@@ -73,11 +73,101 @@
         "type": "github"
       }
     },
+    "nyx-accounts": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793589442,
+        "narHash": "sha256-A6QvHK7J6AaLlGjQGqHaPnhBN3376YgOwGXrU/4LOMI=",
+        "owner": "design-nexus",
+        "repo": "nyx-accounts",
+        "rev": "5fc6ef9caa8dd89794393c20aea4afcf565b1e00",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-accounts",
+        "type": "github"
+      }
+    },
+    "nyx-core": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793678583,
+        "narHash": "sha256-Ul2K9bGwGHZS8pa8YcFB+tGIzVAgyYbUQ+2QVI30CiI=",
+        "owner": "design-nexus",
+        "repo": "nyx-core",
+        "rev": "1c309f2912d5eff5e1a3f5eeca8b91cc3c5bcf76",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-core",
+        "type": "github"
+      }
+    },
+    "nyx-design": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793599373,
+        "narHash": "sha256-XOVFh3+R5bvL82Cn4ZW1paa0FUznVCodRXjTuwaFEMs=",
+        "owner": "design-nexus",
+        "repo": "nyx-design",
+        "rev": "bcbd8dd7a215565c6af6b418a0bca2457be9e6da",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-design",
+        "type": "github"
+      }
+    },
+    "nyx-fonts": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793504520,
+        "narHash": "sha256-jxvgboOvf/HQv2oIeYAWvdS6V9q8z1w2Sw5rWgJtdJM=",
+        "owner": "design-nexus",
+        "repo": "nyx-fonts",
+        "rev": "d4e03b9866e1bec6defada5c751d83ed971fb310",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-fonts",
+        "type": "github"
+      }
+    },
+    "nyx-packages": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "nyx-accounts": "nyx-accounts",
+        "nyx-core": "nyx-core",
+        "nyx-design": "nyx-design",
+        "nyx-fonts": "nyx-fonts",
+        "rust-overlay": "rust-overlay_2"
+      },
+      "locked": {
+        "lastModified": 1793686925,
+        "narHash": "sha256-2qUWipz+YV7nKYY7E0OF9a5GqVKOIBxBdeS0alGOWLw=",
+        "owner": "nyxos-project",
+        "repo": "nyx-packages",
+        "rev": "549457db48d1ab328e3ec0952d42394b963e0332",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nyxos-project",
+        "repo": "nyx-packages",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "herdr": "herdr",
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_2",
+        "nyx-packages": "nyx-packages"
       }
     },
     "rust-overlay": {
@@ -93,6 +183,27 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "rev": "4cdea398dc491b082dccdce0fad1ed0b75fa3394",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_2": {
+      "inputs": {
+        "nixpkgs": [
+          "nyx-packages",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793610678,
+        "narHash": "sha256-5V08BokWHSUU962Kcr/uSTWyy+1NqB7pjuyqjqXTqQU=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "6b29b8e8d3cc8ebda9342fbbcc7ac06eff58e2fb",
         "type": "github"
       },
       "original": {
