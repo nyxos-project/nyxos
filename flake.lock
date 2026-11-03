@@ -185,6 +185,54 @@
         "type": "github"
       }
     },
+    "nyx-git": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793504522,
+        "narHash": "sha256-HHH/+xVAT58JJT/WQa6OCKwFvnQcgmuauWC+tyUleoQ=",
+        "owner": "design-nexus",
+        "repo": "nyx-git",
+        "rev": "f65d3f985ffd967efb53edf25883594be6890a31",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-git",
+        "type": "github"
+      }
+    },
+    "nyx-media-player": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793504525,
+        "narHash": "sha256-IwNWUeQna77zSWo82bTVXXEG+duIievnd2RccfCkXh8=",
+        "owner": "design-nexus",
+        "repo": "nyx-media-player",
+        "rev": "1dd144ff7665c1b8de3f84edecde9bf11ec1882f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-media-player",
+        "type": "github"
+      }
+    },
+    "nyx-music": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793504527,
+        "narHash": "sha256-S7vUbdpEKZpKeilCtcNP527FV4JF0vc7gXsylXD51JM=",
+        "owner": "design-nexus",
+        "repo": "nyx-music",
+        "rev": "1393047e1dba7ecce0249c31396952fcc5839e93",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-music",
+        "type": "github"
+      }
+    },
     "nyx-news": {
       "flake": false,
       "locked": {
@@ -245,18 +293,23 @@
         "nyx-core": "nyx-core",
         "nyx-design": "nyx-design",
         "nyx-fonts": "nyx-fonts",
+        "nyx-git": "nyx-git",
+        "nyx-media-player": "nyx-media-player",
+        "nyx-music": "nyx-music",
         "nyx-news": "nyx-news",
         "nyx-notepad": "nyx-notepad",
         "nyx-office": "nyx-office",
         "nyx-pdf": "nyx-pdf",
+        "nyx-photos": "nyx-photos",
+        "nyx-theater": "nyx-theater",
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793695630,
-        "narHash": "sha256-iRR6/biqpR7VuGyQfNCHMFF8oMp0sEvBGyQnkzAh9io=",
+        "lastModified": 1793700571,
+        "narHash": "sha256-/5/dHVyluMbpk7gHBXzJrFHMFsgibjTGBjy1b+84ml4=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "84a5c2977ad3f3173be97eb7ef0d8de61bdb9f6e",
+        "rev": "32f557e8923bf6c8515936f2f6b4fa9769aebcb6",
         "type": "github"
       },
       "original": {
@@ -278,6 +331,38 @@
       "original": {
         "owner": "design-nexus",
         "repo": "nyx-pdf",
+        "type": "github"
+      }
+    },
+    "nyx-photos": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793504535,
+        "narHash": "sha256-4XkD0THtoSmUNwP9aKmXfjwsYNzOyvNb2I8n0Btdli0=",
+        "owner": "design-nexus",
+        "repo": "nyx-photos",
+        "rev": "e902e532a371f1500ad6502c0af02787bacd3810",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-photos",
+        "type": "github"
+      }
+    },
+    "nyx-theater": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793677796,
+        "narHash": "sha256-clCefi9RumMaNijtQ6AcaIjaSEVOF8yjQQ18FrYyMow=",
+        "owner": "design-nexus",
+        "repo": "nyx-theater",
+        "rev": "a5031ba209ecd2d1f6c23ddb7bcb236ad75f8681",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-theater",
         "type": "github"
       }
     },
