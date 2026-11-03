@@ -1,6 +1,13 @@
 # Base tier: Nyx components every NyxOS install ships. Options come from nyx-packages.
-{ lib, ... }:
 {
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
+{
+  environment.systemPackages = [ inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.nyx-cli ];
+
   nyx = {
     icons = {
       enable = lib.mkDefault true;

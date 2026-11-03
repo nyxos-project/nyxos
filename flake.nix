@@ -27,8 +27,15 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      inherit (nixpkgs) lib;
     in
     {
+      packages.${system}.nyx-cli = pkgs.callPackage ./pkgs/nyx-cli {
+        packaged = map (lib.removePrefix "nyx-") (
+          lib.filter (lib.hasPrefix "nyx-") (lib.attrNames inputs.nyx-packages.packages.${system})
+        );
+      };
+
       nixosModules = {
         nyxos = ./modules/nixos;
         home = ./modules/home;
@@ -39,7 +46,10 @@
         modules = [ ./hosts/incus-dev ];
       };
 
-      checks.${system}.incus-dev = self.nixosConfigurations.incus-dev.config.system.build.toplevel;
+      checks.${system} = {
+        incus-dev = self.nixosConfigurations.incus-dev.config.system.build.toplevel;
+        inherit (self.packages.${system}) nyx-cli;
+      };
 
       formatter.${system} = pkgs.nixfmt;
     };

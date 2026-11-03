@@ -19,6 +19,7 @@ Nyx repositories.
 | `modules/nixos` | System defaults: Nix, users, network, audio, desktop, shell, packages, base Nyx apps |
 | `modules/home` | User defaults: Foot, Zsh and the Nyx prompt, Helix, Herdr, Hyprland |
 | `themes` | Theme tokens (Nyx Dark), mirrored from nyx-design |
+| `pkgs/nyx-cli` | The `nyx` command on NyxOS |
 | `scripts/dev-vm` | Create, rebuild, snapshot and inspect the VM |
 
 ## Configuration layers
@@ -29,6 +30,14 @@ Nyx repositories.
 
 Later layers win. Updates replace only the first layer. The merge logic arrives with
 the theme and settings services in phase 3.
+
+## The `nyx` command
+
+The same commands as the Omarchy CLI. `nyx icons …` and `nyx share …` run the
+packaged tools; `nyx list` shows which Nyx apps are installed or available. Apps
+belong to the system configuration, so `nyx install`, `uninstall` and `update`
+print the configuration change and the rebuild command instead of installing
+anything themselves.
 
 ## Defaults
 
