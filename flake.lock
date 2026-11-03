@@ -89,6 +89,38 @@
         "type": "github"
       }
     },
+    "nyx-archive": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793504512,
+        "narHash": "sha256-p+DuTJvHgma2HbS3JPz2dypwAECpvr1uwgd8kcESShE=",
+        "owner": "design-nexus",
+        "repo": "nyx-archive",
+        "rev": "4846f18e0650ce7d22a715127df81a94c7e93a52",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-archive",
+        "type": "github"
+      }
+    },
+    "nyx-calculator": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793693230,
+        "narHash": "sha256-PSFrisb6AfHyD3M1BtsXv3WOT2Vre2BmogoiI7ISGNg=",
+        "owner": "design-nexus",
+        "repo": "nyx-calculator",
+        "rev": "75bf2ec762d0a14850e9dac8070467b83f9aa3d1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-calculator",
+        "type": "github"
+      }
+    },
     "nyx-core": {
       "flake": false,
       "locked": {
@@ -137,28 +169,98 @@
         "type": "github"
       }
     },
+    "nyx-news": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793504528,
+        "narHash": "sha256-DLsb3YJDMZek40Cikysus7jIzpdDenLtlyZR5KVnS9A=",
+        "owner": "design-nexus",
+        "repo": "nyx-news",
+        "rev": "6f48884ac8b8b120c17be384b3a579a6e7dd3ef8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-news",
+        "type": "github"
+      }
+    },
+    "nyx-notepad": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793504530,
+        "narHash": "sha256-qI4q0HFOLGofHMzn7oZUdAVVxj9/6fB94iBJCxmmmUE=",
+        "owner": "design-nexus",
+        "repo": "nyx-notepad",
+        "rev": "f6b0dcaf500f9e3e5a851cdef4609d6a1b8994d4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-notepad",
+        "type": "github"
+      }
+    },
+    "nyx-office": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793504531,
+        "narHash": "sha256-CrglAdEkFMFMx1Jj/6kWPiaXLsilIfNjPlOG44rql3I=",
+        "owner": "design-nexus",
+        "repo": "nyx-office",
+        "rev": "6223b0d9955f199a16e46cf586cd0db8a84e28d8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-office",
+        "type": "github"
+      }
+    },
     "nyx-packages": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
         ],
         "nyx-accounts": "nyx-accounts",
+        "nyx-archive": "nyx-archive",
+        "nyx-calculator": "nyx-calculator",
         "nyx-core": "nyx-core",
         "nyx-design": "nyx-design",
         "nyx-fonts": "nyx-fonts",
+        "nyx-news": "nyx-news",
+        "nyx-notepad": "nyx-notepad",
+        "nyx-office": "nyx-office",
+        "nyx-pdf": "nyx-pdf",
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793688444,
-        "narHash": "sha256-OdhkgoEDdVAYag+sNrHGduPEO9HtG0Q7wgee029AK0E=",
+        "lastModified": 1793693364,
+        "narHash": "sha256-8P/tlkFRARerPnrB5q9rdP4tBnFExmzWl/HKh7ksCP8=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "978d6843a55b73c244728db06232ad5eb2d79c5f",
+        "rev": "42103e7652a53e0f091ca98f2549911bae5ebd2f",
         "type": "github"
       },
       "original": {
         "owner": "nyxos-project",
         "repo": "nyx-packages",
+        "type": "github"
+      }
+    },
+    "nyx-pdf": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793504533,
+        "narHash": "sha256-450ebYFlEa4e4B+KCQuyjvZLywqpwDHsRSZITeAY+Ik=",
+        "owner": "design-nexus",
+        "repo": "nyx-pdf",
+        "rev": "667e81a85f21ce29f838e9e0534f80a819ba3202",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-pdf",
         "type": "github"
       }
     },
