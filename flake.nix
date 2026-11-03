@@ -11,6 +11,11 @@
 
     # Herdr pins its own nixpkgs and Rust toolchain; don't make it follow ours.
     herdr.url = "github:herdrdev/herdr/v0.9.5";
+
+    nyx-packages = {
+      url = "github:nyxos-project/nyx-packages";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

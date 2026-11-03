@@ -10,6 +10,10 @@ user=${NYXOS_USER:-ken}
 gpu_pci=${NYXOS_GPU_PCI:-0000:00:02.0}
 repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 flake_dir=/etc/nyxos/flake
+# A local nyx-packages checkout. Set NYX_PACKAGES to build NyxOS against it instead of
+# the revision pinned in flake.lock.
+packages_repo=${NYX_PACKAGES:-}
+packages_dir=/etc/nyxos/nyx-packages
 vm_path=/run/wrappers/bin:/run/current-system/sw/bin
 
 usage() {
@@ -20,6 +24,8 @@ Usage: scripts/dev-vm <command> [args]
   gpu [on|off]        Add or remove the accelerated GPU (stops the VM briefly)
   sync                Copy this checkout to $flake_dir in the VM
   rebuild [action]    sync, then nixos-rebuild <action> (default: switch)
+  packages <args...>  Copy \$NYX_PACKAGES (default ../nyx-packages) to the VM and
+                      run nix <args> there, e.g. "packages build .#nyx-fonts"
   rollback            Switch back to the previous system generation
   generations         List system generations
   check               sync, then nix flake check in the VM
@@ -50,15 +56,34 @@ vm_ip() {
   incus list "$vm" -c4 -f csv | grep -oE '^[0-9.]+' | head -1
 }
 
+push_tree() {
+  vm_exec rm -rf "$2"
+  vm_exec mkdir -p "$2"
+  tar -C "$1" --exclude=.git --exclude='result*' -cf - . | vm_exec tar -C "$2" -xf -
+}
+
+# Copies lock files Nix wrote in the VM back to the checkout they belong to.
+pull_lock() {
+  if vm_exec test -f "$1/flake.lock"; then
+    incus file pull "$vm$1/flake.lock" "$2/flake.lock"
+  fi
+}
+
+override_args=()
+
 sync() {
-  vm_exec rm -rf "$flake_dir"
-  vm_exec mkdir -p "$flake_dir"
-  tar -C "$repo" --exclude=.git --exclude=result -cf - . | vm_exec tar -C "$flake_dir" -xf -
+  push_tree "$repo" "$flake_dir"
+  if [[ -n $packages_repo ]]; then
+    push_tree "$packages_repo" "$packages_dir"
+    override_args=(--override-input nyx-packages "path:$packages_dir")
+  fi
 }
 
 rebuild() {
   sync
-  vm_exec nixos-rebuild "${1:-switch}" --flake "path:$flake_dir#$host"
+  vm_exec nixos-rebuild "${1:-switch}" --flake "path:$flake_dir#$host" "${override_args[@]}"
+  # An overridden input must not end up in flake.lock.
+  [[ -n $packages_repo ]] || pull_lock "$flake_dir" "$repo"
 }
 
 cmd=${1:-}
@@ -93,7 +118,14 @@ case $cmd in
   generations) vm_exec nixos-rebuild list-generations ;;
   check)
     sync
-    vm_exec nix flake check "path:$flake_dir"
+    vm_exec nix flake check "path:$flake_dir" "${override_args[@]}"
+    ;;
+  packages)
+    src=${packages_repo:-$repo/../nyx-packages}
+    src=$(cd "$src" && pwd)
+    push_tree "$src" "$packages_dir"
+    vm_exec bash -c 'cd "$1" && shift && nix "$@"' _ "$packages_dir" "$@"
+    pull_lock "$packages_dir" "$src"
     ;;
   ip) vm_ip ;;
   ssh) exec ssh "$user@$(vm_ip)" "$@" ;;
@@ -107,7 +139,11 @@ case $cmd in
     incus file pull "$vm/tmp/nyxos-shot.png" "$out"
     echo "$out"
     ;;
-  snapshot) incus snapshot create "$vm" "${1:?snapshot name}" ;;
+  snapshot)
+    # Snapshots of a running VM are crash-consistent; flush the guest's writes first.
+    vm_exec sync
+    incus snapshot create "$vm" "${1:?snapshot name}"
+    ;;
   restore) incus snapshot restore "$vm" "${1:?snapshot name}" ;;
   destroy) incus delete --force "$vm" ;;
   "" | -h | --help | help) usage ;;

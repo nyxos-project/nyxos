@@ -2,8 +2,8 @@
 
 NyxOS is a NixOS distribution built around the Nyx desktop and applications. This
 repository holds the distribution flake: NixOS modules, Home Manager defaults and host
-definitions. Nyx applications stay in their own repositories and will be packaged by a
-separate `nyx-packages` flake.
+definitions. Nyx applications stay in their own repositories and are packaged by
+[nyx-packages](https://github.com/nyxos-project/nyx-packages).
 
 Status: phase 1, a development VM that boots NixOS 26.05 into a minimal Hyprland
 session. See [docs/dev-vm.md](docs/dev-vm.md) to run it and
@@ -14,9 +14,9 @@ Nyx repositories.
 
 | Path | Contents |
 | --- | --- |
-| `flake.nix` | Inputs (nixpkgs 26.05, Home Manager, Herdr) and outputs |
+| `flake.nix` | Inputs (nixpkgs 26.05, Home Manager, Herdr, nyx-packages) and outputs |
 | `hosts/incus-dev` | The Incus development VM |
-| `modules/nixos` | System defaults: Nix, users, network, audio, desktop, shell, packages |
+| `modules/nixos` | System defaults: Nix, users, network, audio, desktop, shell, packages, base Nyx apps |
 | `modules/home` | User defaults: Foot, Zsh and the Nyx prompt, Helix, Herdr, Hyprland |
 | `themes` | Theme tokens (Nyx Dark), mirrored from nyx-design |
 | `scripts/dev-vm` | Create, rebuild, snapshot and inspect the VM |

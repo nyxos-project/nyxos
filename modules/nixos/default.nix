@@ -11,6 +11,8 @@ in
 {
   imports = [
     inputs.home-manager.nixosModules.home-manager
+    inputs.nyx-packages.nixosModules.default
+    ./apps.nix
     ./base.nix
     ./network.nix
     ./audio.nix

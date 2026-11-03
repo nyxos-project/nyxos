@@ -84,6 +84,25 @@ working even if a change breaks networking or SSH.
 `scripts/dev-vm rebuild test` activates without adding a boot entry;
 `scripts/dev-vm rebuild boot` makes the build the default for the next boot only.
 
+## Working on nyx-packages
+
+NyxOS takes the Nyx applications from the `nyx-packages` flake at the revision in
+`flake.lock`. To build and test a local checkout (default `../nyx-packages`) in the VM:
+
+```sh
+scripts/dev-vm packages flake check -L      # build and test every package
+scripts/dev-vm packages build -L .#nyx-fonts
+```
+
+To run NyxOS against that checkout instead of the pinned revision:
+
+```sh
+NYX_PACKAGES=~/Projects/nyx-packages scripts/dev-vm rebuild
+```
+
+With `NYX_PACKAGES` set, `flake.lock` isn't copied back, so the override never ends
+up pinned.
+
 ## Log in
 
 ```sh
@@ -112,6 +131,9 @@ scripts/dev-vm restore known-good-1        # incus snapshot restore nyxos-dev kn
 
 Every older generation also stays in the systemd-boot menu (up to 20), reachable from
 `incus console nyxos-dev --type=vga` during boot.
+
+`scripts/dev-vm snapshot` flushes the guest's disks first: a snapshot of a running VM
+is only crash-consistent, and unflushed store files come back empty.
 
 A known-good state is a Git tag (`known-good/<n>`) on the commit that built it, plus an
 Incus snapshot with the same number. Restoring the snapshot returns the whole VM disk;

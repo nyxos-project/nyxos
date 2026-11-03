@@ -22,6 +22,9 @@
     desktop.autoLogin = true;
   };
 
+  # Packaging pilot; a Welcome-tier app, not a base default.
+  nyx.fonts.enable = true;
+
   # The Incus image allows a passwordless root console; `incus exec` is enough.
   users.users.root = {
     initialHashedPassword = lib.mkForce null;
