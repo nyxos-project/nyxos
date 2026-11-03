@@ -1,57 +1,84 @@
-# nyx: the Nyx command line on NyxOS. Same commands as the Omarchy CLI, but apps
-# belong to the system configuration here, so nothing is installed from source into
-# ~/.local/bin.
-
-ALL=(settings contacts activity torrents pdf notepad music media-player theater chat fonts archive office photos glimpse store git passwords weather news capture pulse containers files cloud notes calculator home maps transfer mail calendar reminders share dock control-center notification-center clipboard)
-# Apps nyx-packages builds for this NyxOS release.
-read -r -a PACKAGED <<<"@packaged@"
-
-# The program that shows an app is installed.
-program() {
-  case $1 in
-    office) echo nyx-office ;;
-    photos) echo nyx-photos ;;
-    cloud) echo nyx-cloudd ;;
-    *) echo "nyx-$1" ;;
-  esac
-}
-
-packaged() {
-  local app
-  for app in "${PACKAGED[@]}"; do [[ $app == "$1" ]] && return 0; done
-  return 1
-}
+# nyx: short commands for the Nix package manager on NyxOS. Each one runs a single
+# nix command; anything nyx doesn't know goes to nix unchanged.
 
 usage() {
   cat <<'EOF'
-nyx icons check | generate | sync | restore | follow on|off   theme launcher icons
-nyx list                   the apps, and which are installed
-nyx install | uninstall    how to add or remove apps on NyxOS
-nyx update                 how to update NyxOS and its apps
-nyx share FILE…            share through the Share Sheet (nyx share --help)
+nyx install PKG…          install packages for your user
+nyx remove PKG…           remove them (also: uninstall)
+nyx update [PKG…]         update all your packages, or the ones named
+nyx list                  your installed packages
+nyx search TERM…          search the package collection
+nyx run PKG [ARGS…]       run a program without installing it
+nyx shell PKG… [-c CMD]   open a shell with packages available
+nyx rollback              undo the last install, remove or update
+nyx history               past installs, removals and updates
+nyx clean                 delete old versions to free disk space
+nyx icons …               theme launcher icons (nyx icons --help)
+nyx share FILE…           share through the Share Sheet
+
+PKG is a package name (firefox), a Nyx app (nyx-pdf) or any flake reference.
+Any other command goes to nix: nyx build, nyx flake, nyx develop…
 EOF
 }
 
-configure() {
-  local verb=$1 app value options=()
-  shift
-  (($#)) || { echo "Usage: nyx $verb APP…" >&2; exit 1; }
-  [[ $verb == install ]] && value=true || value=false
-  for app in "$@"; do
-    if packaged "$app"; then
-      options+=("  nyx.$app.enable = $value;")
-    else
-      echo "$app isn't packaged for NyxOS yet." >&2
-    fi
+# firefox → nixpkgs#firefox, nyx-pdf → the Nyx app; flake references and options as given.
+ref() {
+  case $1 in
+    -* | *'#'* | *:*) printf '%s' "$1" ;;
+    nyx-*) printf 'github:nyxos-project/nyx-packages#%s' "$1" ;;
+    *) printf 'nixpkgs#%s' "$1" ;;
+  esac
+}
+
+# Package arguments until the first option; the rest pass through untouched.
+refs=()
+expand() {
+  refs=()
+  while (($#)) && [[ $1 != -* ]]; do
+    refs+=("$(ref "$1")")
+    shift
   done
-  ((${#options[@]})) || exit 1
-  echo "Apps are part of the NyxOS system configuration. Set these in your"
-  echo "configuration, then apply it with: sudo nixos-rebuild switch"
-  echo
-  printf '%s\n' "${options[@]}"
+  refs+=("$@")
 }
 
 case ${1:-} in
+  install | add)
+    shift
+    expand "$@"
+    exec nix profile add "${refs[@]}" ;;
+  remove | uninstall)
+    shift
+    exec nix profile remove "$@" ;;
+  update | upgrade)
+    shift
+    (($#)) || set -- --all
+    exec nix profile upgrade "$@" ;;
+  list)
+    shift
+    exec nix profile list "$@" ;;
+  search)
+    shift
+    exec nix search nixpkgs "$@" ;;
+  run)
+    shift
+    (($#)) || { usage >&2; exit 1; }
+    package=$(ref "$1")
+    shift
+    [[ ${1:-} == -- ]] && shift
+    exec nix run "$package" -- "$@" ;;
+  shell)
+    shift
+    expand "$@"
+    exec nix shell "${refs[@]}" ;;
+  rollback)
+    shift
+    exec nix profile rollback "$@" ;;
+  history)
+    shift
+    exec nix profile history "$@" ;;
+  clean)
+    shift
+    exec nix-collect-garbage -d "$@" ;;
   icons)
     shift
     exec nyx-icons "$@" ;;
@@ -59,27 +86,8 @@ case ${1:-} in
     shift
     command -v nyx-share >/dev/null || { echo "Share isn't installed on this system." >&2; exit 1; }
     exec nyx-share "$@" ;;
-  list)
-    for a in "${ALL[@]}"; do
-      if command -v "$(program "$a")" >/dev/null; then
-        printf '  %-20s installed\n' "$a"
-      elif packaged "$a"; then
-        printf '  %-20s available\n' "$a"
-      else
-        printf '  %s\n' "$a"
-      fi
-    done ;;
-  install | uninstall | remove)
-    verb=$1
-    [[ $verb == remove ]] && verb=uninstall
-    shift
-    configure "$verb" "$@" ;;
-  update)
-    echo "NyxOS updates the system and its apps together: update the configuration's"
-    echo "flake inputs, then apply them with: sudo nixos-rebuild switch" ;;
   "" | -h | --help | help)
     usage ;;
   *)
-    usage >&2
-    exit 1 ;;
+    exec nix "$@" ;;
 esac

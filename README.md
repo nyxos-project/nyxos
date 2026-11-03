@@ -33,11 +33,24 @@ the theme and settings services in phase 3.
 
 ## The `nyx` command
 
-The same commands as the Omarchy CLI. `nyx icons …` and `nyx share …` run the
-packaged tools; `nyx list` shows which Nyx apps are installed or available. Apps
-belong to the system configuration, so `nyx install`, `uninstall` and `update`
-print the configuration change and the rebuild command instead of installing
-anything themselves.
+Short commands for the Nix package manager. Each runs one `nix` command for the
+current user; anything else goes to `nix` unchanged (`nyx build`, `nyx flake`, …).
+
+| nyx | nix |
+| --- | --- |
+| `install PKG…` | `nix profile add nixpkgs#PKG…` |
+| `remove PKG…` | `nix profile remove PKG…` |
+| `update [PKG…]` | `nix profile upgrade --all` (or the packages named) |
+| `list` | `nix profile list` |
+| `search TERM…` | `nix search nixpkgs TERM…` |
+| `run PKG [ARGS…]` | `nix run nixpkgs#PKG -- ARGS…` |
+| `shell PKG… [-c CMD]` | `nix shell nixpkgs#PKG… [-c CMD]` |
+| `rollback` / `history` | `nix profile rollback` / `history` |
+| `clean` | `nix-collect-garbage -d` |
+
+A name starting with `nyx-` comes from nyx-packages
+(`github:nyxos-project/nyx-packages#nyx-pdf`); anything with `#` or `:` is used as
+given. `nyx icons …` and `nyx share …` run the Nyx tools as on Omarchy.
 
 ## Defaults
 
