@@ -77,7 +77,7 @@ To see the desktop:
 
 ```sh
 scripts/dev-vm generations                 # nixos-rebuild list-generations
-scripts/dev-vm rollback                    # nixos-rebuild switch --rollback
+scripts/dev-vm rollback                    # nixos-rebuild switch --rollback --flake …
 scripts/dev-vm snapshot known-good-1       # incus snapshot create nyxos-dev known-good-1
 scripts/dev-vm restore known-good-1        # incus snapshot restore nyxos-dev known-good-1
 ```

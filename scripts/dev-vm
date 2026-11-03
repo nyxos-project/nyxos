@@ -70,7 +70,8 @@ case $cmd in
     ;;
   sync) sync ;;
   rebuild) rebuild "$@" ;;
-  rollback) vm_exec nixos-rebuild switch --rollback ;;
+  # Without --flake, nixos-rebuild tries to rebuild itself from <nixpkgs/nixos> and fails.
+  rollback) vm_exec nixos-rebuild switch --rollback --flake "path:$flake_dir#$host" ;;
   generations) vm_exec nixos-rebuild list-generations ;;
   check)
     sync
