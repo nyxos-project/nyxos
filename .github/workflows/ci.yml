@@ -13,6 +13,8 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
+    # A hung test otherwise holds the runner for GitHub's six-hour default.
+    timeout-minutes: 90
     steps:
       # A full NixOS closure plus the Rust builds doesn't fit the runner's default
       # free space.
@@ -24,6 +26,11 @@ jobs:
       - uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          # An HTTP/2 framing error from the binary cache once stalled a run for an
+          # hour; HTTP/1.1 and a short stall timeout make Nix retry instead.
+          extra_nix_config: |
+            http2 = false
+            stalled-download-timeout = 60
 
       - uses: cachix/cachix-action@v17
         with:
