@@ -40,8 +40,14 @@ in
 
       misc = {
         disable_hyprland_logo = true,
+        disable_splash_rendering = true,
         force_default_wallpaper = 0,
         background_color = "rgb(${c.bg})",
+      },
+
+      ecosystem = {
+        no_update_news = true,
+        no_donation_nag = true,
       },
     })
 

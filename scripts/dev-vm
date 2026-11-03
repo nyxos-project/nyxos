@@ -6,6 +6,8 @@ vm=${NYXOS_VM:-nyxos-dev}
 host=${NYXOS_HOST:-incus-dev}
 image=${NYXOS_IMAGE:-images:nixos/26.05}
 user=${NYXOS_USER:-ken}
+# Host GPU shared with the VM through virtio-gpu DRM native context (the Intel iGPU here).
+gpu_pci=${NYXOS_GPU_PCI:-0000:00:02.0}
 repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 flake_dir=/etc/nyxos/flake
 vm_path=/run/wrappers/bin:/run/current-system/sw/bin
@@ -14,7 +16,8 @@ usage() {
   cat <<EOF
 Usage: scripts/dev-vm <command> [args]
 
-  create              Launch $vm from $image (6 vCPU, 8 GiB, 50 GiB disk)
+  create              Launch $vm from $image (6 vCPU, 8 GiB, 50 GiB disk, GPU $gpu_pci)
+  gpu [on|off]        Add or remove the accelerated GPU (stops the VM briefly)
   sync                Copy this checkout to $flake_dir in the VM
   rebuild [action]    sync, then nixos-rebuild <action> (default: switch)
   rollback            Switch back to the previous system generation
@@ -63,9 +66,24 @@ cmd=${1:-}
 
 case $cmd in
   create)
-    incus launch "$image" "$vm" --vm \
+    incus init "$image" "$vm" --vm \
       -c limits.cpu=6 -c limits.memory=8GiB -c security.secureboot=false \
       -d root,size=50GiB
+    incus config device add "$vm" gpu gpu gputype=native-context pci="$gpu_pci"
+    incus start "$vm"
+    wait_for_agent
+    ;;
+  gpu)
+    incus stop "$vm"
+    case ${1:-on} in
+      on) incus config device add "$vm" gpu gpu gputype=native-context pci="$gpu_pci" ;;
+      off) incus config device remove "$vm" gpu ;;
+      *)
+        usage >&2
+        exit 1
+        ;;
+    esac
+    incus start "$vm"
     wait_for_agent
     ;;
   sync) sync ;;

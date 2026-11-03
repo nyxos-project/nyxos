@@ -1,7 +1,7 @@
 # NyxOS development VM
 
-NyxOS is developed in an Incus virtual machine (QEMU/KVM, virtio-gpu, no GPU
-passthrough). The host doesn't need Nix: the VM boots the stock NixOS 26.05 Incus
+NyxOS is developed in an Incus virtual machine (QEMU/KVM, virtio-gpu with 3D
+acceleration from the host's Intel iGPU, no GPU passthrough). The host doesn't need Nix: the VM boots the stock NixOS 26.05 Incus
 image, receives a copy of this checkout, and builds and switches to the flake itself.
 
 `scripts/dev-vm` wraps every command below; `scripts/dev-vm help` lists them.
@@ -20,16 +20,44 @@ image, receives a copy of this checkout, and builds and switches to the flake it
 
   If a VPN client with its own firewall (NordVPN's kill switch, for example) is
   connected, it may need `incusbr0` or `10.24.219.0/24` allowlisted too.
+- QEMU's GL display modules and virglrenderer, for 3D acceleration:
+
+  ```sh
+  sudo pacman -S --needed virglrenderer qemu-hw-display-virtio-gpu-gl \
+    qemu-hw-display-virtio-vga-gl qemu-hw-display-virtio-gpu-pci-gl qemu-ui-egl-headless
+  ```
 
 ## Create the VM
 
 ```sh
-incus launch images:nixos/26.05 nyxos-dev --vm \
+incus init images:nixos/26.05 nyxos-dev --vm \
   -c limits.cpu=6 -c limits.memory=8GiB -c security.secureboot=false \
   -d root,size=50GiB
+incus config device add nyxos-dev gpu gpu gputype=native-context pci=0000:00:02.0
+incus start nyxos-dev
 ```
 
 Secure Boot is off because the image's systemd-boot isn't signed.
+
+### 3D acceleration
+
+The `native-context` GPU device shares the host's Intel iGPU (`0000:00:02.0`, Arc 140T
+on `i915`) with the VM through virtio-gpu; nothing is passed through and the host keeps
+using the GPU. Select the Intel GPU explicitly: without `pci=`, QEMU picks the default
+render node, which on this laptop is the NVIDIA card. The device can't be hot-plugged,
+so `scripts/dev-vm gpu on|off` stops and restarts the VM.
+
+Inside the VM, Mesa's virgl driver uses it, so Hyprland and GL clients report
+`virgl (Mesa Intel(R) Graphics (ARL))` with OpenGL 4.6 and OpenGL ES 3.2. Vulkan still
+falls back to llvmpipe: native Vulkan (ANV) needs Mesa built with
+`intel-virtio-experimental`, which nixpkgs doesn't enable.
+
+Check from the host:
+
+```sh
+scripts/dev-vm exec dmesg | grep 'features:'   # expect +virgl +resource_blob +context_init
+scripts/dev-vm exec bash -c 'grep Renderer: /run/user/1000/hypr/*/hyprland.log'
+```
 
 ## Build and switch to NyxOS
 
