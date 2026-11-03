@@ -185,6 +185,22 @@
         "type": "github"
       }
     },
+    "nyx-capture": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793733319,
+        "narHash": "sha256-ae/RPl73S1flbXhOwF0W/dZglNfIpENjhWmeww87uIY=",
+        "owner": "design-nexus",
+        "repo": "nyx-capture",
+        "rev": "1b5623cb0f72e621f8201ad479a7b0e3206a71ed",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-capture",
+        "type": "github"
+      }
+    },
     "nyx-chat": {
       "flake": false,
       "locked": {
@@ -501,6 +517,7 @@
         "nyx-backup": "nyx-backup",
         "nyx-calculator": "nyx-calculator",
         "nyx-calendar": "nyx-calendar",
+        "nyx-capture": "nyx-capture",
         "nyx-chat": "nyx-chat",
         "nyx-clipboard": "nyx-clipboard",
         "nyx-cloud": "nyx-cloud",
@@ -531,11 +548,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793748904,
-        "narHash": "sha256-aayfnswtsRYwoMPAaUbYmzU/3Knbzi+yjOJsRCMHCYQ=",
+        "lastModified": 1793749955,
+        "narHash": "sha256-xN+sLaaomMkpOYnOGcm0thP4U9AHoqIyrt1/3vaT3UU=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "73511cf1ca635e66477f421daa152874ec15f859",
+        "rev": "4635cc888cb41ca17d1d1ff34ff164f57f79c89d",
         "type": "github"
       },
       "original": {
