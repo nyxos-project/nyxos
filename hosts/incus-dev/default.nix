@@ -28,6 +28,11 @@
     pdf.enable = true;
     news.enable = true;
     office.enable = true;
+    git.enable = true;
+    music.enable = true;
+    media-player.enable = true;
+    theater.enable = true;
+    photos.enable = true;
   };
 
   # Rust builds take about 1 GiB per rustc; 6 jobs of 6 threads each overran 8 GiB.
