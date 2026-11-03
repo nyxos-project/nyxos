@@ -361,6 +361,38 @@
         "type": "github"
       }
     },
+    "nyx-mail": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793748490,
+        "narHash": "sha256-hcIILO4lbS1qwOVRR1p6duKr2oJZsY3CY0H7jW2oKvI=",
+        "owner": "design-nexus",
+        "repo": "nyx-mail",
+        "rev": "21892bea0cab22595d8c60665da2002ccbb82ddd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-mail",
+        "type": "github"
+      }
+    },
+    "nyx-maps": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793733487,
+        "narHash": "sha256-lMN6sc5RbBYpsbmgLC5xhI7sZH2TkFFhtorobcuyMJs=",
+        "owner": "design-nexus",
+        "repo": "nyx-maps",
+        "rev": "98817a9650dd5123d79f026f26d142ef4cb8aff4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-maps",
+        "type": "github"
+      }
+    },
     "nyx-media-player": {
       "flake": false,
       "locked": {
@@ -480,6 +512,8 @@
         "nyx-fonts": "nyx-fonts",
         "nyx-git": "nyx-git",
         "nyx-home": "nyx-home",
+        "nyx-mail": "nyx-mail",
+        "nyx-maps": "nyx-maps",
         "nyx-media-player": "nyx-media-player",
         "nyx-music": "nyx-music",
         "nyx-news": "nyx-news",
@@ -497,11 +531,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793747565,
-        "narHash": "sha256-pKZVqwD4icGr2tU/OcokAqCEbgsf9YqP2fJ27h4r29E=",
+        "lastModified": 1793748904,
+        "narHash": "sha256-aayfnswtsRYwoMPAaUbYmzU/3Knbzi+yjOJsRCMHCYQ=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "b388f25319238e169b1387bc3e618da744f009c7",
+        "rev": "73511cf1ca635e66477f421daa152874ec15f859",
         "type": "github"
       },
       "original": {
