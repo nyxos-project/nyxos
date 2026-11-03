@@ -15,6 +15,7 @@ nyx history               past installs, removals and updates
 nyx clean                 delete old versions to free disk space
 nyx icons …               theme launcher icons (nyx icons --help)
 nyx share FILE…           share through the Share Sheet
+nyx plugin …              bar plugins: list, add, configure, update… (nyx plugin help)
 
 PKG is a package name (firefox), a Nyx app (nyx-pdf) or any flake reference.
 Any other command goes to nix: nyx build, nyx flake, nyx develop…
@@ -86,6 +87,10 @@ case ${1:-} in
     shift
     command -v nyx-share >/dev/null || { echo "Share isn't installed on this system." >&2; exit 1; }
     exec nyx-share "$@" ;;
+  plugin | plugins)
+    shift
+    command -v nyx-plugin >/dev/null || { echo "Plugins come with Nyx Bar, which isn't installed on this system." >&2; exit 1; }
+    exec nyx-plugin "$@" ;;
   "" | -h | --help | help)
     usage ;;
   *)

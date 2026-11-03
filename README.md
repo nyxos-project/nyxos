@@ -50,7 +50,7 @@ current user; anything else goes to `nix` unchanged (`nyx build`, `nyx flake`, �
 
 A name starting with `nyx-` comes from nyx-packages
 (`github:nyxos-project/nyx-packages#nyx-pdf`); anything with `#` or `:` is used as
-given. `nyx icons …` and `nyx share …` run the Nyx tools as on Omarchy.
+given. `nyx icons …`, `nyx share …` and `nyx plugin …` run the Nyx tools as on Omarchy.
 
 ## Defaults
 
