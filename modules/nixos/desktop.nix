@@ -47,6 +47,9 @@ in
       };
     };
 
+    # GTK's standard symbolic icons; without them apps show missing-image placeholders.
+    environment.systemPackages = [ pkgs.adwaita-icon-theme ];
+
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
     # Temporary login path until Nyx Greeter exists.

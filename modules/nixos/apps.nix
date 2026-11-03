@@ -4,5 +4,8 @@
   nyx = {
     icons.enable = lib.mkDefault true;
     accounts.enable = lib.mkDefault true;
+    notepad.enable = lib.mkDefault true;
+    calculator.enable = lib.mkDefault true;
+    archive.enable = lib.mkDefault true;
   };
 }

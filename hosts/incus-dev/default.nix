@@ -22,8 +22,19 @@
     desktop.autoLogin = true;
   };
 
-  # Packaging pilot; a Welcome-tier app, not a base default.
-  nyx.fonts.enable = true;
+  # Welcome-tier apps, enabled here to test their packages.
+  nyx = {
+    fonts.enable = true;
+    pdf.enable = true;
+    news.enable = true;
+    office.enable = true;
+  };
+
+  # Rust builds take about 1 GiB per rustc; 6 jobs of 6 threads each overran 8 GiB.
+  nix.settings = {
+    max-jobs = 2;
+    cores = 3;
+  };
 
   # The Incus image allows a passwordless root console; `incus exec` is enough.
   users.users.root = {

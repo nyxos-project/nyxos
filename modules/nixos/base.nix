@@ -32,6 +32,10 @@ in
     };
   };
 
+  # Compressed swap in RAM, so a memory spike slows things down instead of
+  # triggering the OOM killer.
+  zramSwap.enable = lib.mkDefault true;
+
   # Older generations stay bootable from the boot menu.
   boot.loader.systemd-boot.configurationLimit = lib.mkDefault 20;
 
