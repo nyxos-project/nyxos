@@ -137,6 +137,22 @@
         "type": "github"
       }
     },
+    "nyx-backup": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793740242,
+        "narHash": "sha256-uuzWOdFK8xPy8f4TIRoGG4WapCy6YPJzgrkvgalO1eI=",
+        "owner": "design-nexus",
+        "repo": "nyx-backup",
+        "rev": "95ec0008ca3413b53f1e45a532d0d8f435d18a20",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-backup",
+        "type": "github"
+      }
+    },
     "nyx-calculator": {
       "flake": false,
       "locked": {
@@ -150,6 +166,22 @@
       "original": {
         "owner": "design-nexus",
         "repo": "nyx-calculator",
+        "type": "github"
+      }
+    },
+    "nyx-calendar": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793740242,
+        "narHash": "sha256-7RJWYd2KW2J39dvme37VCZG20wETJmTq3m0hyIVjudo=",
+        "owner": "design-nexus",
+        "repo": "nyx-calendar",
+        "rev": "f2e0cb374e0636b19bdec0de6bc76b757a86f2b1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-calendar",
         "type": "github"
       }
     },
@@ -201,6 +233,22 @@
         "type": "github"
       }
     },
+    "nyx-contacts": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793740242,
+        "narHash": "sha256-shEssM6pEodpWZT6IAnn4MkrXQ4SBRP9osa+DN00jcg=",
+        "owner": "design-nexus",
+        "repo": "nyx-contacts",
+        "rev": "c5ba7a118d87f86e85a84b6e1ceb02a99d12a787",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-contacts",
+        "type": "github"
+      }
+    },
     "nyx-containers": {
       "flake": false,
       "locked": {
@@ -220,11 +268,11 @@
     "nyx-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1793726437,
-        "narHash": "sha256-bK+Vr0RGv0ng7MvJYmGuPuMz4acXC3tfMjdGE4CqRtc=",
+        "lastModified": 1793732325,
+        "narHash": "sha256-ZKZHGvnmJLeWtxa7C0nhTh7qqee8+udegW/VFYHPvw0=",
         "owner": "design-nexus",
         "repo": "nyx-core",
-        "rev": "0f1c0e8f0359a58f2d702180f34dafffafe3db44",
+        "rev": "394ddf8193797cd1f420fac98b097d04fa75f0e2",
         "type": "github"
       },
       "original": {
@@ -236,11 +284,11 @@
     "nyx-design": {
       "flake": false,
       "locked": {
-        "lastModified": 1793599373,
-        "narHash": "sha256-XOVFh3+R5bvL82Cn4ZW1paa0FUznVCodRXjTuwaFEMs=",
+        "lastModified": 1793740052,
+        "narHash": "sha256-reWdYa2IcFYxewUeE7F9kmedfgsdoElzbJ0i1KWxO2k=",
         "owner": "design-nexus",
         "repo": "nyx-design",
-        "rev": "bcbd8dd7a215565c6af6b418a0bca2457be9e6da",
+        "rev": "d2398b346b6bc414cc031b0a08a1b2a9a0f6ee2e",
         "type": "github"
       },
       "original": {
@@ -418,10 +466,13 @@
         "nyx-accounts": "nyx-accounts",
         "nyx-activity": "nyx-activity",
         "nyx-archive": "nyx-archive",
+        "nyx-backup": "nyx-backup",
         "nyx-calculator": "nyx-calculator",
+        "nyx-calendar": "nyx-calendar",
         "nyx-chat": "nyx-chat",
         "nyx-clipboard": "nyx-clipboard",
         "nyx-cloud": "nyx-cloud",
+        "nyx-contacts": "nyx-contacts",
         "nyx-containers": "nyx-containers",
         "nyx-core": "nyx-core",
         "nyx-design": "nyx-design",
@@ -437,6 +488,7 @@
         "nyx-office": "nyx-office",
         "nyx-pdf": "nyx-pdf",
         "nyx-photos": "nyx-photos",
+        "nyx-reminders": "nyx-reminders",
         "nyx-share": "nyx-share",
         "nyx-theater": "nyx-theater",
         "nyx-torrents": "nyx-torrents",
@@ -445,11 +497,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793735521,
-        "narHash": "sha256-53HwIn3Z9ibzLT/q+vZQ3nZLMc0BXhKwoorgD9yQ/Ug=",
+        "lastModified": 1793747565,
+        "narHash": "sha256-pKZVqwD4icGr2tU/OcokAqCEbgsf9YqP2fJ27h4r29E=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "b5390eebf42634e5f8bdc746638758f96e176d63",
+        "rev": "b388f25319238e169b1387bc3e618da744f009c7",
         "type": "github"
       },
       "original": {
@@ -487,6 +539,22 @@
       "original": {
         "owner": "design-nexus",
         "repo": "nyx-photos",
+        "type": "github"
+      }
+    },
+    "nyx-reminders": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793740242,
+        "narHash": "sha256-UBDYPG0Z8Fo94cTVgbRn0U+oBGBHEoJMFMp4m6+OBuw=",
+        "owner": "design-nexus",
+        "repo": "nyx-reminders",
+        "rev": "effc40d13ad1f0b0338eea0f5fb3d4216087d449",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-reminders",
         "type": "github"
       }
     },
