@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+# Manage the NyxOS development VM on the local Incus host.
+set -euo pipefail
+
+vm=${NYXOS_VM:-nyxos-dev}
+host=${NYXOS_HOST:-incus-dev}
+image=${NYXOS_IMAGE:-images:nixos/26.05}
+user=${NYXOS_USER:-ken}
+repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+flake_dir=/etc/nyxos/flake
+vm_path=/run/wrappers/bin:/run/current-system/sw/bin
+
+usage() {
+  cat <<EOF
+Usage: scripts/dev-vm <command> [args]
+
+  create              Launch $vm from $image (6 vCPU, 8 GiB, 50 GiB disk)
+  sync                Copy this checkout to $flake_dir in the VM
+  rebuild [action]    sync, then nixos-rebuild <action> (default: switch)
+  rollback            Switch back to the previous system generation
+  generations         List system generations
+  check               sync, then nix flake check in the VM
+  ip                  Print the VM's IPv4 address
+  ssh [args]          SSH in as $user
+  exec <cmd...>       Run a command as root in the VM
+  shot [file]         Screenshot the VM's Hyprland session (default: shot.png)
+  snapshot <name>     Create an Incus snapshot
+  restore <name>      Restore an Incus snapshot
+  destroy             Delete the VM and its snapshots
+EOF
+}
+
+vm_exec() {
+  incus exec "$vm" --env PATH="$vm_path" -- "$@"
+}
+
+wait_for_agent() {
+  for _ in $(seq 120); do
+    vm_exec true 2>/dev/null && return
+    sleep 1
+  done
+  echo "Incus agent in $vm didn't come up" >&2
+  return 1
+}
+
+vm_ip() {
+  incus list "$vm" -c4 -f csv | grep -oE '^[0-9.]+' | head -1
+}
+
+sync() {
+  vm_exec rm -rf "$flake_dir"
+  vm_exec mkdir -p "$flake_dir"
+  tar -C "$repo" --exclude=.git --exclude=result -cf - . | vm_exec tar -C "$flake_dir" -xf -
+}
+
+rebuild() {
+  sync
+  vm_exec nixos-rebuild "${1:-switch}" --flake "path:$flake_dir#$host"
+}
+
+cmd=${1:-}
+[[ $# -gt 0 ]] && shift
+
+case $cmd in
+  create)
+    incus launch "$image" "$vm" --vm \
+      -c limits.cpu=6 -c limits.memory=8GiB -c security.secureboot=false \
+      -d root,size=50GiB
+    wait_for_agent
+    ;;
+  sync) sync ;;
+  rebuild) rebuild "$@" ;;
+  rollback) vm_exec nixos-rebuild switch --rollback ;;
+  generations) vm_exec nixos-rebuild list-generations ;;
+  check)
+    sync
+    vm_exec nix flake check "path:$flake_dir"
+    ;;
+  ip) vm_ip ;;
+  ssh) exec ssh "$user@$(vm_ip)" "$@" ;;
+  exec) vm_exec "$@" ;;
+  shot)
+    out=${1:-shot.png}
+    uid=$(vm_exec id -u "$user")
+    incus exec "$vm" --user "$uid" --env PATH="$vm_path" \
+      --env XDG_RUNTIME_DIR="/run/user/$uid" --env WAYLAND_DISPLAY=wayland-1 \
+      -- grim /tmp/nyxos-shot.png
+    incus file pull "$vm/tmp/nyxos-shot.png" "$out"
+    echo "$out"
+    ;;
+  snapshot) incus snapshot create "$vm" "${1:?snapshot name}" ;;
+  restore) incus snapshot restore "$vm" "${1:?snapshot name}" ;;
+  destroy) incus delete --force "$vm" ;;
+  "" | -h | --help | help) usage ;;
+  *)
+    usage >&2
+    exit 1
+    ;;
+esac

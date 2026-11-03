@@ -1,0 +1,54 @@
+{
+  config,
+  lib,
+  inputs,
+  ...
+}:
+let
+  user = config.nyxos.user;
+in
+{
+  nix = {
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
+      auto-optimise-store = true;
+    };
+    registry.nixpkgs.flake = inputs.nixpkgs;
+    nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+  };
+
+  # Older generations stay bootable from the boot menu.
+  boot.loader.systemd-boot.configurationLimit = lib.mkDefault 20;
+
+  time.timeZone = lib.mkDefault "America/Chicago";
+  i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
+
+  users.users.${user.name} = {
+    isNormalUser = true;
+    inherit (user) description initialPassword;
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "video"
+      "audio"
+      "input"
+    ];
+    openssh.authorizedKeys.keys = user.authorizedKeys;
+  };
+
+  # Configuration layers: distribution defaults live in this flake, system overrides
+  # under /etc/nyxos/overrides, user settings under ~/.config/nyx.
+  systemd.tmpfiles.rules = [ "d /etc/nyxos/overrides 0755 root root -" ];
+}
