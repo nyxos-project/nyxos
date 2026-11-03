@@ -73,6 +73,22 @@
         "type": "github"
       }
     },
+    "nyx": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793695198,
+        "narHash": "sha256-vRqp8iW9sLU54OUtyMEZtWRcx3edtOqFgDATSCNnrpE=",
+        "owner": "design-nexus",
+        "repo": "nyx",
+        "rev": "2d4db3a7f7633787eacb76995781c9b8c6e2d4de",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx",
+        "type": "github"
+      }
+    },
     "nyx-accounts": {
       "flake": false,
       "locked": {
@@ -222,6 +238,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
+        "nyx": "nyx",
         "nyx-accounts": "nyx-accounts",
         "nyx-archive": "nyx-archive",
         "nyx-calculator": "nyx-calculator",
@@ -235,11 +252,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793693364,
-        "narHash": "sha256-8P/tlkFRARerPnrB5q9rdP4tBnFExmzWl/HKh7ksCP8=",
+        "lastModified": 1793695630,
+        "narHash": "sha256-iRR6/biqpR7VuGyQfNCHMFF8oMp0sEvBGyQnkzAh9io=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "42103e7652a53e0f091ca98f2549911bae5ebd2f",
+        "rev": "84a5c2977ad3f3173be97eb7ef0d8de61bdb9f6e",
         "type": "github"
       },
       "original": {
