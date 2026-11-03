@@ -149,7 +149,80 @@ throughout (`/var/lib/pacman`, `makepkg`, `pacman-key`). Reusable: the home/shel
 UI, AppStream catalog parsing and artwork handling. The NyxOS Store is a new
 implementation; the Omarchy Store stays as is.
 
-## Not yet audited
+## Phase 2: remaining repositories
 
-All other `nyx-*` repositories (mail, calendar, contacts, notes, office, pdf, and so
-on). Phase 2 audits each one before packaging.
+Audited 2026-11-03, same method. Packaged so far in
+[nyx-packages](https://github.com/nyxos-project/nyx-packages): `nyx-accounts`,
+`nyx-fonts`, the `nyx-design` icons, and test checks for `nyx-core` and `nyx-design`.
+
+### Findings that apply to many repositories
+
+- systemd user units start programs from `%h/.local/bin` or `%h/.local/lib`, and D-Bus
+  activation files use `Exec=/usr/bin/false` with `SystemdService=`. Packages must
+  install both with store paths. Affects calendar, chat, clipboard, cloud, home, mail,
+  passwords, reminders, share and transfer.
+- Calendar, Contacts, Reminders and Settings use `nyx-pim`, which requires libical 4;
+  nixpkgs 26.05 has 3.0.20. See nyx-packages `docs/compatibility.md`. They're blocked
+  on a small upstream change in nyx-core, whatever their class below.
+- Calendar, Contacts, Clipboard, Mail and Reminders lock two nyx-core revisions
+  (`52cba5e` and `9dc1962`) at once. That builds, but aligning on one is cleaner.
+- Outside Glimpse and Assistant, Omarchy ties in Rust are mostly the default
+  `ThemeMode::Omarchy` in `nyx-theme`. A NyxOS theme source in nyx-design fixes them
+  all at once.
+- None use libadwaita. Every GTK app needs only the GTK 4 stack plus the extras listed.
+
+### Not separate packages
+
+| Directory | What it is |
+| --- | --- |
+| `nyx-assistant-auth` | Worktree of `nyx-assistant` (branch `secrets-through-broker`) |
+| `nyx-passwords-face` | Worktree of `nyx-passwords` (branch `face-unlock`) |
+| `nyx-passwords-ssh-ext` | Branch `extension-ssh-keys` of `nyx-passwords`, no directory |
+| `nyx-glimpse-protected` | A copy of Glimpse (see `nyx-glimpse` above) |
+| `nyx-integration-audit` | Markdown and JSON reports, no code |
+
+### Applications
+
+| Repository | Class | Extra native deps | Runtime tools to wrap | Notes |
+| --- | --- | --- | --- | --- |
+| `nyx-notepad` | 1 | none | none | Simplest build in the set |
+| `nyx-calculator` | 1 | bundled SQLite | `hyprctl` (optional) | |
+| `nyx-archive` | 1 | none | `7zz` | |
+| `nyx-pdf` | 1 | poppler-glib 24.12+ (nixpkgs 26.10) | `xdg-open` | Pulls in nyx-share crates |
+| `nyx-news` | 1 | bundled SQLite | `xdg-open` | Pulls in nyx-glimpse SDK |
+| `nyx-office` | 1 | gtksourceview5, libspelling | `qpdf` | 43k lines, 129 tests |
+| `nyx-contacts` | 1 | libical-glib | none | Blocked on libical 4 |
+| `nyx-maps` | 1 | libshumate 1.7+ | none | Blocked: nixpkgs has libshumate 1.6.3 |
+| `nyx-git` | 2 | gtksourceview5 | `git`, `ssh`, `secret-tool` | |
+| `nyx-music` | 2 | GStreamer plugin sets | `notify-send` | |
+| `nyx-media-player` | 2 | libmpv | `ffmpeg`, `yt-dlp` | |
+| `nyx-theater` | 2 | libmpv | `secret-tool` | |
+| `nyx-photos` | 2 | none | `ffmpeg`, `ffmpegthumbnailer` | "Set as background" calls `omarchy-theme-bg-set` |
+| `nyx-home` | 2 | OpenSSL (native-tls) | `wpctl`, `secret-tool` | Unit and D-Bus files templated with `@BINDIR@` |
+| `nyx-share` | 2 | none | `wl-copy`, `tailscale`, `bwrap` | Shared service; sandbox sets `PATH=/usr/bin` |
+| `nyx-transfer` | 2 | none | `rclone`, `ssh-keygen` | D-Bus service |
+| `nyx-cloud` | 2 | none (no GTK) | `rclone`, `fusermount3` | Needs the setuid `fusermount3` wrapper |
+| `nyx-clipboard` | 2 | gtk4-layer-shell | `wtype` | Daemon, D-Bus service |
+| `nyx-chat` | 2 | none | `llama-server` | Replace its llama.cpp installer with nixpkgs `llama-cpp` |
+| `nyx-activity` | 2 | none | `nvidia-smi` | Reads `/usr/share/hwdata/pci.ids` and Omarchy autostart |
+| `nyx-containers` | 2 | vte4, gtksourceview5 | `docker`, `incus` | Fix-it hints use pacman; should point to NixOS options |
+| `nyx-torrents` | 2 | libtorrent-rasterbar 2, Boost | `python3` | C++ shim via cxx |
+| `nyx-weather` | 2 | none | `hyprctl` | Bar widget targets the Omarchy shell |
+| `nyx-calendar` | 2 | libical-glib | `systemctl` | Blocked on libical 4 |
+| `nyx-reminders` | 2 | libical-glib | `systemctl` | Blocked on libical 4 |
+| `nyx-mail` | 3 | WebKitGTK 6.0 2.50+ (nixpkgs 2.54) | `systemctl` | Six Git dependencies; daemon unit path |
+| `nyx-capture` | 3 | gtk4-layer-shell, onnxruntime | `grim`, `slurp`, `ffmpeg`, `tesseract` | `ort` downloads binaries at build time; needs `omasnap` |
+| `nyx-passwords` | 3 | aws-lc | `pkcheck`, `secret-tool` | Polkit action, browser native-messaging hosts, root broker |
+| `nyx-pulse` | 3 | libclang, TDLib, libntgcalls | `python3`, `ffmpeg` | Downloads prebuilt libraries; hardcoded `/usr` paths |
+| `nyx-assistant` | 3 | llama.cpp, whisper, sherpa-onnx, onnxruntime, PipeWire | many | pacman tools, Omarchy crate, root helper, Quickshell HUD |
+
+### Packaging order
+
+1. No blockers, no services: notepad, calculator, archive, pdf, news, office.
+2. Wrappers only: git, music, media-player, theater, photos.
+3. Services (needs a shared helper for unit and D-Bus files): share, transfer, cloud,
+   clipboard, home, chat.
+4. After the libical change in nyx-core: contacts, calendar, reminders. Maps after
+   libshumate 1.7 reaches nixpkgs, or with an overlay.
+5. Need NixOS modules, not just packages: mail, capture, passwords, pulse, assistant,
+   and the Omarchy-coupled shell pieces (dock, control center, notifications, glimpse).
