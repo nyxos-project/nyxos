@@ -19,6 +19,9 @@ in
         "@wheel"
       ];
       auto-optimise-store = true;
+      # Nyx packages built by CI.
+      extra-substituters = [ "https://nyxos.cachix.org" ];
+      extra-trusted-public-keys = [ "nyxos.cachix.org-1:Kq51mQ7B9BhkeatzFfCiIkz6FoeaRFkLFtpkK2iJMPQ=" ];
     };
     registry.nixpkgs.flake = inputs.nixpkgs;
     nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
