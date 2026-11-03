@@ -305,11 +305,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793700571,
-        "narHash": "sha256-/5/dHVyluMbpk7gHBXzJrFHMFsgibjTGBjy1b+84ml4=",
+        "lastModified": 1793704760,
+        "narHash": "sha256-Zh8gE1fX2ltiwJP/cXzdCnoZUfg9xHaEpInxMv75lBw=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "32f557e8923bf6c8515936f2f6b4fa9769aebcb6",
+        "rev": "ecd2f01d74a73c1c7454378b6ded769506002d3f",
         "type": "github"
       },
       "original": {
