@@ -50,6 +50,12 @@
 
       checks.${system} = {
         incus-dev = self.nixosConfigurations.incus-dev.config.system.build.toplevel;
+        catalog = import ./checks/catalog.nix {
+          inherit pkgs;
+          inherit (nixpkgs) lib;
+          catalog = inputs.nyx-packages.lib.catalog;
+          nixos = self.nixosConfigurations.incus-dev;
+        };
         inherit (self.packages.${system}) nyx-cli;
       };
 

@@ -18,6 +18,8 @@ let
   services = o.services or { };
   service = name: lib.mkIf (services ? ${name}) (over services.${name});
   themes = o.theme or { };
+  # Unfree packages the administrator accepted, by package name.
+  unfree = map (attr: lib.last (lib.splitString "." attr)) (o.unfree or [ ]);
   theme = name: lib.mkIf (themes ? ${name}) (over themes.${name});
   package =
     attr:
@@ -65,6 +67,19 @@ in
     services.tailscale.enable = service "tailscale";
     services.fwupd.enable = service "fwupd";
     services.avahi.enable = service "avahi";
+    virtualisation.podman.enable = service "podman";
+    virtualisation.incus.enable = service "incus";
+    # Incus's firewall rules need nftables.
+    networking.nftables.enable = lib.mkIf (services.incus or false) (over true);
+    virtualisation.libvirtd.enable = service "libvirtd";
+    services.ollama.enable = service "ollama";
+
+    nixpkgs.config.allowUnfreePredicate = lib.mkIf (unfree != [ ]) (pkg: lib.elem (lib.getName pkg) unfree);
+
+    # Nyx apps turned on or off; a name nyx-packages doesn't have fails the build.
+    nyx = lib.mapAttrs (_: on: { enable = over on; }) (o.nyxApps or { });
+
+    users.groups = lib.mapAttrs (_: users: { members = users; }) (o.groups or { });
 
     nyxos.theme = {
       system = theme "system";

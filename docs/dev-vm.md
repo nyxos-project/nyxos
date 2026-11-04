@@ -101,7 +101,8 @@ NYX_PACKAGES=~/Projects/nyx-packages scripts/dev-vm rebuild
 ```
 
 With `NYX_PACKAGES` set, `flake.lock` isn't copied back, so the override never ends
-up pinned.
+up pinned. Add `NYX_SYSTEM=~/Projects/nyx-system` to also build nyx-packages against a
+local nyx-system (the System Manager and the software catalog).
 
 ## Log in
 

@@ -14,6 +14,9 @@ flake_dir=/etc/nyxos/flake
 # the revision pinned in flake.lock.
 packages_repo=${NYX_PACKAGES:-}
 packages_dir=/etc/nyxos/nyx-packages
+# A local nyx-system checkout (the System Manager and the catalog), used with NYX_PACKAGES.
+system_repo=${NYX_SYSTEM:-}
+system_dir=/etc/nyxos/nyx-system
 vm_path=/run/wrappers/bin:/run/current-system/sw/bin
 
 usage() {
@@ -59,7 +62,7 @@ vm_ip() {
 push_tree() {
   vm_exec rm -rf "$2"
   vm_exec mkdir -p "$2"
-  tar -C "$1" --exclude=.git --exclude='result*' -cf - . | vm_exec tar -C "$2" -xf -
+  tar -C "$1" --exclude=.git --exclude='result*' --exclude=./target -cf - . | vm_exec tar -C "$2" -xf -
 }
 
 # Copies lock files Nix wrote in the VM back to the checkout they belong to.
@@ -76,6 +79,10 @@ sync() {
   if [[ -n $packages_repo ]]; then
     push_tree "$packages_repo" "$packages_dir"
     override_args=(--override-input nyx-packages "path:$packages_dir")
+    if [[ -n $system_repo ]]; then
+      push_tree "$system_repo" "$system_dir"
+      override_args+=(--override-input nyx-packages/nyx-system "path:$system_dir")
+    fi
   fi
   # What the Nyx System Manager set on the VM (its overrides layer) stays set.
   if vm_exec test -d /etc/nyxos/overrides; then

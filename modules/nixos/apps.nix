@@ -20,6 +20,12 @@ in
     notepad.enable = lib.mkDefault true;
     calculator.enable = lib.mkDefault true;
     archive.enable = lib.mkDefault true;
+    files.enable = lib.mkDefault true;
+    capture.enable = lib.mkDefault true;
+    photos.enable = lib.mkDefault true;
+    activity.enable = lib.mkDefault true;
+    backup.enable = lib.mkDefault true;
+    share.enable = lib.mkDefault true;
     # The desktop shell.
     bar.enable = lib.mkDefault true;
     glimpse.enable = lib.mkDefault true;
