@@ -86,7 +86,8 @@ in
     services.greetd = {
       enable = true;
       settings = {
-        default_session.command = "${lib.getExe' config.programs.hyprland.package "Hyprland"} --config ${greeterSession}";
+        # start-hyprland is the watchdog Hyprland expects (it warns on screen without it).
+        default_session.command = "${lib.getExe' config.programs.hyprland.package "start-hyprland"} -- --config ${greeterSession}";
         initial_session = lib.mkIf cfg.autoLogin {
           user = config.nyxos.user.name;
           command = session;
