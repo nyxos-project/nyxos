@@ -537,6 +537,7 @@
         "nyx-notepad": "nyx-notepad",
         "nyx-notes": "nyx-notes",
         "nyx-office": "nyx-office",
+        "nyx-passwords": "nyx-passwords",
         "nyx-pdf": "nyx-pdf",
         "nyx-photos": "nyx-photos",
         "nyx-reminders": "nyx-reminders",
@@ -548,16 +549,32 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793749955,
-        "narHash": "sha256-xN+sLaaomMkpOYnOGcm0thP4U9AHoqIyrt1/3vaT3UU=",
+        "lastModified": 1793751882,
+        "narHash": "sha256-DDHOGZYqbfpONrS8u2GPjVlGeKdTK+2hGWr5Z3w6QUI=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "4635cc888cb41ca17d1d1ff34ff164f57f79c89d",
+        "rev": "d856f1950756ea0d5a8386540885d5e9d0b65de9",
         "type": "github"
       },
       "original": {
         "owner": "nyxos-project",
         "repo": "nyx-packages",
+        "type": "github"
+      }
+    },
+    "nyx-passwords": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793750501,
+        "narHash": "sha256-aiA0HlV1VL7utngGykdX0CUObEl5DsWvuZhB4wdOdfs=",
+        "owner": "design-nexus",
+        "repo": "nyx-passwords",
+        "rev": "3eefb911f37f93bd0fb48e5b9a7c648cfe4f9b01",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-passwords",
         "type": "github"
       }
     },
