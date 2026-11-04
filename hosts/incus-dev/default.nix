@@ -54,6 +54,7 @@
     capture.enable = true;
     passwords.enable = true;
     pulse.enable = true;
+    assistant.enable = true;
   };
 
   # Rust builds take about 1 GiB per rustc; 6 jobs of 6 threads each overran 8 GiB.

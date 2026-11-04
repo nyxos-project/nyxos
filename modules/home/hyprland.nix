@@ -1,6 +1,11 @@
 # Temporary minimal Hyprland session until Nyx Bar, Dock and the rest of the shell
 # are packaged. Hyprland itself comes from the NixOS module (programs.hyprland).
-{ theme, ... }:
+{
+  lib,
+  osConfig,
+  theme,
+  ...
+}:
 let
   c = theme.colors;
 in
@@ -79,5 +84,20 @@ in
 
     hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true })
     hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
+  ''
+  # Hold Alt+Space to talk to the Assistant (the repeating bind is the hold signal);
+  # Super+Shift+Escape stops everything it is doing.
+  + lib.optionalString osConfig.nyx.assistant.enable ''
+
+    hl.bind("ALT + SPACE", hl.dsp.exec_cmd("nyx-assistant ptt-start"), { repeating = true, description = "Assistant PTT" })
+    hl.bind("SUPER + SHIFT + Escape", hl.dsp.exec_cmd("nyx-assistant cancel"), { description = "Assistant stop" })
+    hl.window_rule({
+      name = "nyx-assistant-canvas",
+      match = { class = "^io\\.github\\.design_nexus\\.nyx\\.assistant\\.visual$", initial_title = "^Canvas$" },
+      float = true,
+      center = true,
+      size = { 820, 620 },
+      no_initial_focus = true,
+    })
   '';
 }
