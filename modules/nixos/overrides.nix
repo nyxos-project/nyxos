@@ -83,6 +83,17 @@ in
 
     users.groups = lib.mapAttrs (_: users: { members = users; }) (o.groups or { });
 
+    # Accounts NyxOS made (their passwords are set apart, never in the configuration),
+    # and full names for accounts declared elsewhere.
+    users.users = lib.mkMerge [
+      (lib.mapAttrs (_: p: {
+        isNormalUser = true;
+        description = p.fullName;
+        extraGroups = lib.optional (p.admin or false) "wheel";
+      }) (o.people or { }))
+      (lib.mapAttrs (_: name: { description = over name; }) (o.fullNames or { }))
+    ];
+
     networking.firewall = {
       enable = lib.mkIf (firewall ? enabled) (over firewall.enabled);
       allowedTCPPorts = firewall.tcp or [ ];
