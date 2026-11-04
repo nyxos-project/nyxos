@@ -36,7 +36,10 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
-      packages.${system}.nyx-cli = pkgs.callPackage ./pkgs/nyx-cli { };
+      packages.${system} = {
+        nyx-cli = pkgs.callPackage ./pkgs/nyx-cli { };
+        iso = self.nixosConfigurations.iso.config.system.build.isoImage;
+      };
 
       nixosModules = {
         nyxos = ./modules/nixos;
@@ -64,6 +67,12 @@
       templates.host = {
         path = ./templates/host;
         description = "An installed NyxOS machine's flake (the installer fills it in)";
+      };
+
+      # The live USB: nix build .#iso
+      nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        modules = [ ./iso ];
       };
 
       nixosConfigurations.incus-dev = nixpkgs.lib.nixosSystem {
