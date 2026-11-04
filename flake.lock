@@ -540,6 +540,7 @@
         "nyx-passwords": "nyx-passwords",
         "nyx-pdf": "nyx-pdf",
         "nyx-photos": "nyx-photos",
+        "nyx-pulse": "nyx-pulse",
         "nyx-reminders": "nyx-reminders",
         "nyx-share": "nyx-share",
         "nyx-theater": "nyx-theater",
@@ -549,11 +550,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793751882,
-        "narHash": "sha256-DDHOGZYqbfpONrS8u2GPjVlGeKdTK+2hGWr5Z3w6QUI=",
+        "lastModified": 1793754810,
+        "narHash": "sha256-8E7Pp5U0jXxz+ukrqIr2NtCtmpFw96DaCp0U8RQ5awk=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "d856f1950756ea0d5a8386540885d5e9d0b65de9",
+        "rev": "2327bc0ff6aab5de3d400c7da00212aa641e5e4f",
         "type": "github"
       },
       "original": {
@@ -607,6 +608,22 @@
       "original": {
         "owner": "design-nexus",
         "repo": "nyx-photos",
+        "type": "github"
+      }
+    },
+    "nyx-pulse": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793752337,
+        "narHash": "sha256-4I++sYII7LdIu4yD2lqQIhUa35Vg4Fz14Rx5Gdj9F5o=",
+        "owner": "design-nexus",
+        "repo": "nyx-pulse",
+        "rev": "2632da86b5cc0f6e6618cb8802ed129c1a6798c4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-pulse",
         "type": "github"
       }
     },
