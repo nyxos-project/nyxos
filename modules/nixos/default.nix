@@ -23,6 +23,7 @@ in
     ./overrides.nix
     ./recovery.nix
     ./snapshots.nix
+    ./security.nix
   ];
 
   options.nyxos.user = {

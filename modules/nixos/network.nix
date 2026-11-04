@@ -6,8 +6,9 @@
     firewall.enable = true;
   };
 
+  # Off unless a host or Settings (Services) turns it on; keys only, never root.
   services.openssh = {
-    enable = true;
+    enable = lib.mkDefault false;
     startWhenNeeded = false;
     openFirewall = true;
     settings = {

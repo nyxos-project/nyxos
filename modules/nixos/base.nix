@@ -18,10 +18,6 @@ in
         "nix-command"
         "flakes"
       ];
-      trusted-users = [
-        "root"
-        "@wheel"
-      ];
       auto-optimise-store = true;
       # Nyx packages built by CI.
       extra-substituters = [ "https://nyxos.cachix.org" ];
