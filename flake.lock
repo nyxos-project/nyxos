@@ -1,5 +1,45 @@
 {
   "nodes": {
+    "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "gaze": {
+      "inputs": {
+        "nixpkgs": [
+          "nyx-packages",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793483371,
+        "narHash": "sha256-3qLVIRJGr4yYA6PnkDA5sh77bCn1RHA4Wt+jqPk3fEs=",
+        "owner": "GunduLabs",
+        "repo": "gaze",
+        "rev": "3cfe392471f17c9ed4d40efa1d4bfc8765fb39a6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "GunduLabs",
+        "ref": "v0.4.2",
+        "repo": "gaze",
+        "type": "github"
+      }
+    },
     "herdr": {
       "inputs": {
         "nixpkgs": "nixpkgs",
@@ -38,6 +78,33 @@
         "owner": "nix-community",
         "ref": "release-26.05",
         "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "irlume": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nyx-packages",
+          "nixpkgs"
+        ],
+        "rust-overlay": [
+          "nyx-packages",
+          "rust-overlay"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790691315,
+        "narHash": "sha256-FlEspuFBgrdvfzMvi9oyxFGzJ/CBGjm7s4sh+R9rKe4=",
+        "owner": "archledger",
+        "repo": "irlume",
+        "rev": "4288677fb32fb1c09dd844c83f37e0be453d1daa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "archledger",
+        "ref": "v0.15.0",
+        "repo": "irlume",
         "type": "github"
       }
     },
@@ -140,11 +207,11 @@
     "nyx-assistant": {
       "flake": false,
       "locked": {
-        "lastModified": 1793755845,
-        "narHash": "sha256-2piUUNuLETYL/KseQ4c16ypBqPRkInTPnQO8lamQVVo=",
+        "lastModified": 1793766437,
+        "narHash": "sha256-q2x7K3na4mCGpCWjFRyip3chjc2rQOzi9dM0K0foQb4=",
         "owner": "design-nexus",
         "repo": "nyx-assistant",
-        "rev": "19cef10bd1b4a66381b306f7b9eae3804dec1029",
+        "rev": "c10037b923659f64a195ce96f4de4b5c4155208b",
         "type": "github"
       },
       "original": {
@@ -182,6 +249,22 @@
       "original": {
         "owner": "design-nexus",
         "repo": "nyx-bar",
+        "type": "github"
+      }
+    },
+    "nyx-biometrics": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793765552,
+        "narHash": "sha256-v9LsrI4Ncp7HW/4Riwf3+bxlWSYsTNb23BwnnegfJJo=",
+        "owner": "design-nexus",
+        "repo": "nyx-biometrics",
+        "rev": "5011c09b1482440247427a85db1f95b35b9b0e52",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-biometrics",
         "type": "github"
       }
     },
@@ -603,6 +686,8 @@
     },
     "nyx-packages": {
       "inputs": {
+        "gaze": "gaze",
+        "irlume": "irlume",
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -613,6 +698,7 @@
         "nyx-assistant": "nyx-assistant",
         "nyx-backup": "nyx-backup",
         "nyx-bar": "nyx-bar",
+        "nyx-biometrics": "nyx-biometrics",
         "nyx-calculator": "nyx-calculator",
         "nyx-calendar": "nyx-calendar",
         "nyx-capture": "nyx-capture",
@@ -652,11 +738,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793763696,
-        "narHash": "sha256-svtTfTqXZazMEiIttn4MKOvs05KEm5Zk7RC8Y5I1WfU=",
+        "lastModified": 1793767283,
+        "narHash": "sha256-hM9+TLSMGhBQIEkc6JAhX2+UNy6renvdJfBtUQInSpA=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "9a739d7e83e4880eb4509890cebea1c2ead6cd0f",
+        "rev": "f36965138ba4eccaefa9956bba3886c703ecf4e4",
         "type": "github"
       },
       "original": {
@@ -668,11 +754,11 @@
     "nyx-passwords": {
       "flake": false,
       "locked": {
-        "lastModified": 1793750501,
-        "narHash": "sha256-aiA0HlV1VL7utngGykdX0CUObEl5DsWvuZhB4wdOdfs=",
+        "lastModified": 1793766700,
+        "narHash": "sha256-h1PVwQqwdpv0AyMUTDpYXog+rGsN8XAvWhVg3HURxDU=",
         "owner": "design-nexus",
         "repo": "nyx-passwords",
-        "rev": "3eefb911f37f93bd0fb48e5b9a7c648cfe4f9b01",
+        "rev": "71ed8b12e0cf27bbfb7097835af0a9433808fca5",
         "type": "github"
       },
       "original": {
@@ -872,6 +958,21 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
         "type": "github"
       }
     }

@@ -55,6 +55,16 @@
     passwords.enable = true;
     pulse.enable = true;
     assistant.enable = true;
+    # No camera or reader in the VM: both methods stand aside and the password works.
+    biometrics = {
+      enable = true;
+      face = "irlume";
+      fingerprint.enable = true;
+      surfaces.sudo = [
+        "face"
+        "fingerprint"
+      ];
+    };
   };
 
   # Rust builds take about 1 GiB per rustc; 6 jobs of 6 threads each overran 8 GiB.
