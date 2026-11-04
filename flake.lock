@@ -733,6 +733,7 @@
         "nyx-settings": "nyx-settings",
         "nyx-share": "nyx-share",
         "nyx-store": "nyx-store",
+        "nyx-switcher": "nyx-switcher",
         "nyx-system": "nyx-system",
         "nyx-theater": "nyx-theater",
         "nyx-torrents": "nyx-torrents",
@@ -742,11 +743,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793773986,
-        "narHash": "sha256-yFTBopfOxCQDJXD3e2qcFrQDHVNDdM6wvq+liVpmWh0=",
+        "lastModified": 1793791837,
+        "narHash": "sha256-RlIAwzdV5JFJ6Gc1LprG1Lt6ojKrgcllhlyE0D6njXA=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "f9496bfc9a4c18cb65d91db9b808c98e58aff622",
+        "rev": "f971621b8463cb670855fd5447e787cc8a128bbf",
         "type": "github"
       },
       "original": {
@@ -880,6 +881,22 @@
       "original": {
         "owner": "design-nexus",
         "repo": "nyx-store",
+        "type": "github"
+      }
+    },
+    "nyx-switcher": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793791541,
+        "narHash": "sha256-e02CZMBiuuTbmW9Q70gFtMYOCrT3ymh9BcTcRnxh6so=",
+        "owner": "design-nexus",
+        "repo": "nyx-switcher",
+        "rev": "07fb2022d52be6392cae1b113c39213f8c6a7a57",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-switcher",
         "type": "github"
       }
     },
