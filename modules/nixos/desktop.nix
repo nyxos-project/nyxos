@@ -8,11 +8,23 @@
 let
   cfg = config.nyxos.desktop;
   session = "uwsm start hyprland-uwsm.desktop";
+  nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
+  greeter = nyxPkgs.nyx-greeter;
+  loginTheme = config.nyxos.theme.login;
+  # The greeter's session with this computer's keyboard, and hyprctl found without PATH.
+  greeterSession = pkgs.runCommand "nyx-greeter-hyprland.lua" { } ''
+    sed -e 's/kb_layout = "us"/kb_layout = "${config.services.xserver.xkb.layout}"/' \
+      -e 's|; hyprctl eval|; ${config.programs.hyprland.package}/bin/hyprctl eval|' \
+      ${greeter}/share/nyx-greeter/hyprland.lua > $out
+  '';
 in
 {
   options.nyxos.desktop.autoLogin = lib.mkEnableOption "logging the primary user straight into Hyprland at boot";
 
   config = {
+    # The lock screen (its PAM service); the user's config is in modules/home/lock.nix.
+    programs.hyprlock.enable = lib.mkDefault true;
+
     programs.hyprland = {
       enable = true;
       withUWSM = true;
@@ -55,11 +67,25 @@ in
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-    # Temporary login path until Nyx Greeter exists.
+    environment.etc."nyx-greeter/config.toml".text = ''
+      theme = "${loginTheme}"
+      ${lib.optionalString (nyxPkgs.nyx-wallpapers.passthru.defaults ? ${loginTheme}) ''wallpaper = "${nyxPkgs.nyx-wallpapers.passthru.defaults.${loginTheme}}"''}
+      mark = "${greeter}/share/nyx-greeter/mark.png"
+      default_session = "hyprland-uwsm"
+    '';
+    # Who signed in last, and with which session.
+    systemd.tmpfiles.rules = [ "d /var/cache/nyx-greeter 0755 greeter greeter -" ];
+    # A home of its own, for GTK's and fontconfig's caches (greetd gives it /var/empty).
+    users.users.greeter = {
+      home = "/var/lib/nyx-greeter";
+      createHome = true;
+    };
+
+    # Nyx Greeter, in its own bare Hyprland session, in the login theme.
     services.greetd = {
       enable = true;
       settings = {
-        default_session.command = "${lib.getExe pkgs.tuigreet} --time --remember --cmd '${session}'";
+        default_session.command = "${lib.getExe' config.programs.hyprland.package "Hyprland"} --config ${greeterSession}";
         initial_session = lib.mkIf cfg.autoLogin {
           user = config.nyxos.user.name;
           command = session;

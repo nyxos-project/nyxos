@@ -48,6 +48,8 @@ in
         disable_splash_rendering = true,
         force_default_wallpaper = 0,
         background_color = "rgb(${c.bg})",
+        -- If the lock screen stops, the session stays locked and a new one can take over.
+        allow_session_lock_restore = true,
       },
 
       ecosystem = {
@@ -65,6 +67,7 @@ in
     hl.bind("SUPER + T", hl.dsp.window.float({ action = "toggle" }))
     hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
     hl.bind("SUPER + SHIFT + E", hl.dsp.exec_cmd("uwsm stop"))
+    hl.bind("SUPER + CTRL + L", hl.dsp.exec_cmd("loginctl lock-session"), { description = "Lock" })
 
     hl.bind("SUPER + LEFT", hl.dsp.focus({ direction = "l" }))
     hl.bind("SUPER + RIGHT", hl.dsp.focus({ direction = "r" }))

@@ -7,6 +7,7 @@
     ./helix.nix
     ./herdr.nix
     ./hyprland.nix
+    ./lock.nix
   ];
 
   _module.args.theme = import ../../themes/nyx-dark.nix;

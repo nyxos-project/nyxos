@@ -15,7 +15,7 @@ in
   # first terminal opens.
   home.activation.nyxTheme = lib.mkIf osConfig.nyx.themes.enable (
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      if [ ! -e "${config.xdg.configHome}/foot/nyx-theme.ini" ]; then
+      if [ ! -e "${config.xdg.configHome}/foot/nyx-theme.ini" ] || [ ! -e "${config.xdg.configHome}/hypr/nyx-hyprlock.conf" ]; then
         run ${nyxPkgs.nyx-system}/bin/nyx-themed --once || true
       fi
     ''
