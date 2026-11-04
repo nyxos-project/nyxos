@@ -22,6 +22,12 @@ Nyx repositories.
 | `pkgs/nyx-cli` | The `nyx` command on NyxOS |
 | `scripts/dev-vm` | Create, rebuild, snapshot and inspect the VM |
 
+## Channels
+
+- `main`: development; every change lands here first.
+- `stable`: the last known-good state (`known-good/<n>` tags), with nyx-packages pinned at
+  its own `stable`. Follow it with `github:nyxos-project/nyxos/stable`.
+
 ## Configuration layers
 
 1. Distribution defaults: this flake.
