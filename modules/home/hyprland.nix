@@ -73,14 +73,24 @@ in
 
     for workspace = 1, 10 do
       local key = "code:" .. tostring(workspace + 9)
-      hl.bind("SUPER + " .. key, hl.dsp.focus({ workspace = tostring(workspace) }))
-      hl.bind("SUPER + SHIFT + " .. key, hl.dsp.window.move({ workspace = tostring(workspace) }))
+      local name = tostring(workspace)
+      hl.bind("SUPER + " .. key, hl.dsp.focus({ workspace = name }), { description = "Switch to workspace " .. name })
+      hl.bind("SUPER + SHIFT + " .. key, hl.dsp.window.move({ workspace = name }), { description = "Move window to workspace " .. name })
+      hl.bind("SUPER + SHIFT + ALT + " .. key, hl.dsp.window.move({ workspace = name, follow = false }), { description = "Move window silently to workspace " .. name })
     end
 
-    hl.bind("SUPER + TAB", hl.dsp.focus({ workspace = "e+1" }))
-    hl.bind("SUPER + SHIFT + TAB", hl.dsp.focus({ workspace = "e-1" }))
+    -- Switcher takes Super+Tab when it runs (it replaces these by their descriptions);
+    -- Super+Ctrl+arrows and Super+Ctrl+Tab stay.
+    hl.bind("SUPER + TAB", hl.dsp.focus({ workspace = "m+1" }), { description = "Next workspace" })
+    hl.bind("SUPER + SHIFT + TAB", hl.dsp.focus({ workspace = "m-1" }), { description = "Previous workspace" })
+    hl.bind("SUPER + CTRL + RIGHT", hl.dsp.focus({ workspace = "m+1" }), { description = "Next workspace" })
+    hl.bind("SUPER + CTRL + LEFT", hl.dsp.focus({ workspace = "m-1" }), { description = "Previous workspace" })
+    hl.bind("SUPER + CTRL + TAB", hl.dsp.focus({ workspace = "previous_per_monitor" }), { description = "Former workspace" })
     hl.bind("SUPER + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
     hl.bind("SUPER + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
+
+    hl.bind("SUPER + S", hl.dsp.workspace.toggle_special("scratchpad"), { description = "Toggle scratchpad" })
+    hl.bind("SUPER + ALT + S", hl.dsp.window.move({ workspace = "special:scratchpad", follow = false }), { description = "Move window to scratchpad" })
 
     hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true })
     hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
@@ -103,6 +113,15 @@ in
       size = { 820, 620 },
       no_initial_focus = true,
     })
+  ''
+  # Switcher's shortcuts, which it writes from its settings.
+  + lib.optionalString osConfig.nyx.switcher.enable ''
+
+    local nyx_switcher = io.open((os.getenv("HOME") or "") .. "/.config/hypr/nyx-switcher.lua")
+    if nyx_switcher then
+      nyx_switcher:close()
+      dofile((os.getenv("HOME") or "") .. "/.config/hypr/nyx-switcher.lua")
+    end
   ''
   # The user's Nyx theme (written by nyx-themed), then the values set in Nyx Settings,
   # last so they win; Settings looks for its require line.

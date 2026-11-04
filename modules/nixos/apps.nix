@@ -26,6 +26,7 @@ in
     notification-center.enable = lib.mkDefault true;
     dock.enable = lib.mkDefault true;
     control-center.enable = lib.mkDefault true;
+    switcher.enable = lib.mkDefault true;
     settings.enable = lib.mkDefault true;
     wallpapers.enable = lib.mkDefault true;
     store.enable = lib.mkDefault true;
