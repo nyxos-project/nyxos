@@ -43,6 +43,7 @@ in
       flake = lib.mkDefault "/etc/nyxos/flake";
     };
     themes.enable = lib.mkDefault true;
+    locker.enable = lib.mkDefault true;
   };
 
   # Without a suite theme file Nyx apps fall back to Omarchy's theme, then Tokyo Night.

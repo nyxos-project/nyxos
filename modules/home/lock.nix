@@ -1,16 +1,35 @@
-# The lock screen, for now hyprlock: the clock, the date and the password (and a
-# fingerprint when there's a reader), in the lock-screen theme's colours and wallpaper
-# (nyx-themed writes ~/.config/hypr/nyx-hyprlock.conf). No notifications. hypridle
-# locks after five idle minutes and before the computer sleeps (which waits for the
-# lock). hyprlock runs as nyx-lock.service, restarted if it ever crashes; in between,
-# Hyprland keeps the session locked.
+# The lock screen: Nyx Locker (the password, a fingerprint, a face and a security key at
+# once, its indicator in the lock-screen style), or hyprlock where it's off (the clock,
+# the date and the password, and a fingerprint with a reader). Both in the lock-screen
+# theme's colours and wallpaper (nyx-themed writes ~/.config/hypr/nyx-hyprlock.conf);
+# no notifications. hypridle locks after five idle minutes and before the computer
+# sleeps (which waits for the lock). The locker runs as nyx-lock.service, restarted if
+# it ever crashes; in between, Hyprland keeps the session locked.
 {
   lib,
   pkgs,
   osConfig,
   ...
 }:
-lib.mkIf osConfig.programs.hyprlock.enable {
+let
+  hyprlock = lib.getExe pkgs.hyprlock;
+  # Nyx Locker, and hyprlock if it fails for any reason but another lock screen having
+  # the session: a lock screen that can't start must never leave the desktop open.
+  locker =
+    if osConfig.nyx.locker.enable then
+      toString (
+        pkgs.writeShellScript "nyx-lock" ''
+          /run/current-system/sw/bin/nyx-locker
+          rc=$?
+          if [ "$rc" -eq 0 ] || [ "$rc" -eq 3 ]; then exit "$rc"; fi
+          echo "nyx-lock: Nyx Locker stopped ($rc); hyprlock takes over" >&2
+          exec ${hyprlock}
+        ''
+      )
+    else
+      hyprlock;
+in
+lib.mkIf (osConfig.programs.hyprlock.enable || osConfig.nyx.locker.enable) {
   xdg.configFile."hypr/hyprlock.conf".text = ''
     source = ~/.config/hypr/nyx-hyprlock.conf
 
@@ -84,9 +103,11 @@ lib.mkIf osConfig.programs.hyprlock.enable {
       StartLimitIntervalSec = 0;
     };
     Service = {
-      ExecStart = "${lib.getExe pkgs.hyprlock}";
+      ExecStart = locker;
       Restart = "on-failure";
       RestartSec = 0;
+      # Another lock screen already has the session.
+      RestartPreventExitStatus = 3;
     };
   };
 

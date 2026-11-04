@@ -145,6 +145,8 @@ case $cmd in
   shot)
     out=${1:-shot.png}
     uid=$(vm_exec id -u "$user")
+    # A failed capture mustn't leave the last one to be copied instead.
+    vm_exec rm -f /tmp/nyxos-shot.png
     incus exec "$vm" --user "$uid" --env PATH="$vm_path" \
       --env XDG_RUNTIME_DIR="/run/user/$uid" --env WAYLAND_DISPLAY=wayland-1 \
       -- grim /tmp/nyxos-shot.png

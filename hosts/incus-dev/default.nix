@@ -65,6 +65,10 @@
         "face"
         "fingerprint"
       ];
+      surfaces.lock = [
+        "fingerprint"
+        "face"
+      ];
     };
   };
 
