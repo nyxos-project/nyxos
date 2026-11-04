@@ -543,11 +543,11 @@
     "nyx-greeter": {
       "flake": false,
       "locked": {
-        "lastModified": 1793822162,
-        "narHash": "sha256-HHIoAtb5xzOSMJqt9KQUhqnr/GOyLg6C1Qy/wFB3Dq8=",
+        "lastModified": 1793825457,
+        "narHash": "sha256-/rGcJxxj5Ww2+EEYmO0We8AToNG6eHq+3KVwOqB4WzM=",
         "owner": "nyxos-project",
         "repo": "nyx-greeter",
-        "rev": "fc9c5a4ccb2f68d69889f152ee56728bad32b7ba",
+        "rev": "ee0bf555e88da691dbd460e068c9192099c7e12c",
         "type": "github"
       },
       "original": {
@@ -779,11 +779,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793824461,
-        "narHash": "sha256-jTdDBBmvUdvkTMfd3Rr1u6NlgBQclY92bACuIA4qASY=",
+        "lastModified": 1793825463,
+        "narHash": "sha256-eyKwzvwg2ouTrb2LcID6RdIIr6MrS4r9Ww3BlZLUedo=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "d62a2c10c941aea5d8027869634cc9f70e08bd6b",
+        "rev": "b8b8d5143d913beee24bacdfdf032e1e18f907d7",
         "type": "github"
       },
       "original": {
