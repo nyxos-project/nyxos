@@ -24,6 +24,7 @@
     dock.enable = lib.mkDefault true;
     control-center.enable = lib.mkDefault true;
     settings.enable = lib.mkDefault true;
+    wallpapers.enable = lib.mkDefault true;
   };
 
   # Without a suite theme file Nyx apps fall back to Omarchy's theme, then Tokyo Night.
