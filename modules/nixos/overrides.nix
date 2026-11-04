@@ -20,6 +20,12 @@ let
   themes = o.theme or { };
   firewall = o.firewall or { };
   power = o.power or { };
+  mounts = o.mounts or { };
+  networkTypes = [
+    "cifs"
+    "nfs"
+    "nfs4"
+  ];
   # Unfree packages the administrator accepted, by package name.
   unfree = map (attr: lib.last (lib.splitString "." attr)) (o.unfree or [ ]);
   theme = name: lib.mkIf (themes ? ${name}) (over themes.${name});
@@ -85,6 +91,19 @@ in
 
     # Accounts NyxOS made (their passwords are set apart, never in the configuration),
     # and full names for accounts declared elsewhere.
+    # Drives and shares mounted at startup; a share's login is kept apart, root only.
+    fileSystems = lib.mapAttrs' (
+      id: m:
+      lib.nameValuePair m.dir {
+        device = if lib.elem m.fsType networkTypes then m.what else "/dev/disk/by-uuid/${m.what}";
+        inherit (m) fsType;
+        options = (m.options or [ ]) ++ lib.optional (m.login or false) "credentials=/etc/nyxos/secrets/mounts/${id}";
+      }
+    ) mounts;
+    boot.supportedFilesystems = lib.genAttrs (lib.unique (
+      map (m: if m.fsType == "nfs4" then "nfs" else m.fsType) (lib.attrValues mounts)
+    )) (_: true);
+
     users.users = lib.mkMerge [
       (lib.mapAttrs (_: p: {
         isNormalUser = true;
