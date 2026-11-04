@@ -18,6 +18,8 @@ let
   services = o.services or { };
   service = name: lib.mkIf (services ? ${name}) (over services.${name});
   themes = o.theme or { };
+  firewall = o.firewall or { };
+  power = o.power or { };
   # Unfree packages the administrator accepted, by package name.
   unfree = map (attr: lib.last (lib.splitString "." attr)) (o.unfree or [ ]);
   theme = name: lib.mkIf (themes ? ${name}) (over themes.${name});
@@ -80,6 +82,15 @@ in
     nyx = lib.mapAttrs (_: on: { enable = over on; }) (o.nyxApps or { });
 
     users.groups = lib.mapAttrs (_: users: { members = users; }) (o.groups or { });
+
+    networking.firewall = {
+      enable = lib.mkIf (firewall ? enabled) (over firewall.enabled);
+      allowedTCPPorts = firewall.tcp or [ ];
+      allowedUDPPorts = firewall.udp or [ ];
+    };
+
+    services.logind.settings.Login = lib.mapAttrs (_: over) (power.login or { });
+    systemd.sleep.settings.Sleep.HibernateDelaySec = lib.mkIf (power ? hibernateDelay) (over power.hibernateDelay);
 
     nyxos.theme = {
       system = theme "system";
