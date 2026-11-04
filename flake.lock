@@ -733,6 +733,7 @@
         "nyx-settings": "nyx-settings",
         "nyx-share": "nyx-share",
         "nyx-store": "nyx-store",
+        "nyx-system": "nyx-system",
         "nyx-theater": "nyx-theater",
         "nyx-torrents": "nyx-torrents",
         "nyx-transfer": "nyx-transfer",
@@ -741,11 +742,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793771921,
-        "narHash": "sha256-KEP9czlOh+009DbnojHVrY8vrN/DWIsQl3/7OcWGHfA=",
+        "lastModified": 1793773986,
+        "narHash": "sha256-yFTBopfOxCQDJXD3e2qcFrQDHVNDdM6wvq+liVpmWh0=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "8182a17b6c8d04a9c4c829b5b237dc2541ab06f3",
+        "rev": "f9496bfc9a4c18cb65d91db9b808c98e58aff622",
         "type": "github"
       },
       "original": {
@@ -882,6 +883,22 @@
         "type": "github"
       }
     },
+    "nyx-system": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793773610,
+        "narHash": "sha256-ZdBK4r7AkQgJ3aaIEphxah8j9BpVD30nKEZuBWtXKg8=",
+        "owner": "nyxos-project",
+        "repo": "nyx-system",
+        "rev": "54706381c3f20739d1e4f95481fc127e6cdeefea",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nyxos-project",
+        "repo": "nyx-system",
+        "type": "github"
+      }
+    },
     "nyx-theater": {
       "flake": false,
       "locked": {
@@ -962,12 +979,25 @@
         "type": "github"
       }
     },
+    "nyxos-overrides": {
+      "flake": false,
+      "locked": {
+        "path": "./overrides",
+        "type": "path"
+      },
+      "original": {
+        "path": "./overrides",
+        "type": "path"
+      },
+      "parent": []
+    },
     "root": {
       "inputs": {
         "herdr": "herdr",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs_2",
-        "nyx-packages": "nyx-packages"
+        "nyx-packages": "nyx-packages",
+        "nyxos-overrides": "nyxos-overrides"
       }
     },
     "rust-overlay": {

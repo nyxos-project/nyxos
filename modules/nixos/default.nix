@@ -19,6 +19,7 @@ in
     ./desktop.nix
     ./shell.nix
     ./packages.nix
+    ./overrides.nix
   ];
 
   options.nyxos.user = {

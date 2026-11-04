@@ -16,6 +16,13 @@
       url = "github:nyxos-project/nyx-packages";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # The system overrides layer (/etc/nyxos/overrides on a system, passed by the Nyx
+    # System Manager); this folder is empty.
+    nyxos-overrides = {
+      url = "path:./overrides";
+      flake = false;
+    };
   };
 
   outputs =

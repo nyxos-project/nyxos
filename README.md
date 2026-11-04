@@ -30,12 +30,29 @@ Nyx repositories.
 
 ## Configuration layers
 
-1. Distribution defaults: this flake.
-2. System overrides: `/etc/nyxos/overrides/` (created, not read yet).
-3. User settings: `~/.config/nyx/` (created, not read yet).
+1. Distribution defaults: this flake, and `/etc/nyxos/defaults/` for user settings.
+2. System overrides: `/etc/nyxos/overrides/`, written by the Nyx System Manager.
+   `system.json` (host name, time zone, locale, keyboard, packages for everyone, the
+   services NyxOS manages, the system, boot and login themes) is the flake's
+   `nyxos-overrides` input; `DOMAIN.toml` files are every user's defaults.
+3. User settings: `~/.config/nyx/`, written by the user's apps.
 
-Later layers win. Updates replace only the first layer. The merge logic arrives with
-the theme and settings services in phase 3.
+Later layers win, key by key. Updates replace only the first layer. Ordinary desktop
+preferences change live; system settings are built and switched to (see below).
+
+## System services
+
+From [nyx-system](https://github.com/nyxos-project/nyx-system):
+
+- **Nyx System Manager**: a root D-Bus service, started on demand, for Settings, Welcome,
+  Store, the `nyx` command and recovery tools. Typed changes only, each kind authorized
+  through polkit and written to the journal; a change is built before it's switched to,
+  and undone if either fails. `nyx system` and `nyx service` drive it.
+- **nyx-themed**: each user's Nyx theme (the one their apps follow) on Hyprland, Foot
+  (and Helix, through the terminal's palette), GTK and the wallpaper, live.
+
+Rollback without it: pick an earlier generation in the boot menu, or
+`sudo nixos-rebuild switch --rollback --flake /etc/nyxos/flake#HOST`.
 
 ## The `nyx` command
 
@@ -57,6 +74,8 @@ current user; anything else goes to `nix` unchanged (`nyx build`, `nyx flake`, �
 A name starting with `nyx-` comes from nyx-packages
 (`github:nyxos-project/nyx-packages#nyx-pdf`); anything with `#` or `:` is used as
 given. `nyx icons …`, `nyx share …` and `nyx plugin …` run the Nyx tools as on Omarchy.
+`nyx system …` and `nyx service NAME on|off|default` go to the Nyx System Manager:
+system settings, packages for everyone, `update`, `generations` and `rollback`.
 
 ## Defaults
 

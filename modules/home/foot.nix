@@ -1,43 +1,37 @@
-{ theme, ... }:
+{
+  config,
+  lib,
+  osConfig,
+  inputs,
+  pkgs,
+  theme,
+  ...
+}:
 let
-  c = theme.colors;
-  s = theme.swatches;
+  nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
 in
 {
+  # Foot reads the theme's colours from a file nyx-themed writes; write it before the
+  # first terminal opens.
+  home.activation.nyxTheme = lib.mkIf osConfig.nyx.themes.enable (
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      if [ ! -e "${config.xdg.configHome}/foot/nyx-theme.ini" ]; then
+        run ${nyxPkgs.nyx-system}/bin/nyx-themed --once || true
+      fi
+    ''
+  );
+
   programs.foot = {
     enable = true;
     settings = {
       main = {
         font = "${theme.font.mono}:size=11";
         pad = "12x12";
+        # The user's Nyx theme's colours, from nyx-themed.
+        include = "${config.xdg.configHome}/foot/nyx-theme.ini";
       };
       scrollback.lines = 10000;
       mouse.hide-when-typing = "yes";
-      colors-dark = {
-        background = c.bg;
-        foreground = c.text;
-        selection-background = c.border;
-        selection-foreground = c.text;
-        cursor = "${c.bg} ${c.accent}";
-
-        regular0 = c.surface;
-        regular1 = s.red;
-        regular2 = s.green;
-        regular3 = s.amber;
-        regular4 = s.blue;
-        regular5 = s.violet;
-        regular6 = s.teal;
-        regular7 = s.graphite;
-
-        bright0 = c.tertiaryText;
-        bright1 = s.coral;
-        bright2 = s.green;
-        bright3 = s.amber;
-        bright4 = s.blue;
-        bright5 = s.pink;
-        bright6 = s.teal;
-        bright7 = c.text;
-      };
     };
   };
 }

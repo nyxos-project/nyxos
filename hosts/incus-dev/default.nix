@@ -24,6 +24,7 @@
 
   # Welcome-tier apps, enabled here to test their packages.
   nyx = {
+    system.host = "incus-dev";
     fonts.enable = true;
     pdf.enable = true;
     news.enable = true;

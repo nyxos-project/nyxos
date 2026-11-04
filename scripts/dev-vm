@@ -77,6 +77,10 @@ sync() {
     push_tree "$packages_repo" "$packages_dir"
     override_args=(--override-input nyx-packages "path:$packages_dir")
   fi
+  # What the Nyx System Manager set on the VM (its overrides layer) stays set.
+  if vm_exec test -d /etc/nyxos/overrides; then
+    override_args+=(--override-input nyxos-overrides path:/etc/nyxos/overrides)
+  fi
 }
 
 rebuild() {

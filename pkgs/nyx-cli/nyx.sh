@@ -16,6 +16,9 @@ nyx clean                 delete old versions to free disk space
 nyx icons …               theme launcher icons (nyx icons --help)
 nyx share FILE…           share through the Share Sheet
 nyx plugin …              bar plugins: list, add, configure, update… (nyx plugin help)
+nyx system …              the system: settings, packages for everyone, update, rollback
+                          (nyx system help)
+nyx service NAME on|off   system services NyxOS manages (nyx system services)
 
 PKG is a package name (firefox), a Nyx app (nyx-pdf) or any flake reference.
 Any other command goes to nix: nyx build, nyx flake, nyx develop…
@@ -87,6 +90,14 @@ case ${1:-} in
     shift
     command -v nyx-share >/dev/null || { echo "Share isn't installed on this system." >&2; exit 1; }
     exec nyx-share "$@" ;;
+  system)
+    shift
+    command -v nyx-system >/dev/null || { echo "The Nyx System Manager isn't installed on this system." >&2; exit 1; }
+    exec nyx-system "$@" ;;
+  service)
+    shift
+    command -v nyx-system >/dev/null || { echo "The Nyx System Manager isn't installed on this system." >&2; exit 1; }
+    exec nyx-system service "$@" ;;
   plugin | plugins)
     shift
     command -v nyx-plugin >/dev/null || { echo "Plugins come with Nyx Bar, which isn't installed on this system." >&2; exit 1; }

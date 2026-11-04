@@ -5,6 +5,9 @@
   inputs,
   ...
 }:
+let
+  nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
+in
 {
   environment.systemPackages = [ inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.nyx-cli ];
 
@@ -26,14 +29,22 @@
     settings.enable = lib.mkDefault true;
     wallpapers.enable = lib.mkDefault true;
     store.enable = lib.mkDefault true;
+    # System services: the System Manager and the theme service.
+    system = {
+      enable = lib.mkDefault true;
+      flake = lib.mkDefault "/etc/nyxos/flake";
+    };
+    themes.enable = lib.mkDefault true;
   };
 
   # Without a suite theme file Nyx apps fall back to Omarchy's theme, then Tokyo Night.
-  # Seed Nyx Dark once; the file stays the user's to change.
+  # Seed the theme a new user starts with (the distribution's, or the administrator's
+  # from the overrides layer) once; the file stays the user's to change.
   system.userActivationScripts.nyx-theme-default = ''
     if [ ! -e "$HOME/.config/nyx/theme.toml" ]; then
+      theme=$(${nyxPkgs.nyx-system}/bin/nyx-system config get appearance theme --below-user || echo nyx-dark)
       mkdir -p "$HOME/.config/nyx"
-      printf 'mode = "theme"\ntheme = "nyx-dark"\n' > "$HOME/.config/nyx/theme.toml"
+      printf 'mode = "theme"\ntheme = "%s"\n' "$theme" > "$HOME/.config/nyx/theme.toml"
     fi
   '';
 }

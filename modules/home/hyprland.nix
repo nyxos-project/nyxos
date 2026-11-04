@@ -38,7 +38,7 @@ in
       },
 
       input = {
-        kb_layout = "us",
+        kb_layout = "${osConfig.services.xserver.xkb.layout}",
         follow_mouse = 1,
         touchpad = { natural_scroll = true },
       },
@@ -103,6 +103,16 @@ in
       size = { 820, 620 },
       no_initial_focus = true,
     })
+  ''
+  # The user's Nyx theme (written by nyx-themed), then the values set in Nyx Settings,
+  # last so they win; Settings looks for its require line.
+  + lib.optionalString osConfig.nyx.themes.enable ''
+
+    local nyx_theme = io.open((os.getenv("HOME") or "") .. "/.config/hypr/nyx-theme.lua")
+    if nyx_theme then
+      nyx_theme:close()
+      dofile((os.getenv("HOME") or "") .. "/.config/hypr/nyx-theme.lua")
+    end
   ''
   # Values set in Nyx Settings, last so they win; Settings looks for this require line.
   + lib.optionalString osConfig.nyx.settings.enable ''
