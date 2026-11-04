@@ -2,9 +2,10 @@
 # once, its indicator in the lock-screen style), or hyprlock where it's off (the clock,
 # the date and the password, and a fingerprint with a reader). Both in the lock-screen
 # theme's colours and wallpaper (nyx-themed writes ~/.config/hypr/nyx-hyprlock.conf);
-# no notifications. hypridle locks after five idle minutes and before the computer
-# sleeps (which waits for the lock). The locker runs as nyx-lock.service, restarted if
-# it ever crashes; in between, Hyprland keeps the session locked.
+# no notifications. hypridle locks, turns the screen off and sleeps after the idle
+# settings' times, and locks before the computer sleeps (which waits for the lock). The
+# locker runs as nyx-lock.service, restarted if it ever crashes; in between, Hyprland
+# keeps the session locked.
 {
   lib,
   pkgs,
@@ -28,6 +29,46 @@ let
       )
     else
       hyprlock;
+
+  screen = pkgs.writeShellScript "nyx-screen" ''
+    exec ${osConfig.programs.hyprland.package}/bin/hyprctl dispatch "hl.dsp.dpms({ action = \"$1\" })"
+  '';
+
+  # hypridle's configuration, from the idle settings: seconds, 0 for never. hypridle
+  # 0.1.7 wants its usual file even when given another, so it's written there.
+  idleConf = pkgs.writeShellScript "nyx-idle-conf" ''
+    set -eu
+    get() {
+      v=$(/run/current-system/sw/bin/nyx-system config get idle "$1" 2>/dev/null) || v=$2
+      case "$v" in "" | *[!0-9]*) v=$2 ;; esac
+      echo "$v"
+    }
+    lock=$(get lock 300)
+    off=$(get screen-off 330)
+    sleep=$(get suspend 0)
+    dir="''${XDG_CONFIG_HOME:-$HOME/.config}/hypr"
+    mkdir -p "$dir"
+    out="$dir/hypridle.conf"
+    {
+      echo "general {"
+      echo "  lock_cmd = systemctl --user start nyx-lock.service"
+      echo "  before_sleep_cmd = loginctl lock-session"
+      echo "  after_sleep_cmd = ${screen} on"
+      # Sleep waits until the session is locked.
+      echo "  inhibit_sleep = 3"
+      echo "}"
+      if [ "$lock" -gt 0 ]; then
+        printf 'listener {\n  timeout = %s\n  on-timeout = loginctl lock-session\n}\n' "$lock"
+      fi
+      if [ "$off" -gt 0 ]; then
+        printf 'listener {\n  timeout = %s\n  on-timeout = %s off\n  on-resume = %s on\n}\n' "$off" "${screen}" "${screen}"
+      fi
+      if [ "$sleep" -gt 0 ]; then
+        printf 'listener {\n  timeout = %s\n  on-timeout = systemctl suspend\n}\n' "$sleep"
+      fi
+    } > "$out.new"
+    mv "$out.new" "$out"
+  '';
 in
 lib.mkIf (osConfig.programs.hyprlock.enable || osConfig.nyx.locker.enable) {
   xdg.configFile."hypr/hyprlock.conf".text = ''
@@ -111,21 +152,22 @@ lib.mkIf (osConfig.programs.hyprlock.enable || osConfig.nyx.locker.enable) {
     };
   };
 
-  services.hypridle = {
-    enable = true;
-    settings = {
-      general = {
-        lock_cmd = "systemctl --user start nyx-lock.service";
-        before_sleep_cmd = "loginctl lock-session";
-        # Sleep waits until the session is locked.
-        inhibit_sleep = 3;
-      };
-      listener = [
-        {
-          timeout = 300;
-          on-timeout = "loginctl lock-session";
-        }
-      ];
+  # hypridle's timings come from the idle settings (defaults, the administrator's, the
+  # user's, merged by nyx-system), read each time it starts: Settings restarts it after
+  # a change. An idle inhibitor (Stay awake, a video playing) holds them all off.
+  systemd.user.services.hypridle = {
+    Unit = {
+      Description = "Locks the screen and turns it off when you're away";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+      ConditionEnvironment = "WAYLAND_DISPLAY";
     };
+    Service = {
+      ExecStartPre = idleConf;
+      ExecStart = lib.getExe pkgs.hypridle;
+      Restart = "always";
+      RestartSec = 10;
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
   };
 }

@@ -58,6 +58,32 @@ in
     login = themeOption "login screen's";
   };
 
+  # Every user's starting idle times; each user's own win (Settings' Lock Screen).
+  options.nyxos.idle =
+    lib.mapAttrs
+      (
+        _: d:
+        lib.mkOption {
+          type = lib.types.ints.unsigned;
+          default = d.default;
+          description = "Seconds idle before ${d.what}; 0 is never.";
+        }
+      )
+      {
+        lock = {
+          default = 300;
+          what = "the screen locks";
+        };
+        screenOff = {
+          default = 330;
+          what = "the screen turns off";
+        };
+        suspend = {
+          default = 0;
+          what = "the computer sleeps";
+        };
+      };
+
   config = {
     networking.hostName = set "hostname";
     time.timeZone = set "timeZone";
@@ -132,6 +158,11 @@ in
     environment.etc."nyxos/defaults/appearance.toml".text = ''
       theme = "${config.nyxos.theme.system}"
       lock-theme = "${config.nyxos.theme.system}"
+    '';
+    environment.etc."nyxos/defaults/idle.toml".text = ''
+      lock = ${toString config.nyxos.idle.lock}
+      screen-off = ${toString config.nyxos.idle.screenOff}
+      suspend = ${toString config.nyxos.idle.suspend}
     '';
   };
 }
