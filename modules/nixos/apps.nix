@@ -17,6 +17,12 @@
     notepad.enable = lib.mkDefault true;
     calculator.enable = lib.mkDefault true;
     archive.enable = lib.mkDefault true;
+    # The desktop shell.
+    bar.enable = lib.mkDefault true;
+    glimpse.enable = lib.mkDefault true;
+    notification-center.enable = lib.mkDefault true;
+    dock.enable = lib.mkDefault true;
+    control-center.enable = lib.mkDefault true;
   };
 
   # Without a suite theme file Nyx apps fall back to Omarchy's theme, then Tokyo Night.

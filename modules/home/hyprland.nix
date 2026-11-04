@@ -1,5 +1,5 @@
-# Temporary minimal Hyprland session until Nyx Bar, Dock and the rest of the shell
-# are packaged. Hyprland itself comes from the NixOS module (programs.hyprland).
+# The Hyprland session the Nyx shell (bar, dock, panels, Glimpse) runs in. Hyprland
+# itself comes from the NixOS module (programs.hyprland).
 {
   lib,
   osConfig,
@@ -84,6 +84,10 @@ in
 
     hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true })
     hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
+  ''
+  + lib.optionalString osConfig.nyx.glimpse.enable ''
+
+    hl.bind("SUPER + SPACE", launch("nyx-glimpse --toggle"), { description = "Glimpse" })
   ''
   # Hold Alt+Space to talk to the Assistant (the repeating bind is the hold signal);
   # Super+Shift+Escape stops everything it is doing.
