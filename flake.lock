@@ -779,11 +779,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793828133,
-        "narHash": "sha256-bX1b8ZwKsctscgMbaRSdr2Eq52MObAEG/KD7hrLgvUw=",
+        "lastModified": 1793829386,
+        "narHash": "sha256-jc087rE0kMHa6eEQR0TCC4WoYghQYuaxB+WFgjFpZOI=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "ee93a1dbb77594211fa0d1df55b453e61d98b992",
+        "rev": "e8644200a89e378712ef70a2b88b48bba72f8466",
         "type": "github"
       },
       "original": {
@@ -955,11 +955,11 @@
     "nyx-system": {
       "flake": false,
       "locked": {
-        "lastModified": 1793827533,
-        "narHash": "sha256-UCk8tyguMeIQFTuDL5GxHhxlij47Xhati3w3Fpir10o=",
+        "lastModified": 1793829033,
+        "narHash": "sha256-gV2X/6AmVIZwqHq7flvmz98Y8TM/++iIqjAcRoshZDo=",
         "owner": "nyxos-project",
         "repo": "nyx-system",
-        "rev": "b576356057a828b10ce810adef59e7a4a5d4961a",
+        "rev": "98b2b7cc02a7858671f53f9897478c276b0695f4",
         "type": "github"
       },
       "original": {
