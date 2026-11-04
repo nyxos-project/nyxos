@@ -58,6 +58,20 @@ in
     login = themeOption "login screen's";
   };
 
+  options.nyxos.signinStyle = lib.mkOption {
+    type = lib.types.enum [
+      "circular"
+      "cyberpunk"
+      "minimal"
+      "edge"
+    ];
+    default = "circular";
+    description = ''
+      The sign-in animation for a fingerprint, a face or a security key: the login
+      screen's, and every user's lock screen's until they choose their own.
+    '';
+  };
+
   # Every user's starting idle times; each user's own win (Settings' Lock Screen).
   options.nyxos.idle =
     lib.mapAttrs
@@ -158,6 +172,7 @@ in
     environment.etc."nyxos/defaults/appearance.toml".text = ''
       theme = "${config.nyxos.theme.system}"
       lock-theme = "${config.nyxos.theme.system}"
+      lock-style = "${config.nyxos.signinStyle}"
     '';
     environment.etc."nyxos/defaults/idle.toml".text = ''
       lock = ${toString config.nyxos.idle.lock}

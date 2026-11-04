@@ -72,6 +72,7 @@ in
       ${lib.optionalString (nyxPkgs.nyx-wallpapers.passthru.defaults ? ${loginTheme}) ''wallpaper = "${nyxPkgs.nyx-wallpapers.passthru.defaults.${loginTheme}}"''}
       mark = "${greeter}/share/nyx-greeter/mark.png"
       default_session = "hyprland-uwsm"
+      style = "${config.nyxos.signinStyle}"
     '';
     # Who signed in last, and with which session.
     systemd.tmpfiles.rules = [ "d /var/cache/nyx-greeter 0755 greeter greeter -" ];
