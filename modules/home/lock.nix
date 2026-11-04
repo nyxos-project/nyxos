@@ -44,7 +44,7 @@ let
       echo "$v"
     }
     lock=$(get lock 300)
-    off=$(get screen-off 330)
+    off=$(get screen-off 360)
     sleep=$(get suspend 0)
     dir="''${XDG_CONFIG_HOME:-$HOME/.config}/hypr"
     mkdir -p "$dir"

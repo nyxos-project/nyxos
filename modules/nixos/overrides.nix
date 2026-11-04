@@ -75,7 +75,7 @@ in
           what = "the screen locks";
         };
         screenOff = {
-          default = 330;
+          default = 360;
           what = "the screen turns off";
         };
         suspend = {
