@@ -103,5 +103,16 @@ in
       size = { 820, 620 },
       no_initial_focus = true,
     })
+  ''
+  # Values set in Nyx Settings, last so they win; Settings looks for this require line.
+  + lib.optionalString osConfig.nyx.settings.enable ''
+
+    local nyx_config = (os.getenv("HOME") or "") .. "/.config"
+    local nyx_settings = io.open(nyx_config .. "/hypr/settings.lua")
+    if nyx_settings then
+      nyx_settings:close()
+      package.path = nyx_config .. "/?.lua;" .. package.path
+      require("hypr.settings") -- Settings app (managed values, loaded last)
+    end
   '';
 }
