@@ -85,6 +85,9 @@
     aroundChanges = [ "/srv/snaptest" ];
   };
 
+  # The VM's EFI partition is 256 MB; an installed NyxOS has 1 GiB.
+  boot.loader.limine.maxGenerations = 4;
+
   # dev-vm ssh.
   services.openssh.enable = true;
 
