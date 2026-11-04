@@ -72,6 +72,19 @@
     };
   };
 
+  # The VM's disk is ext4; a small Btrfs test disk (Incus volume nyx-snaptest) is
+  # snapshotted instead of / and /home.
+  fileSystems."/srv/snaptest" = {
+    device = "/dev/disk/by-label/nyx-snaptest";
+    fsType = "btrfs";
+    options = [ "nofail" ];
+  };
+  nyxos.snapshots = {
+    enable = true;
+    mounts = [ "/srv/snaptest" ];
+    aroundChanges = [ "/srv/snaptest" ];
+  };
+
   # Rust builds take about 1 GiB per rustc; 6 jobs of 6 threads each overran 8 GiB.
   nix.settings = {
     max-jobs = 2;

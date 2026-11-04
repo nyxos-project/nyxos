@@ -77,7 +77,7 @@ in
     # Who signed in last, and with which session.
     systemd.tmpfiles.rules = [ "d /var/cache/nyx-greeter 0755 greeter greeter -" ];
     # A home of its own, for GTK's and fontconfig's caches (greetd gives it /var/empty).
-    users.users.greeter = {
+    users.users.greeter = lib.mkIf config.services.greetd.enable {
       home = "/var/lib/nyx-greeter";
       createHome = true;
     };

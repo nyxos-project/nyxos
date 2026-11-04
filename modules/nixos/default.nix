@@ -21,6 +21,8 @@ in
     ./shell.nix
     ./packages.nix
     ./overrides.nix
+    ./recovery.nix
+    ./snapshots.nix
   ];
 
   options.nyxos.user = {
