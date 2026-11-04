@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 let
@@ -15,6 +16,8 @@ in
     programs.hyprland = {
       enable = true;
       withUWSM = true;
+      # With workspace swipe wrap-around, which Nyx Settings' Loop around uses.
+      package = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     };
 
     xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];

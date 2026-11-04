@@ -740,14 +740,15 @@
         "nyx-transfer": "nyx-transfer",
         "nyx-wallpapers": "nyx-wallpapers",
         "nyx-weather": "nyx-weather",
+        "nyx-welcome": "nyx-welcome",
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793805901,
-        "narHash": "sha256-TkxCobaIkRd0DIt7qMNQW2tSWlDymJcI3xSzL2g5c28=",
+        "lastModified": 1793807773,
+        "narHash": "sha256-Ri9wEHxPABCIs/oSD+N6mFD/3N1aAa1U1wTrNyWnUK4=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "b23bddbb1b7db0e5d2e0bb4e0b108720597bed86",
+        "rev": "d1a91ddd42143547b4423994600939a2c8186b97",
         "type": "github"
       },
       "original": {
@@ -903,11 +904,11 @@
     "nyx-system": {
       "flake": false,
       "locked": {
-        "lastModified": 1793805898,
-        "narHash": "sha256-F5nGYu3zIDwlg8p663cGn2IfhRWZkRdcbLomeoC/ByY=",
+        "lastModified": 1793807754,
+        "narHash": "sha256-KwVvLCoujbzoLUx5B5fAWm8B6Vmr4HEETC3cYJ0uM+4=",
         "owner": "nyxos-project",
         "repo": "nyx-system",
-        "rev": "baeafa9cf30c7225d8450662f22c521a88525ae6",
+        "rev": "30ec963b8f56032739c589390a10eed9796374c5",
         "type": "github"
       },
       "original": {
@@ -993,6 +994,22 @@
       "original": {
         "owner": "design-nexus",
         "repo": "nyx-weather",
+        "type": "github"
+      }
+    },
+    "nyx-welcome": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793807769,
+        "narHash": "sha256-9ZfPQtnl0V1F0K+p1NMyM87OdkRCsuLaNQ7TlLC8E/Q=",
+        "owner": "nyxos-project",
+        "repo": "nyx-welcome",
+        "rev": "bafca5fbdc65540857349da8b8829580b4c20701",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nyxos-project",
+        "repo": "nyx-welcome",
         "type": "github"
       }
     },

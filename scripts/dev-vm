@@ -14,9 +14,10 @@ flake_dir=/etc/nyxos/flake
 # the revision pinned in flake.lock.
 packages_repo=${NYX_PACKAGES:-}
 packages_dir=/etc/nyxos/nyx-packages
-# A local nyx-system checkout (the System Manager and the catalog), used with NYX_PACKAGES.
-system_repo=${NYX_SYSTEM:-}
-system_dir=/etc/nyxos/nyx-system
+# Local checkouts of nyx-packages' sources, used with NYX_PACKAGES: NYX_SOURCES is
+# "INPUT=PATH ..." (nyx-welcome=~/Projects/nyx-welcome); NYX_SYSTEM is nyx-system's.
+sources=${NYX_SOURCES:-}
+[[ -n ${NYX_SYSTEM:-} ]] && sources+=" nyx-system=$NYX_SYSTEM"
 vm_path=/run/wrappers/bin:/run/current-system/sw/bin
 
 usage() {
@@ -79,10 +80,10 @@ sync() {
   if [[ -n $packages_repo ]]; then
     push_tree "$packages_repo" "$packages_dir"
     override_args=(--override-input nyx-packages "path:$packages_dir")
-    if [[ -n $system_repo ]]; then
-      push_tree "$system_repo" "$system_dir"
-      override_args+=(--override-input nyx-packages/nyx-system "path:$system_dir")
-    fi
+    for source in $sources; do
+      push_tree "${source#*=}" "/etc/nyxos/${source%%=*}"
+      override_args+=(--override-input "nyx-packages/${source%%=*}" "path:/etc/nyxos/${source%%=*}")
+    done
   fi
   # What the Nyx System Manager set on the VM (its overrides layer) stays set.
   if vm_exec test -d /etc/nyxos/overrides; then

@@ -36,6 +36,7 @@ in
     settings.enable = lib.mkDefault true;
     wallpapers.enable = lib.mkDefault true;
     store.enable = lib.mkDefault true;
+    welcome.enable = lib.mkDefault true;
     # System services: the System Manager and the theme service.
     system = {
       enable = lib.mkDefault true;
