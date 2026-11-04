@@ -21,6 +21,7 @@ let
   firewall = o.firewall or { };
   power = o.power or { };
   mounts = o.mounts or { };
+  hw = o.hardware or { };
   networkTypes = [
     "cifs"
     "nfs"
@@ -122,7 +123,17 @@ in
     virtualisation.libvirtd.enable = service "libvirtd";
     services.ollama.enable = service "ollama";
 
-    nixpkgs.config.allowUnfreePredicate = lib.mkIf (unfree != [ ]) (pkg: lib.elem (lib.getName pkg) unfree);
+    nyxos.unfree = unfree;
+
+    # What the System Manager detected, and the driver choices made for it.
+    nyxos.hardware = lib.mkIf (hw != { }) {
+      gpus = over (hw.gpus or [ ]);
+      cpu = over (hw.cpu or null);
+      battery = over (hw.battery or false);
+      bluetooth = over (hw.bluetooth or false);
+      virtualMachine = over (hw.virtualMachine or null);
+      nvidia.proprietary = over (hw.nvidiaProprietary or false);
+    };
 
     # Nyx apps turned on or off; a name nyx-packages doesn't have fails the build.
     nyx = lib.mapAttrs (_: on: { enable = over on; }) (o.nyxApps or { });

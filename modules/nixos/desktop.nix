@@ -36,7 +36,6 @@ in
 
     security.polkit.enable = true;
     hardware.graphics.enable = true;
-    hardware.bluetooth.enable = true;
     services.udisks2.enable = true;
 
     # The Incus VM profile is built on the minimal profile, which turns these off.

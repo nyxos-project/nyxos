@@ -24,6 +24,7 @@ in
     ./recovery.nix
     ./snapshots.nix
     ./security.nix
+    ./hardware.nix
   ];
 
   options.nyxos.user = {
