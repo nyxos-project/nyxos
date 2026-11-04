@@ -24,7 +24,8 @@ in
 
   config = lib.mkMerge [
     {
-      environment.etc."nyxos/built-from/flake.lock".source = "${inputs.self}/flake.lock";
+      # The machine's own flake when it has one (templates/host), else NyxOS's.
+      environment.etc."nyxos/built-from/flake.lock".source = "${inputs.machine or inputs.self}/flake.lock";
       environment.etc."nyxos/built-from/system.json" = lib.mkIf (builtins.pathExists settings) { source = settings; };
     }
 

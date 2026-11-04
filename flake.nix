@@ -43,6 +43,29 @@
         home = ./modules/home;
       };
 
+      # An installed machine: NyxOS's modules and its own (hardware-configuration.nix,
+      # host.nix), from its flake in /etc/nyxos/flake (templates/host). `self` is that
+      # flake (each generation keeps its flake.lock, as inputs.machine); `overrides`, the
+      # settings layer.
+      lib.mkSystem =
+        {
+          self ? inputs.self,
+          overrides ? inputs.nyxos-overrides,
+          modules,
+        }:
+        nixpkgs.lib.nixosSystem {
+          specialArgs.inputs = inputs // {
+            machine = self;
+            nyxos-overrides = overrides;
+          };
+          modules = [ ./modules/nixos ] ++ modules;
+        };
+
+      templates.host = {
+        path = ./templates/host;
+        description = "An installed NyxOS machine's flake (the installer fills it in)";
+      };
+
       nixosConfigurations.incus-dev = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
         modules = [ ./hosts/incus-dev ];
@@ -57,6 +80,14 @@
           nixos = self.nixosConfigurations.incus-dev;
         };
         inherit (self.packages.${system}) nyx-cli;
+        # An installed machine, as the installer writes one.
+        installed =
+          (self.lib.mkSystem {
+            modules = [
+              ./templates/host/example-hardware.nix
+              ./templates/host/example-host.nix
+            ];
+          }).config.system.build.toplevel;
       };
 
       formatter.${system} = pkgs.nixfmt;
