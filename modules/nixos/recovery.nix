@@ -61,7 +61,7 @@ in
             ExecStart = "${nyxPkgs.nyx-system}/bin/nyx-recovery";
             StandardInput = "tty";
             StandardOutput = "tty";
-            StandardError = "journal";
+            StandardError = "tty";
             TTYPath = "/dev/tty1";
             TTYReset = true;
             TTYVHangup = true;
