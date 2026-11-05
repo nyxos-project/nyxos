@@ -59,6 +59,13 @@ in
       example.system.build.toplevel
       pkgs.stdenv
       pkgs.stdenvNoCC
+      # Outputs the machine's pieces build from that nothing installed keeps
+      # (scripts/offline-check finds them).
+      pkgs.kmod.dev
+      pkgs.libxslt.bin
+      pkgs.getconf
+      pkgs.emptyDirectory
+      pkgs.libfido2
     ]
     ++ buildInputs
     ++ lib.unique (sources nyxos);

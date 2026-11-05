@@ -71,6 +71,8 @@
 
       # An installed machine, as the installer writes one (the live USB carries it).
       nixosConfigurations.example = self.lib.mkSystem {
+        # The settings layer the installer writes (time zone, language, keyboard).
+        overrides = ./templates/host/example-overrides;
         modules = [
           ./templates/host/example-hardware.nix
           ./templates/host/example-host.nix

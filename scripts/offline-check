@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# offline-check MACHINE-FLAKE HOST [OVERRIDES]: whether the live USB (.#iso) carries
+# everything installing MACHINE-FLAKE#HOST (with the settings layer OVERRIDES, as the
+# installer wrote it) builds from. Prints the outputs a build would miss
+# (the reason an offline install would try to bootstrap compilers), and nothing else.
+# Run in a store that has the USB's contents built (the dev VM), from the nyxos flake.
+set -euo pipefail
+machine=$1 host=$2 overrides=${3:-/etc/nyxos/overrides}
+here=$(pwd)
+if ! command -v python3 >/dev/null; then exec nix shell nixpkgs#python3 -c "$0" "$@"; fi
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+
+# What the USB's store has: its own system and what it carries.
+iso=$(nix eval --raw .#nixosConfigurations.iso.config.system.build.toplevel.drvPath)
+contents=$(nix build --no-link --print-out-paths .#nixosConfigurations.iso.config.system.build.toplevel \
+  $(nix eval --json .#nixosConfigurations.iso.config.isoImage.storeContents --apply 'map (x: x.drvPath or (toString x))' |
+    python3 -c 'import json,sys; [print(p + ("^*" if p.endswith(".drv") else "")) for p in json.load(sys.stdin)]'))
+nix-store -qR $contents | sort -u > "$work/valid"
+
+drv=$(cd "$machine" && nix eval --raw ".#nixosConfigurations.$host.config.system.build.toplevel.drvPath" \
+  --override-input nyxos "path:$here" --override-input nyxos-overrides "path:$overrides")
+nix derivation show --recursive "$drv" > "$work/drvs.json"
+
+python3 - "$drv" "$work" <<'EOF'
+import json, sys
+top, work = sys.argv[1], sys.argv[2]
+d = json.load(open(f"{work}/drvs.json")); d = d.get("derivations", d)
+norm = lambda k: k if k.startswith("/nix/store/") else "/nix/store/" + k
+drvs = {norm(k): v for k, v in d.items()}
+valid = set(l.strip() for l in open(f"{work}/valid"))
+outs = lambda k: {n: norm(o["path"]) for n, o in drvs[k].get("outputs", {}).items() if "path" in o}
+inputs = lambda k: drvs[k].get("inputs", {}).get("drvs") or drvs[k].get("inputDrvs", {})
+build, seen, stack = set(), set(), [(top, ("out",))]
+while stack:
+    k, req = stack.pop()
+    if (k, req) in seen:
+        continue
+    seen.add((k, req))
+    if all(outs(k).get(r) in valid for r in req):
+        continue
+    build.add(k)
+    for i, spec in inputs(k).items():
+        stack.append((norm(i), tuple(spec.get("outputs", []) if isinstance(spec, dict) else spec)))
+# A derivation is buildable offline when everything it reads is there or buildable; the
+# ones whose sources aren't (fixed-output downloads) are what's missing.
+fetch = sorted(k for k in build if any("outputHash" in (drvs[k].get("env") or {}) or o.get("hash") for o in drvs[k].get("outputs", {}).values()))
+print(f"{len(build)} derivations to build, {len(fetch)} of them downloads")
+for k in fetch:
+    print("  download:", k.split("-", 1)[1])
+EOF
