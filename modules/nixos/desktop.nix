@@ -35,6 +35,9 @@ in
     xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
     security.polkit.enable = true;
+    # Screen readers speak through speech-dispatcher; espeak's mbrola voices are another
+    # 645 MB.
+    services.speechd.package = pkgs.speechd.override { espeak = pkgs.espeak-ng.override { mbrolaSupport = false; }; };
     hardware.graphics.enable = true;
     services.udisks2.enable = true;
 

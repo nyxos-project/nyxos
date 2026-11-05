@@ -69,6 +69,14 @@
         description = "An installed NyxOS machine's flake (the installer fills it in)";
       };
 
+      # An installed machine, as the installer writes one (the live USB carries it).
+      nixosConfigurations.example = self.lib.mkSystem {
+        modules = [
+          ./templates/host/example-hardware.nix
+          ./templates/host/example-host.nix
+        ];
+      };
+
       # The live USB: nix build .#iso
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
@@ -90,13 +98,7 @@
         };
         inherit (self.packages.${system}) nyx-cli;
         # An installed machine, as the installer writes one.
-        installed =
-          (self.lib.mkSystem {
-            modules = [
-              ./templates/host/example-hardware.nix
-              ./templates/host/example-host.nix
-            ];
-          }).config.system.build.toplevel;
+        installed = self.nixosConfigurations.example.config.system.build.toplevel;
       };
 
       formatter.${system} = pkgs.nixfmt;

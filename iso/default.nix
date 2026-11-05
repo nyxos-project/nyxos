@@ -14,6 +14,26 @@ let
   # A flake's source and its inputs', all the way down.
   sources = flake: [ flake.outPath ] ++ lib.concatMap sources (lib.attrValues (flake.inputs or { }));
   nyxos = inputs.self;
+  example = nyxos.nixosConfigurations.example.config;
+  # What building a machine's own pieces needs (its /etc, units, initrd, account and home
+  # files differ from the example's): each one's build inputs, so an install builds them
+  # without the network.
+  buildInputs = map (d: d.inputDerivation or d) (
+    [
+      example.system.build.toplevel
+      example.system.build.etc
+      example.system.build.initialRamdisk
+      example.system.path
+      example.environment.etc."systemd/system".source
+      example.environment.etc."systemd/user".source
+      example.environment.etc."udev/rules.d".source
+      example.environment.etc."udev/hwdb.bin".source
+      example.environment.etc.hosts.source
+    ]
+    ++ map (u: u.unit) (lib.attrValues example.systemd.units)
+    ++ map (u: u.unit) (lib.attrValues example.systemd.user.units)
+    ++ lib.mapAttrsToList (_: h: h.home.activationPackage) example.home-manager.users
+  );
 in
 {
   imports = [
@@ -35,7 +55,13 @@ in
     makeEfiBootable = true;
     makeUsbBootable = true;
     squashfsCompression = "zstd -Xcompression-level 15";
-    storeContents = [ nyxos.checks.x86_64-linux.installed ] ++ lib.unique (sources nyxos);
+    storeContents = [
+      example.system.build.toplevel
+      pkgs.stdenv
+      pkgs.stdenvNoCC
+    ]
+    ++ buildInputs
+    ++ lib.unique (sources nyxos);
   };
   image.baseName = lib.mkForce "nyxos-installer";
 
@@ -43,7 +69,27 @@ in
     "nix-command"
     "flakes"
   ];
-  environment.systemPackages = [ nyxPkgs.nyx-installer ];
+  environment.systemPackages = [
+    nyxPkgs.nyx-installer
+    pkgs.adwaita-icon-theme
+    # For testing the installer in a VM (keys sent from the host).
+    pkgs.ydotool
+  ];
+
+  # The installer, full screen, as root (it partitions disks) as soon as the USB starts.
+  # The text consoles (Ctrl+Alt+F2…) still have a shell.
+  services.cage = {
+    enable = true;
+    user = "root";
+    program = lib.getExe nyxPkgs.nyx-installer;
+    extraArguments = [ "-d" ];
+  };
+  hardware.graphics.enable = true;
+  fonts.packages = [
+    pkgs.inter
+    nyxPkgs.nyx-fonts
+  ];
+  environment.pathsToLink = [ "/share/icons" ];
   # Where the installer finds the NyxOS it installs.
   environment.etc."nyxos/source".text = "${nyxos}\n";
 }
