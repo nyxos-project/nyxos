@@ -24,9 +24,13 @@ in
       description = "The boot menu.";
     };
     windows = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Offer Windows (its Boot Manager on the same EFI partition) in the boot menu.";
+      type = lib.types.nullOr (lib.types.strMatching "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
+      default = null;
+      description = ''
+        Windows Boot Manager's EFI partition (its GPT partition GUID), to offer Windows
+        in the boot menu. NyxOS has its own EFI partition beside it; the installer sets
+        this when it installs beside Windows.
+      '';
     };
     secureBoot = lib.mkOption {
       type = lib.types.bool;
@@ -70,10 +74,10 @@ in
           interface.branding = "NyxOS";
           interface.brandingColor = "7";
         };
-        extraEntries = lib.mkIf cfg.windows ''
+        extraEntries = lib.mkIf (cfg.windows != null) ''
           /Windows
             protocol: efi
-            path: boot():/EFI/Microsoft/Boot/bootmgfw.efi
+            path: guid(${cfg.windows}):/EFI/Microsoft/Boot/bootmgfw.efi
         '';
         secureBoot = lib.mkIf cfg.secureBoot {
           enable = true;

@@ -12,6 +12,5 @@
       description = "FULL NAME";
     };
     snapshots.enable = true;
-    boot.windows = false;
   };
 }
