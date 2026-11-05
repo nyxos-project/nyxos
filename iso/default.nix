@@ -90,6 +90,8 @@ in
     user = "root";
     program = lib.getExe nyxPkgs.nyx-installer;
     extraArguments = [ "-d" ];
+    # Cairo draws the same on any graphics, before a machine's own driver is set up.
+    environment.GSK_RENDERER = "cairo";
   };
   hardware.graphics.enable = true;
   fonts.packages = [
