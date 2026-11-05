@@ -575,11 +575,11 @@
     "nyx-installer": {
       "flake": false,
       "locked": {
-        "lastModified": 1793838958,
-        "narHash": "sha256-Td1KlD43cDaODrrjY5b0YRp9aG6IIuXWvT4mfjGEZys=",
+        "lastModified": 1793845767,
+        "narHash": "sha256-rG8LvOTYlzGJra53oeH6b7A0V0WyLKA49QG45I2fwk8=",
         "owner": "nyxos-project",
         "repo": "nyx-installer",
-        "rev": "ea5814d708e06cce5a9d879d4974e198c5038717",
+        "rev": "952d70d5ecd37a213d77efda064c28d6e3adb123",
         "type": "github"
       },
       "original": {
@@ -796,11 +796,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793838962,
-        "narHash": "sha256-qiYwVuk+CObmlhaX4Q8TzXrfGJ9rloZC73RWUGyMfIw=",
+        "lastModified": 1793845826,
+        "narHash": "sha256-LFnt0o5E0bgKnnZP0dyUf3hpry2P+re4+UZ10iGQYtg=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "fbe824af2983dcd5bb61441429596c2a91c484ce",
+        "rev": "25a4176acd7e5b13f141949039254ca0ade21c41",
         "type": "github"
       },
       "original": {
