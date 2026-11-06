@@ -64,8 +64,19 @@ in
       };
     };
 
-    # GTK's standard symbolic icons; without them apps show missing-image placeholders.
-    environment.systemPackages = [ pkgs.adwaita-icon-theme ];
+    # Umbra, the suite's icon theme (in Nyx Dark's colours), over Adwaita's standard
+    # symbolic icons, which fill in what Umbra doesn't draw.
+    environment.systemPackages = [
+      nyxPkgs.umbra-icons
+      pkgs.adwaita-icon-theme
+    ];
+    # Every account's default; a choice in Settings (the user's own dconf) wins.
+    programs.dconf = {
+      enable = true;
+      profiles.user.databases = [ { settings."org/gnome/desktop/interface".icon-theme = "Umbra"; } ];
+    };
+    environment.etc."xdg/gtk-3.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\n";
+    environment.etc."xdg/gtk-4.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\n";
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
 

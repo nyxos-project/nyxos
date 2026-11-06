@@ -793,14 +793,15 @@
         "nyx-wallpapers": "nyx-wallpapers",
         "nyx-weather": "nyx-weather",
         "nyx-welcome": "nyx-welcome",
-        "rust-overlay": "rust-overlay_2"
+        "rust-overlay": "rust-overlay_2",
+        "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1793935112,
-        "narHash": "sha256-x2A7vaDyiaaIMmf4QK5n6unk/N7dTcZ/btdIkSjhzj0=",
+        "lastModified": 1793935396,
+        "narHash": "sha256-+5v00MPQ1YrM/BVGqJrkFBfiUPJAzCsIukWg5EOx4XU=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "c14cd1553992fcef1b1e5572ad93d25ecd61e0ec",
+        "rev": "fc7ba17bdb909195b529ea12e187e2ef5859fdcf",
         "type": "github"
       },
       "original": {
@@ -1156,6 +1157,22 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "umbra-icons": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793744468,
+        "narHash": "sha256-Dbt8QLPTJNWEci05iD3N+sOC1UVG030IW5O6tYdfF0c=",
+        "owner": "design-nexus",
+        "repo": "umbra-icons",
+        "rev": "0deb6bb27e849c0fc1a0d502e014693bd68d68cf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "umbra-icons",
         "type": "github"
       }
     }
