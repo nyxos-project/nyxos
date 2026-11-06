@@ -20,6 +20,8 @@ Nyx repositories.
 | `modules/home` | User defaults: Foot, Zsh and the Nyx prompt, Helix, Herdr, Hyprland |
 | `themes` | Theme tokens (Nyx Dark), mirrored from nyx-design |
 | `pkgs/nyx-cli` | The `nyx` command on NyxOS |
+| `pkgs/antigravity-cli` | Catalog packages nixpkgs lacks, added to `pkgs` by an overlay |
+| `agents/skills` | Skills that teach coding agents NyxOS, shared by every agent ([docs/agent-skills.md](docs/agent-skills.md)) |
 | `scripts/dev-vm` | Create, rebuild, snapshot and inspect the VM |
 
 ## Channels
@@ -74,6 +76,9 @@ current user; anything else goes to `nix` unchanged (`nyx build`, `nyx flake`, �
 A name starting with `nyx-` comes from nyx-packages
 (`github:nyxos-project/nyx-packages#nyx-pdf`); anything with `#` or `:` is used as
 given. `nyx icons …`, `nyx share …` and `nyx plugin …` run the Nyx tools as on Omarchy.
+`nyx agent` starts the default coding agent (Settings > Default Apps, or `nyx agent default
+CMD`) with its flag for working without stopping to ask, as Super Shift Ctrl A does; `nyx
+agent skills` links NyxOS's skills into every agent's skills folder.
 `nyx system …` and `nyx service NAME on|off|default` go to the Nyx System Manager:
 system settings, packages for everyone, `update`, `generations` and `rollback`.
 
