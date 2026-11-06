@@ -21,6 +21,15 @@ in
     ''
   );
 
+  # Super Enter opens the first terminal in this list (xdg-terminal-exec); Settings →
+  # Default Apps changes it, so it's the user's file, seeded once.
+  home.packages = [ pkgs.xdg-terminal-exec ];
+  home.activation.nyxTerminal = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ ! -e "${config.xdg.configHome}/xdg-terminals.list" ]; then
+      run sh -c 'printf "foot.desktop\n" > "$1"' _ "${config.xdg.configHome}/xdg-terminals.list"
+    fi
+  '';
+
   programs.foot = {
     enable = true;
     settings = {

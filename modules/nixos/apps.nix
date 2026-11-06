@@ -44,6 +44,7 @@ in
     };
     themes.enable = lib.mkDefault true;
     locker.enable = lib.mkDefault true;
+    prompt.enable = lib.mkDefault true;
   };
 
   # Without a suite theme file Nyx apps fall back to Omarchy's theme, then Tokyo Night.

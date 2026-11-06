@@ -94,10 +94,17 @@ in
     environment.GSK_RENDERER = "cairo";
   };
   hardware.graphics.enable = true;
-  fonts.packages = [
-    pkgs.inter
-    nyxPkgs.nyx-fonts
-  ];
+  fonts = {
+    packages = [
+      pkgs.inter
+      nyxPkgs.nyx-fonts
+    ];
+    # The minimal profile turns fontconfig off; without it GTK can't find Inter.
+    fontconfig = {
+      enable = lib.mkForce true;
+      defaultFonts.sansSerif = [ "Inter" ];
+    };
+  };
   environment.pathsToLink = [ "/share/icons" ];
   # Where the installer finds the NyxOS it installs.
   environment.etc."nyxos/source".text = "${nyxos}\n";

@@ -1,6 +1,7 @@
-# The boot menu and splash: Limine in NyxOS's look (the boot theme's wallpaper, every
-# generation and its NyxOS Recovery entry, Windows when it's beside NyxOS, Secure Boot
-# when asked for), then Nyx Plymouth in the boot theme with the kernel and udev quiet.
+# The boot menu and splash: Limine, plain and quiet (Nyx Dark's background and text, no
+# wallpaper or help, three seconds; every generation and its NyxOS Recovery entry,
+# Windows when it's beside NyxOS, Secure Boot when asked for), then Nyx Plymouth in the
+# boot theme with the kernel and udev quiet.
 {
   config,
   lib,
@@ -11,7 +12,9 @@
 let
   cfg = config.nyxos.boot;
   nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
-  wallpaper = nyxPkgs.nyx-wallpapers.passthru.defaults.${config.nyxos.theme.boot} or null;
+  c = (import ../../themes/nyx-dark.nix).colors;
+  s = (import ../../themes/nyx-dark.nix).swatches;
+  palette = lib.concatStringsSep ";";
 in
 {
   options.nyxos.boot = {
@@ -63,16 +66,47 @@ in
 
     (lib.mkIf (cfg.loader == "limine") {
       boot.loader.systemd-boot.enable = lib.mkForce false;
+      boot.loader.timeout = lib.mkDefault 3;
       boot.loader.limine = {
         enable = true;
         efiSupport = true;
         maxGenerations = lib.mkDefault 20;
         style = {
-          wallpapers = lib.optional (wallpaper != null) wallpaper;
-          wallpaperStyle = "stretched";
-          backdrop = "0B0B0E";
-          interface.branding = "NyxOS";
-          interface.brandingColor = "7";
+          wallpapers = [ ];
+          backdrop = c.bg;
+          interface = {
+            branding = "NyxOS";
+            brandingColor = c.text;
+            helpColor = c.dimText;
+            helpColorBright = c.accent;
+            helpHidden = true;
+          };
+          graphicalTerminal = {
+            background = c.bg;
+            foreground = c.text;
+            brightBackground = c.card;
+            brightForeground = c.text;
+            palette = palette [
+              c.bg
+              s.red
+              s.green
+              s.amber
+              s.blue
+              s.violet
+              s.teal
+              c.dimText
+            ];
+            brightPalette = palette [
+              c.border
+              s.red
+              s.green
+              s.amber
+              s.blue
+              s.violet
+              s.teal
+              c.text
+            ];
+          };
         };
         extraEntries = lib.mkIf (cfg.windows != null) ''
           /Windows

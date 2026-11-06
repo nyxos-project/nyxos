@@ -25,6 +25,10 @@ in
     };
 
     initContent = ''
+      # The editor chosen in Settings → Default Apps.
+      if [[ -r ''${XDG_CONFIG_HOME:-$HOME/.config}/nyx/editor ]]; then
+        export EDITOR=$(<''${XDG_CONFIG_HOME:-$HOME/.config}/nyx/editor) VISUAL=$EDITOR
+      fi
       NYX_PROMPT_DIR='#${c.text}'
       NYX_PROMPT_DIM='#${c.dimText}'
       NYX_PROMPT_GIT='#${theme.swatches.violet}'

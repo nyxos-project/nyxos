@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+# Manage a disposable VM for testing the NyxOS installer ISO on the local Incus host.
+set -euo pipefail
+
+vm=${NYXOS_INSTALL_VM:-nyxos-install-test}
+iso=${NYXOS_ISO:-$HOME/.cache/nyxos-test-tmp/iso/nyxos-installer.iso}
+volume=${NYXOS_ISO_VOLUME:-nyxos-installer-iso}
+pool=${NYXOS_POOL:-default}
+vm_path=/run/wrappers/bin:/run/current-system/sw/bin
+
+usage() {
+  cat <<EOF
+Usage: scripts/install-vm <command> [args]
+
+  create          Replace $vm with a fresh VM booting $iso
+                  (4 vCPU, 8 GiB, empty 64 GiB disk, Secure Boot off)
+  screen          Open the VM's screen in a SPICE viewer (needs remote-viewer)
+  fake-windows    Partition the VM's disk like a Windows install, leaving free space
+                  (run from the live ISO, before installing)
+  disk            Take the ISO out, so the next start boots the installed system
+  iso             Put the ISO back in front of the disk
+  restart         Restart the VM
+  exec <cmd...>   Run a command as root in the VM
+  destroy         Delete the VM and the ISO volume
+EOF
+}
+
+vm_exec() {
+  incus exec "$vm" --env PATH="$vm_path" -- "$@"
+}
+
+wait_for_agent() {
+  for _ in $(seq 180); do
+    vm_exec true 2>/dev/null && return
+    sleep 1
+  done
+  echo "Incus agent in $vm didn't come up" >&2
+  return 1
+}
+
+import_iso() {
+  incus storage volume delete "$pool" "$volume" 2>/dev/null || true
+  incus storage volume import "$pool" "$iso" "$volume" --type=iso
+}
+
+attach_iso() {
+  incus config device add "$vm" iso disk pool="$pool" source="$volume" boot.priority=10
+}
+
+cmd=${1:-}
+[[ $# -gt 0 ]] && shift
+
+case $cmd in
+  create)
+    [[ -f $iso ]] || {
+      echo "No ISO at $iso; build one with: nix build .#iso" >&2
+      exit 1
+    }
+    incus delete --force "$vm" 2>/dev/null || true
+    import_iso
+    incus init "$vm" --empty --vm \
+      -c limits.cpu=4 -c limits.memory=8GiB -c security.secureboot=false \
+      -d root,size=64GiB
+    attach_iso
+    incus start "$vm"
+    wait_for_agent
+    ;;
+  screen)
+    command -v remote-viewer >/dev/null || {
+      echo "remote-viewer is missing; install virt-viewer" >&2
+      exit 1
+    }
+    setsid -f incus console "$vm" --type=vga >/dev/null 2>&1 </dev/null
+    ;;
+  fake-windows)
+    # The disk the installer would offer: the only one that isn't the live medium.
+    vm_exec bash -euo pipefail -c '
+      d=$(lsblk -dnpo NAME,TYPE,RM,RO | awk "\$2==\"disk\" && \$3==0 && \$4==0 {print \$1}" | head -1)
+      [ -n "$d" ] || { echo "no disk" >&2; exit 1; }
+      sgdisk --zap-all "$d" >/dev/null
+      sgdisk -n1:0:+100M -t1:ef00 -c1:"EFI system partition" \
+             -n2:0:+16M -t2:0c01 -c2:"Microsoft reserved partition" \
+             -n3:0:+20G -t3:0700 -c3:"Basic data partition" "$d" >/dev/null
+      partprobe "$d"; udevadm settle
+      esp=$(lsblk -lnpo NAME "$d" | sed -n 2p)
+      mkfs.vfat -F 32 -n SYSTEM "$esp" >/dev/null
+      mnt=$(mktemp -d)
+      mount "$esp" "$mnt"
+      mkdir -p "$mnt/EFI/Microsoft/Boot" "$mnt/EFI/Boot"
+      echo "fake Windows Boot Manager" > "$mnt/EFI/Microsoft/Boot/bootmgfw.efi"
+      echo "fake Windows Boot Manager" > "$mnt/EFI/Boot/bootx64.efi"
+      umount "$mnt"
+      sgdisk -p "$d"
+    '
+    ;;
+  disk) incus config device remove "$vm" iso ;;
+  iso) attach_iso ;;
+  restart) incus restart --force "$vm" ;;
+  exec) vm_exec "$@" ;;
+  destroy)
+    incus delete --force "$vm" 2>/dev/null || true
+    incus storage volume delete "$pool" "$volume" 2>/dev/null || true
+    ;;
+  "" | -h | --help | help) usage ;;
+  *)
+    usage >&2
+    exit 1
+    ;;
+esac

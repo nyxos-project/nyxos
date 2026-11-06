@@ -7,8 +7,9 @@
   nyx.system.host = "example";
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # The encrypted disk, opened before the system starts.
+  # The encrypted disk, opened before the system starts; TRIM reaches the SSD.
   boot.initrd.systemd.enable = true;
+  boot.initrd.luks.devices.cryptroot.allowDiscards = true;
 
   # Btrfs with compression; hibernating to the swap file.
   fileSystems = lib.genAttrs [ "/" "/home" "/nix" "/var/log" ] (_: {

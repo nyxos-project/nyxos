@@ -36,6 +36,10 @@ in
   # triggering the OOM killer.
   zramSwap.enable = lib.mkDefault true;
 
+  # Freed blocks go back to the SSD (and to a VM's host) every week; the installer's
+  # host.nix lets them through LUKS (allowDiscards).
+  services.fstrim.enable = lib.mkDefault true;
+
   # Older generations stay bootable from the boot menu.
   boot.loader.systemd-boot.configurationLimit = lib.mkDefault 20;
 
