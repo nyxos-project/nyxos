@@ -11,6 +11,9 @@ in
 {
   environment.systemPackages = [ inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.nyx-cli ];
 
+  # Skills that teach coding agents NyxOS; `nyx agent skills` links them for each agent.
+  environment.etc."nyxos/agents/skills".source = ../../agents/skills;
+
   nyx = {
     icons = {
       enable = lib.mkDefault true;

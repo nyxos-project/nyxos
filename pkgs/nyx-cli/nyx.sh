@@ -19,6 +19,7 @@ nyx plugin …              bar plugins: list, add, configure, update… (nyx pl
 nyx system …              the system: settings, packages for everyone, update, rollback
                           (nyx system help)
 nyx service NAME on|off   system services NyxOS manages (nyx system services)
+nyx agent [ARGS…]         start your default coding agent (nyx agent help)
 
 PKG is a package name (firefox), a Nyx app (nyx-pdf) or any flake reference.
 Any other command goes to nix: nyx build, nyx flake, nyx develop…
@@ -32,6 +33,148 @@ ref() {
     nyx-*) printf 'github:nyxos-project/nyx-packages#%s' "$1" ;;
     *) printf 'nixpkgs#%s' "$1" ;;
   esac
+}
+
+# ----- Coding agents -----
+
+# The agents `nyx agent` starts: command, name, and the flags that let it work without
+# stopping to ask, since it's started for a task you hand it. Run by name, an agent
+# keeps its own prompts.
+known_agents() {
+  cat <<'EOF'
+claude	Claude Code	--permission-mode auto
+codex	Codex CLI	--dangerously-bypass-approvals-and-sandbox
+agy	Antigravity CLI	--dangerously-skip-permissions
+cursor-agent	Cursor Agent	--yolo --trust
+grok	Grok Build	--permission-mode bypassPermissions
+crush	Crush	--yolo
+opencode	OpenCode	
+omp	oh-my-pi	--auto-approve
+gemini	Gemini CLI	--yolo
+pi	Pi	
+EOF
+}
+
+agent_file="${XDG_CONFIG_HOME:-$HOME/.config}/nyx/agent"
+skills_source=/etc/nyxos/agents/skills
+
+agent_usage() {
+  cat <<'EOF'
+nyx agent [ARGS…]          start the default agent, here or in a new terminal
+nyx agent default [CMD]    show the default agent, or make CMD it (none clears it)
+nyx agent list [--all]     installed agents as command and name (--all: every one nyx knows)
+nyx agent skills           link NyxOS's skills into every agent's skills folder
+
+From a terminal the agent starts in it; otherwise (a shortcut) in a new terminal.
+ARGS go to the agent after its flags. Settings and Welcome choose the default too.
+EOF
+}
+
+agent_line() {
+  known_agents | awk -F'\t' -v c="$1" '$1 == c'
+}
+
+current_agent() {
+  [[ -f $agent_file ]] && head -n1 "$agent_file" | tr -d '[:space:]'
+  return 0
+}
+
+# Every agent reads one of these; a skill of the user's own by the same name stays.
+link_skills() {
+  [[ -d $skills_source ]] || return 0
+  local config=${XDG_CONFIG_HOME:-$HOME/.config} dir skill name link
+  local dirs=(
+    "$HOME/.agents/skills"
+    "$config/agents/skills"
+    "$HOME/.claude/skills"
+    "$config/opencode/skills"
+    "$HOME/.grok/skills"
+    "$HOME/.gemini/config/skills"
+    "$HOME/.gemini/antigravity-cli/skills"
+  )
+  for dir in "${dirs[@]}"; do
+    mkdir -p "$dir"
+    for link in "$dir"/*; do
+      if [[ -L $link && $(readlink "$link") == "$skills_source"/* && ! -e $link ]]; then
+        rm -f "$link"
+      fi
+    done
+    for skill in "$skills_source"/*/; do
+      [[ -d $skill ]] || continue
+      name=$(basename "$skill")
+      if [[ -e $dir/$name && ! -L $dir/$name ]]; then
+        continue
+      fi
+      ln -sfn "$skills_source/$name" "$dir/$name"
+    done
+  done
+}
+
+agent() {
+  case ${1:-} in
+    help | -h | --help)
+      agent_usage
+      return ;;
+    list)
+      local cmd name _flags
+      while IFS=$'\t' read -r cmd name _flags; do
+        if [[ ${2:-} == --all ]] || command -v "$cmd" >/dev/null; then
+          printf '%s\t%s\n' "$cmd" "$name"
+        fi
+      done < <(known_agents)
+      return ;;
+    default)
+      if (($# < 2)); then
+        current_agent
+        return
+      fi
+      if [[ $2 == none ]]; then
+        rm -f "$agent_file"
+        return
+      fi
+      [[ -n $(agent_line "$2") ]] || { echo "nyx doesn't know an agent called $2 (nyx agent list --all)" >&2; exit 1; }
+      mkdir -p "$(dirname "$agent_file")"
+      printf '%s\n' "$2" >"$agent_file"
+      return ;;
+    skills)
+      link_skills
+      return ;;
+  esac
+
+  local cmd
+  cmd=$(current_agent)
+  if [[ -z $cmd ]]; then
+    if [[ -t 1 ]]; then
+      echo "No default coding agent yet. Choose one in Settings > Default Apps, or: nyx agent default CMD" >&2
+      exit 1
+    fi
+    exec nyx-settings --section apps
+  fi
+  if ! command -v "$cmd" >/dev/null; then
+    if [[ -t 1 ]]; then
+      echo "$cmd isn't installed. Install it in Nyx Store, or choose another agent in Settings." >&2
+      exit 1
+    fi
+    exec nyx-settings --section apps
+  fi
+  if ! [[ -t 0 && -t 1 ]]; then
+    exec xdg-terminal-exec nyx agent "$@"
+  fi
+
+  # Agents won't remember that they trust your home folder, so start in a work folder.
+  if [[ $PWD == "$HOME" ]]; then
+    for d in "$HOME/Work" "$HOME/Projects"; do
+      if [[ -d $d ]]; then
+        cd "$d"
+        break
+      fi
+    done
+  fi
+  link_skills
+  local flags
+  flags=$(agent_line "$cmd" | cut -f3)
+  # shellcheck disable=SC2086 # flags are words
+  exec "$cmd" $flags "$@"
 }
 
 # Package arguments until the first option; the rest pass through untouched.
@@ -98,6 +241,9 @@ case ${1:-} in
     shift
     command -v nyx-system >/dev/null || { echo "The Nyx System Manager isn't installed on this system." >&2; exit 1; }
     exec nyx-system service "$@" ;;
+  agent | agents)
+    shift
+    agent "$@" ;;
   plugin | plugins)
     shift
     command -v nyx-plugin >/dev/null || { echo "Plugins come with Nyx Bar, which isn't installed on this system." >&2; exit 1; }

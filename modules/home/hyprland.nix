@@ -66,6 +66,7 @@ in
     hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
     hl.bind("SUPER + SHIFT + E", hl.dsp.exec_cmd("uwsm stop"))
     hl.bind("SUPER + CTRL + L", hl.dsp.exec_cmd("loginctl lock-session"), { description = "Lock" })
+    hl.bind("SUPER + SHIFT + CTRL + A", launch("nyx agent"), { description = "Coding agent" })
 
     hl.bind("SUPER + LEFT", hl.dsp.focus({ direction = "l" }))
     hl.bind("SUPER + RIGHT", hl.dsp.focus({ direction = "r" }))
@@ -132,6 +133,15 @@ in
     if nyx_theme then
       nyx_theme:close()
       dofile((os.getenv("HOME") or "") .. "/.config/hypr/nyx-theme.lua")
+    end
+  ''
+  # The user's own Hyprland settings, for hand edits; NyxOS never writes this file.
+  + ''
+
+    local nyx_user = io.open((os.getenv("HOME") or "") .. "/.config/hypr/user.lua")
+    if nyx_user then
+      nyx_user:close()
+      dofile((os.getenv("HOME") or "") .. "/.config/hypr/user.lua")
     end
   ''
   # Values set in Nyx Settings, last so they win; Settings looks for this require line.

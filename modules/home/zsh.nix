@@ -35,6 +35,11 @@ in
       NYX_PROMPT_ACCENT='#${c.accent}'
       NYX_PROMPT_ERROR='#${c.danger}'
       ${builtins.readFile ./zsh/prompt.zsh}
+
+      # The user's own lines; NyxOS never writes this file.
+      if [[ -r ''${XDG_CONFIG_HOME:-$HOME/.config}/zsh/user.zsh ]]; then
+        source ''${XDG_CONFIG_HOME:-$HOME/.config}/zsh/user.zsh
+      fi
     '';
   };
 
