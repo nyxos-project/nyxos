@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# Open every app in the dev VM the way people do, and report what opens, what doesn't and
+# what an app logs while it starts. Run from the host:
+#
+#   scripts/smoke-apps [dock|glimpse] [OUT_DIR]
+#
+# dock:    the dock and its app drawer's command (setsid -f uwsm-app -- gtk-launch ID)
+# glimpse: GIO's launch, as Glimpse does (gio launch FILE)
+set -uo pipefail
+how=${1:-dock}
+out=${2:-/tmp/nyx-smoke-$how}
+vm=nyxos-dev
+mkdir -p "$out"
+
+vmsh() { incus exec "$vm" --env PATH=/run/wrappers/bin:/run/current-system/sw/bin -- /run/current-system/sw/bin/bash -c "$1"; }
+asken() {
+  vmsh "cd /tmp; su ken -c 'cd ~; export XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1 \
+    HYPRLAND_INSTANCE_SIGNATURE=\$(ls /run/user/1000/hypr | head -1) DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus; $1'"
+}
+clients() { asken "hyprctl clients -j" 2>/dev/null; }
+close_all() {
+  for a in $(clients | jq -r '.[] | select(.class != "") | .address'); do
+    asken "hyprctl dispatch 'hl.dsp.window.close({ window = \"address:$a\" })'" >/dev/null
+  done
+  sleep 1
+}
+
+# Every visible app: desktop file, its name, and the window class it should get.
+apps=$(vmsh 'for d in /run/current-system/sw/share/applications /etc/profiles/per-user/ken/share/applications; do
+  for f in "$d"/*.desktop; do
+    [ -e "$f" ] || continue
+    grep -q "^NoDisplay=true" "$f" && continue
+    grep -q "^Type=Application" "$f" || continue
+    id=$(basename "$f")
+    name=$(grep -m1 "^Name=" "$f" | cut -d= -f2-)
+    class=$(grep -m1 "^StartupWMClass=" "$f" | cut -d= -f2-)
+    printf "%s\t%s\t%s\t%s\n" "$id" "$f" "$name" "${class:-${id%.desktop}}"
+  done
+done | sort -u -t"	" -k1,1')
+
+close_all
+pass=0 fail=0
+: >"$out/report.tsv"
+while IFS=$'\t' read -r id file name class; do
+  [ -n "$id" ] || continue
+  since=$(vmsh 'date +%s')
+  case $how in
+    dock) asken "setsid -f uwsm-app -- gtk-launch $id >/dev/null 2>&1 </dev/null" ;;
+    glimpse) asken "setsid -f gio launch $file >/dev/null 2>&1 </dev/null" ;;
+  esac
+  got=""
+  for _ in $(seq 1 24); do
+    sleep 0.5
+    got=$(clients | jq -r --arg c "$class" --arg i "${id%.desktop}" '.[] | select((.class | ascii_downcase) == ($c | ascii_downcase) or (.class | ascii_downcase) == ($i | ascii_downcase)) | .address' | head -1)
+    [ -n "$got" ] && break
+  done
+  sleep 2
+  errors=$(vmsh "journalctl _UID=1000 --since @$since --no-pager -o cat 2>/dev/null | grep -i -E 'error|critical|panic|failed|not found|cannot|unable' | grep -v -E 'Vulkan|radv|MESA|vdrm|nyx-auth-gate|libvulkan' | sort -u | head -8")
+  other=$(clients | jq -r --arg a "$got" '.[] | select(.address != $a) | "\(.class) | \(.title)"' | head -3)
+  if [ -n "$got" ]; then
+    status=ok; pass=$((pass + 1))
+    geo=$(clients | jq -r --arg a "$got" '.[] | select(.address == $a) | "\(.size[0])x\(.size[1])+\(.at[0])+\(.at[1])"')
+    shot="$out/${id%.desktop}.png"
+    region=$(echo "$geo" | awk -F'[x+]' '{print $3","$4" "$1"x"$2}')
+    asken "grim -g \"$region\" /tmp/smoke.png" >/dev/null 2>&1 && incus file pull "$vm/tmp/smoke.png" "$shot" >/dev/null 2>&1
+  else
+    status=NO-WINDOW; fail=$((fail + 1))
+  fi
+  printf '%s\t%s\t%s\t%s\t%s\n' "$status" "$name" "$id" "$(echo "$errors" | tr '\n' '|')" "$(echo "$other" | tr '\n' '|')" >>"$out/report.tsv"
+  printf '%-10s %-28s %s\n' "$status" "$name" "$(echo "$errors" | head -2 | tr '\n' ' ' | cut -c1-140)"
+  close_all
+done <<<"$apps"
+echo "opened $pass, failed $fail; report in $out/report.tsv"

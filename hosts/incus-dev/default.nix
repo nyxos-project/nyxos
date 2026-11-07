@@ -91,10 +91,25 @@
   # dev-vm ssh.
   services.openssh.enable = true;
 
+  # The disk is a file in the host's Btrfs pool with a quota, and builds churn through it:
+  # freed blocks go back at once (discard) and daily, old generations and garbage go daily
+  # and whenever the disk runs low, and the journal stays small. Past the quota the disk
+  # turns read-only.
+  fileSystems."/".options = [ "discard" ];
+  services.fstrim.interval = "daily";
+  nix.gc = {
+    dates = lib.mkForce "daily";
+    options = lib.mkForce "--delete-older-than 3d";
+  };
+  services.journald.extraConfig = "SystemMaxUse=300M";
+
   # Rust builds take about 1 GiB per rustc; 6 jobs of 6 threads each overran 8 GiB.
   nix.settings = {
     max-jobs = 2;
     cores = 3;
+    # During a build, collect garbage when under 30 GiB are free, up to 60 GiB free.
+    min-free = 30 * 1024 * 1024 * 1024;
+    max-free = 60 * 1024 * 1024 * 1024;
   };
 
   # The Incus image allows a passwordless root console; `incus exec` is enough.

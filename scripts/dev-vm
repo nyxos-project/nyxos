@@ -37,6 +37,8 @@ Usage: scripts/dev-vm <command> [args]
   ssh [args]          SSH in as $user
   exec <cmd...>       Run a command as root in the VM
   shot [file]         Screenshot the VM's Hyprland session (default: shot.png)
+  disk [check|clean]  How much of the disk quota the host counts (after a trim); clean
+                      drops old generations, garbage and all but 3 known-good snapshots
   snapshot <name>     Create an Incus snapshot
   restore <name>      Restore an Incus snapshot
   destroy             Delete the VM and its snapshots
@@ -96,6 +98,32 @@ rebuild() {
   vm_exec nixos-rebuild "${1:-switch}" --flake "path:$flake_dir#$host" "${override_args[@]}"
   # An overridden input must not end up in flake.lock.
   [[ -n $packages_repo ]] || pull_lock "$flake_dir" "$repo"
+  disk_check
+}
+
+# The VM's disk is a file in a Btrfs pool with a quota: every block written counts until
+# the guest trims it, and past the quota the guest's disk turns read-only. So: trim, and
+# warn while there's still room to act.
+gib() { awk '{ v = $1; u = $2; if (u ~ /^T/) v *= 1024; else if (u ~ /^M/) v /= 1024; printf "%d", v }'; }
+disk_check() {
+  vm_exec fstrim / >/dev/null 2>&1 || true
+  local used quota
+  used=$(incus info "$vm" | awk '/Disk usage:/ { getline; sub(/GiB|TiB|MiB/, " &", $2); print $2, $3 }' | gib)
+  quota=$(incus config device get "$vm" root size | sed 's/GiB//')
+  echo "disk: ${used} GiB of ${quota} GiB counted on the host"
+  if ((used * 100 > quota * 75)); then
+    echo "WARNING: the VM's disk is over 75% of its quota. Run: scripts/dev-vm disk clean" >&2
+  fi
+}
+
+# Old generations, the store's garbage and old known-good snapshots (the newest three stay).
+disk_clean() {
+  vm_exec nix-env --delete-generations +3 --profile /nix/var/nix/profiles/system >/dev/null
+  vm_exec nix-collect-garbage | tail -1
+  vm_exec journalctl --vacuum-size=200M >/dev/null 2>&1 || true
+  incus snapshot list "$vm" -f csv -c n | grep '^known-good-' | sort -t- -k3 -n | head -n -3 |
+    while read -r s; do incus snapshot delete "$vm" "$s" && echo "deleted snapshot $s"; done
+  disk_check
 }
 
 cmd=${1:-}
@@ -155,8 +183,20 @@ case $cmd in
     ;;
   snapshot)
     # Snapshots of a running VM are crash-consistent; flush the guest's writes first.
+    # Trim first too: a snapshot keeps every block it holds for as long as it exists.
     vm_exec sync
+    vm_exec fstrim / >/dev/null 2>&1 || true
     incus snapshot create "$vm" "${1:?snapshot name}"
+    ;;
+  disk)
+    case ${1:-check} in
+      check) disk_check ;;
+      clean) disk_clean ;;
+      *)
+        usage >&2
+        exit 1
+        ;;
+    esac
     ;;
   restore) incus snapshot restore "$vm" "${1:?snapshot name}" ;;
   destroy) incus delete --force "$vm" ;;

@@ -42,6 +42,8 @@ in
     };
     hardware.graphics.enable = true;
     services.udisks2.enable = true;
+    # Trash, network places, phones and cameras in Files and the file dialogs.
+    services.gvfs.enable = true;
 
     # The Incus VM profile is built on the minimal profile, which turns these off.
     xdg = {
