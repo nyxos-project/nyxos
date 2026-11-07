@@ -37,7 +37,9 @@ in
     security.polkit.enable = true;
     # Screen readers speak through speech-dispatcher; espeak's mbrola voices are another
     # 645 MB.
-    services.speechd.package = pkgs.speechd.override { espeak = pkgs.espeak-ng.override { mbrolaSupport = false; }; };
+    services.speechd.package = pkgs.speechd.override {
+      espeak = pkgs.espeak-ng.override { mbrolaSupport = false; };
+    };
     hardware.graphics.enable = true;
     services.udisks2.enable = true;
 
@@ -88,7 +90,9 @@ in
 
     environment.etc."nyx-greeter/config.toml".text = ''
       theme = "${loginTheme}"
-      ${lib.optionalString (nyxPkgs.nyx-wallpapers.passthru.defaults ? ${loginTheme}) ''wallpaper = "${nyxPkgs.nyx-wallpapers.passthru.defaults.${loginTheme}}"''}
+      ${lib.optionalString (nyxPkgs.nyx-wallpapers.passthru.defaults ? ${loginTheme})
+        ''wallpaper = "${nyxPkgs.nyx-wallpapers.passthru.defaults.${loginTheme}}"''
+      }
       mark = "${greeter}/share/nyx-greeter/mark.png"
       default_session = "hyprland-uwsm"
       style = "${config.nyxos.signinStyle}"
