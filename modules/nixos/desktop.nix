@@ -69,6 +69,12 @@ in
     environment.systemPackages = [
       nyxPkgs.umbra-icons
       pkgs.adwaita-icon-theme
+      # The dock, Control Center, notifications and Home start apps with gtk-launch, as on
+      # Omarchy; only that command, not the rest of GTK 3's tools.
+      (pkgs.runCommand "gtk-launch" { } ''
+        mkdir -p $out/bin
+        ln -s ${pkgs.gtk3}/bin/gtk-launch $out/bin/gtk-launch
+      '')
     ];
     # Every account's default; a choice in Settings (the user's own dconf) wins.
     programs.dconf = {
