@@ -37,7 +37,7 @@ deciding, and how to work so things don't break again.
    ```bash
    cd ~/Projects/nyx-packages
    tar --exclude=.git --exclude=result -cf - . | incus exec nyxos-dev -- /run/current-system/sw/bin/tar -C /etc/nyxos/nyx-packages -xf -
-   scripts/../../nyxos/scripts/dev-vm exec systemd-run --unit nyx-pkgall --property=WorkingDirectory=/etc/nyxos/nyx-packages \
+   ~/Projects/nyxos/scripts/dev-vm exec systemd-run --unit nyx-pkgall --property=WorkingDirectory=/etc/nyxos/nyx-packages \
      --setenv=PATH=/run/wrappers/bin:/run/current-system/sw/bin /run/current-system/sw/bin/bash -c \
      'nix build --no-link --keep-going path:/etc/nyxos/nyx-packages#default > /var/tmp/pkgall.log 2>&1; echo build exit $? >> /var/tmp/pkgall.log'
    ```
