@@ -6,26 +6,41 @@
 #
 # dock:    the dock and its app drawer's command (setsid -f uwsm-app -- gtk-launch ID)
 # glimpse: GIO's launch, as Glimpse does (gio launch FILE)
+#
+# An app counts as opened when its window appears; a terminal app (Terminal=true) when
+# any new window does; an overlay (Clipboard, Glimpse) when its layer surface does, and
+# Escape closes it.
 set -uo pipefail
 how=${1:-dock}
 out=${2:-/tmp/nyx-smoke-$how}
 vm=nyxos-dev
 mkdir -p "$out"
 
-vmsh() { incus exec "$vm" --env PATH=/run/wrappers/bin:/run/current-system/sw/bin -- /run/current-system/sw/bin/bash -c "$1"; }
+# Not reading stdin, which is the list of apps the loop below reads.
+vmsh() { incus exec "$vm" --env PATH=/run/wrappers/bin:/run/current-system/sw/bin -- /run/current-system/sw/bin/bash -c "$1" </dev/null; }
 asken() {
   vmsh "cd /tmp; su ken -c 'cd ~; export XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1 \
-    HYPRLAND_INSTANCE_SIGNATURE=\$(ls /run/user/1000/hypr | head -1) DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus; $1'"
+    HYPRLAND_INSTANCE_SIGNATURE=\$(ls -t /run/user/1000/hypr | head -1) DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus; $1'"
 }
 clients() { asken "hyprctl clients -j" 2>/dev/null; }
+layers() { asken "hyprctl layers -j" 2>/dev/null | jq -r '[.. | .namespace? // empty] | unique | .[]'; }
 close_all() {
   for a in $(clients | jq -r '.[] | select(.class != "") | .address'); do
-    asken "hyprctl dispatch 'hl.dsp.window.close({ window = \"address:$a\" })'" >/dev/null
+    # asken's command sits inside single quotes: a Lua long string instead.
+    asken "hyprctl dispatch \"hl.dsp.window.close({ window = [[address:$a]] })\"" >/dev/null
   done
   sleep 1
 }
 
-# Every visible app: desktop file, its name, and the window class it should get.
+# NyxOS has no gio command (Glimpse calls GIO itself); nixpkgs' is enough to launch.
+# wtype presses Escape, which closes an overlay as it would for a person.
+if [ "$how" = glimpse ]; then
+  gio=$(vmsh 'nix build --no-link --print-out-paths nixpkgs#glib.bin 2>/dev/null | tail -1')/bin/gio
+fi
+wtype=$(vmsh 'nix build --no-link --print-out-paths nixpkgs#wtype 2>/dev/null | tail -1')/bin/wtype
+
+# Every visible app: desktop file, its name, the window class it should get, and
+# whether it runs in a terminal.
 apps=$(vmsh 'for d in /run/current-system/sw/share/applications /etc/profiles/per-user/ken/share/applications; do
   for f in "$d"/*.desktop; do
     [ -e "$f" ] || continue
@@ -34,25 +49,38 @@ apps=$(vmsh 'for d in /run/current-system/sw/share/applications /etc/profiles/pe
     id=$(basename "$f")
     name=$(grep -m1 "^Name=" "$f" | cut -d= -f2-)
     class=$(grep -m1 "^StartupWMClass=" "$f" | cut -d= -f2-)
-    printf "%s\t%s\t%s\t%s\n" "$id" "$f" "$name" "${class:-${id%.desktop}}"
+    term=$(grep -q "^Terminal=true" "$f" && echo yes || echo no)
+    printf "%s\t%s\t%s\t%s\t%s\n" "$id" "$f" "$name" "${class:-${id%.desktop}}" "$term"
   done
 done | sort -u -t"	" -k1,1')
+
+launch() {
+  case $how in
+    dock) asken "setsid -f uwsm-app -- gtk-launch $1 >/dev/null 2>&1 </dev/null" ;;
+    glimpse) asken "setsid -f $gio launch $2 >/dev/null 2>&1 </dev/null" ;;
+  esac
+}
 
 close_all
 pass=0 fail=0
 : >"$out/report.tsv"
-while IFS=$'\t' read -r id file name class; do
+while IFS=$'\t' read -r id file name class term; do
   [ -n "$id" ] || continue
   since=$(vmsh 'date +%s')
-  case $how in
-    dock) asken "setsid -f uwsm-app -- gtk-launch $id >/dev/null 2>&1 </dev/null" ;;
-    glimpse) asken "setsid -f gio launch $file >/dev/null 2>&1 </dev/null" ;;
-  esac
-  got=""
+  before=$(clients | jq -r '[.[].address] | join(" ")')
+  layers_before=$(layers)
+  launch "$id" "$file"
+  got="" overlay=""
   for _ in $(seq 1 24); do
     sleep 0.5
-    got=$(clients | jq -r --arg c "$class" --arg i "${id%.desktop}" '.[] | select((.class | ascii_downcase) == ($c | ascii_downcase) or (.class | ascii_downcase) == ($i | ascii_downcase)) | .address' | head -1)
+    got=$(clients | jq -r --arg c "$class" --arg i "${id%.desktop}" --arg term "$term" --arg before "$before" '
+      .[] | select(
+        (.class | ascii_downcase) == ($c | ascii_downcase) or (.class | ascii_downcase) == ($i | ascii_downcase)
+        or ($term == "yes" and (.address as $a | $before | split(" ") | index($a) | not)))
+      | .address' | head -1)
     [ -n "$got" ] && break
+    overlay=$(comm -13 <(echo "$layers_before") <(layers) | head -1)
+    [ -n "$overlay" ] && break
   done
   sleep 2
   errors=$(vmsh "journalctl _UID=1000 --since @$since --no-pager -o cat 2>/dev/null | grep -i -E 'error|critical|panic|failed|not found|cannot|unable' | grep -v -E 'Vulkan|radv|MESA|vdrm|nyx-auth-gate|libvulkan' | sort -u | head -8")
@@ -63,6 +91,12 @@ while IFS=$'\t' read -r id file name class; do
     shot="$out/${id%.desktop}.png"
     region=$(echo "$geo" | awk -F'[x+]' '{print $3","$4" "$1"x"$2}')
     asken "grim -g \"$region\" /tmp/smoke.png" >/dev/null 2>&1 && incus file pull "$vm/tmp/smoke.png" "$shot" >/dev/null 2>&1
+  elif [ -n "$overlay" ]; then
+    status=overlay; pass=$((pass + 1))
+    asken "grim /tmp/smoke.png" >/dev/null 2>&1 && incus file pull "$vm/tmp/smoke.png" "$out/${id%.desktop}.png" >/dev/null 2>&1
+    asken "$wtype -k Escape"
+    sleep 1
+    layers | grep -qx "$overlay" && other="Escape left $overlay open|$other"
   else
     status=NO-WINDOW; fail=$((fail + 1))
   fi
