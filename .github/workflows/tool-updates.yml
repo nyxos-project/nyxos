@@ -5,9 +5,10 @@
 #
 # `propose` runs upstream code (in the Nix sandbox) and gets no secrets and a read-only
 # token; `publish` builds nothing and only turns what `propose` made into pull requests
-# and issues. Its TOOLS_BOT_TOKEN (a GitHub App or fine-grained token for this repository
-# with contents, pull requests and issues) is what lets the pull requests run CI, which
-# ones opened with GITHUB_TOKEN don't.
+# and issues, with this run's own token (no stored secret). A pull request opened with
+# that token doesn't start CI by itself, so `publish` starts CI on the branch
+# (workflow_dispatch), and its result shows on the pull request. The repository allows
+# Actions to create pull requests (Settings → Actions → General).
 name: Tool updates
 
 on:
@@ -126,11 +127,12 @@ jobs:
       contents: write
       pull-requests: write
       issues: write
+      # Starting CI on the pull request's branch.
+      actions: write
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          token: ${{ secrets.TOOLS_BOT_TOKEN }}
 
       - uses: actions/download-artifact@v5
         with:
@@ -139,6 +141,6 @@ jobs:
 
       - name: Open or update pull requests and issues
         env:
-          GH_TOKEN: ${{ secrets.TOOLS_BOT_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: scripts/publish-tool-updates results

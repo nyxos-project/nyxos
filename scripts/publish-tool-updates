@@ -59,6 +59,8 @@ propose() {
     echo "$tool: $new is already proposed."
   else
     git push -q --force origin "$branch" || return 1
+    # Pushed with the workflow's own token, the branch starts no CI by itself.
+    gh workflow run ci.yml --ref "$branch" || return 1
   fi
 
   body=$(
