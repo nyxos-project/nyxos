@@ -24,7 +24,15 @@ let
           rc=$?
           if [ "$rc" -eq 0 ] || [ "$rc" -eq 3 ]; then exit "$rc"; fi
           echo "nyx-lock: Nyx Locker stopped ($rc); hyprlock takes over" >&2
-          exec ${hyprlock}
+          ${hyprlock}
+          rc=$?
+          # Nyx Locker told logind the session is locked (LockedHint) and hyprlock doesn't
+          # say otherwise, so once hyprlock has unlocked, clear it here.
+          if [ "$rc" -eq 0 ]; then
+            ${pkgs.systemd}/bin/busctl --system call org.freedesktop.login1 \
+              /org/freedesktop/login1/session/auto org.freedesktop.login1.Session SetLockedHint b false || true
+          fi
+          exit "$rc"
         ''
       )
     else
