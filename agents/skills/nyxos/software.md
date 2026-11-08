@@ -47,7 +47,8 @@ bring new items.
 nyx install PKG...            # nix profile add nixpkgs#PKG (nyx-NAME: the Nyx app's flake;
                               #   anything with # or : is a flake reference as given)
 nyx remove NAME...            # names as `nyx list` shows them
-nyx update [NAME...]          # all, or the ones named
+nyx update [NAME...]          # everything, or what's named (system, apps, tools, firmware,
+                              #   claude, firefox...): see system.md, Updates
 nyx list
 nyx history / nyx rollback    # undo the last install, removal or update
 nyx search TERM...

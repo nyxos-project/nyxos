@@ -5,7 +5,8 @@ usage() {
   cat <<'EOF'
 nyx install PKG…          install packages for your user
 nyx remove PKG…           remove them (also: uninstall)
-nyx update [PKG…]         update all your packages, or the ones named
+nyx update [WHAT…]        update everything, or system, apps, tools, firmware, or
+                          one thing by name (nyx update --help)
 nyx list                  your installed packages
 nyx search TERM…          search the package collection
 nyx run PKG [ARGS…]       run a program without installing it
@@ -198,8 +199,8 @@ case ${1:-} in
     exec nix profile remove "$@" ;;
   update | upgrade)
     shift
-    (($#)) || set -- --all
-    exec nix profile upgrade "$@" ;;
+    command -v nyx-system >/dev/null || { echo "The Nyx System Manager isn't installed on this system." >&2; exit 1; }
+    exec nyx-system update "$@" ;;
   list)
     shift
     exec nix profile list "$@" ;;

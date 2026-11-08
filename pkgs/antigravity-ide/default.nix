@@ -6,12 +6,13 @@
   buildVscode,
   fetchurl,
   writeShellScript,
+  stdenvNoCC,
+  pin,
   commandLineArgs ? "",
 }:
 buildVscode {
   inherit commandLineArgs;
-  version = "2.6.0";
-  vscodeVersion = "1.107.0";
+  inherit (pin) version vscodeVersion;
   pname = "antigravity-ide";
 
   executableName = "antigravity-ide";
@@ -20,13 +21,11 @@ buildVscode {
   libraryName = "antigravity-ide";
   iconName = "antigravity-ide";
 
-  src = fetchurl {
-    url = "https://edgedl.me.gvt1.com/edgedl/release2/j0qc3/antigravity/stable/2.6.0-5526304964083712/linux-x64/Antigravity%20IDE.tar.gz";
-    sha256 = "b060a7c7679103b2b619752f8ee7a3088dd241a7d207d4311974b56ea6f94356";
-  };
+  src = fetchurl { inherit (pin.srcs.${stdenvNoCC.hostPlatform.system}) url hash; };
   sourceRoot = "Antigravity IDE";
 
   tests = { };
+  # Google has no release feed for it; its pin in pkgs/tools/sources.json is bumped by hand.
   updateScript = writeShellScript "antigravity-ide-update" ''
     echo "New releases: https://antigravity.google/download" >&2
   '';

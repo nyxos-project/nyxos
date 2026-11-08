@@ -1,0 +1,144 @@
+# New releases of the tools NyxOS packages from pins (pkgs/tools/sources.json), as pull
+# requests: one per tool, on tool-update/NAME, opened only once the new pin builds and
+# passes its check. A release that fails opens or updates the issue "Tool update failed:
+# NAME", and the last validated pin stays. Nothing is merged automatically.
+#
+# `propose` runs upstream code (in the Nix sandbox) and gets no secrets and a read-only
+# token; `publish` builds nothing and only turns what `propose` made into pull requests
+# and issues. Its TOOLS_BOT_TOKEN (a GitHub App or fine-grained token for this repository
+# with contents, pull requests and issues) is what lets the pull requests run CI, which
+# ones opened with GITHUB_TOKEN don't.
+name: Tool updates
+
+on:
+  schedule:
+    - cron: "23 7 * * *"
+  workflow_dispatch:
+    inputs:
+      tool:
+        description: Only this tool (empty for every one)
+        required: false
+        default: ""
+
+permissions: {}
+
+concurrency:
+  group: tool-updates
+  cancel-in-progress: false
+
+jobs:
+  tools:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      list: ${{ steps.list.outputs.list }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - id: list
+        env:
+          ONLY: ${{ inputs.tool }}
+        run: |
+          all=$(scripts/update-tool --list)
+          if [ -n "$ONLY" ]; then
+            grep -qx -- "$ONLY" <<<"$all" || { echo "::error::no tool with a release feed is called $ONLY"; exit 1; }
+            all=$ONLY
+          fi
+          echo "list=$(jq -Rnc '[inputs]' <<<"$all")" >> "$GITHUB_OUTPUT"
+
+  propose:
+    needs: tools
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        tool: ${{ fromJSON(needs.tools.outputs.list) }}
+    steps:
+      - name: Free disk space
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache
+
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ github.token }}
+          extra_nix_config: |
+            http2 = false
+            stalled-download-timeout = 60
+
+      # Read-only: no token, so nothing built here reaches the cache.
+      - uses: cachix/cachix-action@v17
+        with:
+          name: ${{ vars.CACHIX_NAME }}
+
+      - name: Look for a release, build it and check it
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TOOL: ${{ matrix.tool }}
+        run: |
+          set -uo pipefail
+          mkdir -p out
+          if ! scripts/update-tool "$TOOL" > out/report.json 2> out/update.log; then
+            cat out/update.log
+            jq -n --arg tool "$TOOL" --arg log "$(tail -n 20 out/update.log)" \
+              '{tool: $tool, status: "failed", stage: "finding or verifying the release", log: $log}' > out/report.json
+            exit 0
+          fi
+          cat out/report.json
+          [ "$(jq -r .status out/report.json)" = updated ] || exit 0
+          git diff -- pkgs/tools/sources.json > out/change.patch
+          # Already proposed and waiting for review: don't build it again.
+          if git rev-parse -q --verify "origin/tool-update/$TOOL" >/dev/null &&
+            [ "$(git show "origin/tool-update/$TOOL:pkgs/tools/sources.json" | jq -c --arg t "$TOOL" '.[$t]')" = \
+              "$(jq -c --arg t "$TOOL" '.[$t]' pkgs/tools/sources.json)" ]; then
+            jq '.status = "waiting"' out/report.json > out/r && mv out/r out/report.json
+            exit 0
+          fi
+          if nix build -L --no-link ".#checks.x86_64-linux.tool-$TOOL" > out/build.log 2>&1; then
+            jq '.status = "proposed"' out/report.json > out/r
+          else
+            tail -n 60 out/build.log
+            jq --arg log "$(tail -n 40 out/build.log)" '.status = "failed" | .stage = "building and checking it" | .log = $log' \
+              out/report.json > out/r
+          fi
+          mv out/r out/report.json
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: tool-${{ matrix.tool }}
+          path: |
+            out/report.json
+            out/change.patch
+          if-no-files-found: ignore
+          retention-days: 7
+
+  publish:
+    needs: propose
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.TOOLS_BOT_TOKEN }}
+
+      - uses: actions/download-artifact@v5
+        with:
+          pattern: tool-*
+          path: results
+
+      - name: Open or update pull requests and issues
+        env:
+          GH_TOKEN: ${{ secrets.TOOLS_BOT_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/publish-tool-updates results

@@ -5,14 +5,13 @@
   lib,
   appimageTools,
   fetchurl,
+  stdenvNoCC,
+  pin,
 }:
 let
   pname = "antigravity-app";
-  version = "2.29.0";
-  src = fetchurl {
-    url = "https://storage.googleapis.com/antigravity-public/antigravity-hub/2.29.0-5723181030440960/linux-x64/Antigravity.AppImage";
-    hash = "sha512-D8NY3sxLGAfFgl8Y2Rk1IarFXFlcD/A3omEcAM7hTUOtAAvLKE9c9QxaVSQvxg65w3MPUr8Uhy0dXsHJcUSYyQ==";
-  };
+  inherit (pin) version;
+  src = fetchurl { inherit (pin.srcs.${stdenvNoCC.hostPlatform.system}) url hash; };
   contents = appimageTools.extractType2 { inherit pname version src; };
 in
 appimageTools.wrapType2 {

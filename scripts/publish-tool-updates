@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+# Turn what the tool-updates workflow's `propose` job found (DIR/tool-NAME/report.json and
+# change.patch) into pull requests and issues. A proposed update becomes a pull request
+# on tool-update/NAME (force-pushed, so there's one per tool); a failed one opens or
+# comments on "Tool update failed: NAME", once per version. A patch may only change that
+# tool's own pin, and its downloads must stay on the hosts the pin already uses.
+#
+#   scripts/publish-tool-updates DIR
+#
+# Needs git, gh (GH_TOKEN) and jq; RUN_URL links the workflow run.
+set -euo pipefail
+dir=${1:?usage: publish-tool-updates DIR}
+[ -d "$dir" ] || {
+  echo "Nothing to publish."
+  exit 0
+}
+cd "$(git rev-parse --show-toplevel)"
+sources=pkgs/tools/sources.json
+git config user.name "NyxOS tool updates"
+git config user.email "tool-updates@users.noreply.github.com"
+git fetch -q origin main
+
+hosts() {
+  jq -r --arg t "$1" '.[$t].srcs[].url | capture("^https://(?<h>[^/]+)/").h' | sort -u
+}
+
+open_issue() {
+  local title=$1
+  gh issue list --state open --search "\"$title\" in:title" --json number,title |
+    jq -r --arg t "$title" 'map(select(.title == $t))[0].number // empty'
+}
+
+propose() {
+  local tool=$1 report=$2 patch=$3 name old new release branch body pr issue
+  name=$(jq -r .name "$report")
+  old=$(jq -r .old "$report")
+  new=$(jq -r .new "$report")
+  release=$(jq -r .release "$report")
+  branch=tool-update/$tool
+
+  # Called from `||`, so set -e doesn't apply here: every step checks for itself.
+  git checkout -q -f -B "$branch" origin/main || return 1
+  if [ "$(git apply --numstat "$patch" | awk '{print $3}' | sort -u)" != "$sources" ]; then
+    echo "::error::$tool's patch changes more than $sources"
+    return 1
+  fi
+  git apply "$patch" || return 1
+  if [ "$(jq -S --arg t "$tool" 'del(.[$t])' "$sources")" != "$(git show "origin/main:$sources" | jq -S --arg t "$tool" 'del(.[$t])')" ]; then
+    echo "::error::$tool's patch changes other tools' pins"
+    return 1
+  fi
+  if [ "$(hosts "$tool" <"$sources")" != "$(git show "origin/main:$sources" | hosts "$tool")" ]; then
+    echo "::error::$tool's new pin downloads from somewhere new"
+    return 1
+  fi
+  git commit -q -am "Tools: $name $new" || return 1
+
+  if git rev-parse -q --verify "origin/$branch" >/dev/null && git diff --quiet "origin/$branch" HEAD; then
+    echo "$tool: $new is already proposed."
+  else
+    git push -q --force origin "$branch" || return 1
+  fi
+
+  body=$(
+    cat <<EOF
+$name: **$old → $new**
+
+- Release: $release
+- Changed: \`$sources\` (this tool's pin only: version, download and hash)
+- Hash: verified by \`scripts/update-tool $tool\` (against the vendor's published hash where it has one)
+- Build and check (\`checks.x86_64-linux.tool-$tool\`): passed in ${RUN_URL:-the tool-updates workflow}. It starts the
+  tool with an empty home folder and no network, compares \`--version\` with the pin and
+  makes sure nothing that could update it lands in that home folder.
+
+Merging puts it on \`main\` (testing); stable machines get it when \`stable\` is promoted.
+Read the release notes for anything that changes how NyxOS runs the tool (new flags,
+a different updater, new files it needs) first: those need a recipe change and a new
+\`recipe\` number, not just this pin.
+EOF
+  )
+  pr=$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty') || return 1
+  if [ -n "$pr" ]; then
+    gh pr edit "$pr" --title "Tools: $name $new" --body "$body" >/dev/null || return 1
+  else
+    pr=$(gh pr create --base main --head "$branch" --title "Tools: $name $new" --body "$body" | sed -n 's|.*/pull/||p')
+    [ -n "$pr" ] || return 1
+  fi
+  issue=$(open_issue "Tool update failed: $tool")
+  if [ -n "$issue" ]; then
+    gh issue close "$issue" --comment "$name $new builds and passes its check: #$pr." >/dev/null
+  fi
+  echo "$tool: #$pr"
+}
+
+failed() {
+  local tool=$1 report=$2 name new stage log title issue body
+  name=$(jq -r '.name // .tool' "$report")
+  new=$(jq -r '.new // "its newest release"' "$report")
+  stage=$(jq -r .stage "$report")
+  log=$(jq -r '.log // ""' "$report")
+  title="Tool update failed: $tool"
+  body=$(
+    cat <<EOF
+$name $new failed while $stage. The pin on \`main\` is unchanged.
+
+Run: ${RUN_URL:-the tool-updates workflow}
+
+\`\`\`
+$log
+\`\`\`
+EOF
+  )
+  issue=$(open_issue "$title")
+  if [ -z "$issue" ]; then
+    gh issue create --title "$title" --body "$body" >/dev/null
+    echo "$tool: failed, issue opened"
+  elif ! gh issue view "$issue" --json body,comments --jq '[.body] + [.comments[].body] | join("\n")' | grep -qF -- "$name $new failed"; then
+    gh issue comment "$issue" --body "$body" >/dev/null
+    echo "$tool: failed again, issue #$issue updated"
+  else
+    echo "$tool: failed, already reported in #$issue"
+  fi
+}
+
+status=0
+for d in "$dir"/tool-*/; do
+  [ -f "$d/report.json" ] || continue
+  tool=$(jq -r .tool "$d/report.json")
+  case $(jq -r .status "$d/report.json") in
+    proposed) propose "$tool" "$d/report.json" "$d/change.patch" || status=1 ;;
+    failed) failed "$tool" "$d/report.json" ;;
+    *) ;;
+  esac
+done
+git checkout -q --detach origin/main
+exit $status

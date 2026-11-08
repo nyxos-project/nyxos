@@ -129,7 +129,7 @@ status` for a service, the app itself for its settings, `nyx-system settings` fo
 - "Change the computer's name to studio" -> `nyx-system set hostname studio`
 - "Turn on SSH" -> `nyx-system service ssh on` (it opens port 22 too)
 - "Open port 8080" -> `nyx-system port open 8080 tcp`
-- "Update everything" -> `nyx-system update`, and `nyx update` for the user's own packages
+- "Update everything" -> `nyx update` (it plans, then asks); "update Claude" -> `nyx update claude`
 - "Undo the last system change" -> `nyx-system rollback`
 - "Switch to the light theme" -> set `theme = "nyx-light"` in `~/.config/nyx/theme.toml`, or
   Settings > Theme

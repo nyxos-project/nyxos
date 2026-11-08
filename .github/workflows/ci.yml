@@ -10,6 +10,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -32,10 +35,13 @@ jobs:
             http2 = false
             stalled-download-timeout = 60
 
+      # A tool update's new binaries reach the cache once it's reviewed and merged, not
+      # from its pull request.
       - uses: cachix/cachix-action@v17
         with:
           name: ${{ vars.CACHIX_NAME }}
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          skipPush: ${{ startsWith(github.head_ref, 'tool-update/') }}
 
       - name: Format
         run: nix fmt -- --check $(git ls-files '*.nix')

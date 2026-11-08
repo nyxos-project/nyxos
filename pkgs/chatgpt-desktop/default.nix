@@ -9,16 +9,14 @@
   dpkg,
   buildFHSEnv,
   writeShellScript,
+  pin,
 }:
 let
-  version = "26.1103.31037";
+  inherit (pin) version;
   unwrapped = stdenvNoCC.mkDerivation {
     pname = "chatgpt-desktop-unwrapped";
     inherit version;
-    src = fetchurl {
-      url = "https://persistent.oaistatic.com/codex-app-prod/linux/deb/pool/main/c/chatgpt/chatgpt_${version}_amd64.deb";
-      sha256 = "32fed80ad3f8caf666e5860022361e9709d64aa318cfb19f548e8b458d4f6793";
-    };
+    src = fetchurl { inherit (pin.srcs.${stdenvNoCC.hostPlatform.system}) url hash; };
     nativeBuildInputs = [ dpkg ];
     unpackPhase = "dpkg-deb -x $src .";
     dontConfigure = true;

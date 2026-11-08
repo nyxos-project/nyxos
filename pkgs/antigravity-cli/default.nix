@@ -1,27 +1,29 @@
 # Google's Antigravity CLI, which nixpkgs doesn't have (its `antigravity` is the IDE).
-# The release is one static binary; it runs as `agy`, so it never shadows the IDE.
+# The release is one static binary; it runs as `agy`, so it never shadows the IDE, with
+# its updater off.
 {
   lib,
   stdenvNoCC,
   fetchurl,
+  makeBinaryWrapper,
+  pin,
 }:
-stdenvNoCC.mkDerivation (finalAttrs: {
+stdenvNoCC.mkDerivation {
   pname = "antigravity-cli";
-  version = "1.5.1";
+  inherit (pin) version;
 
-  src = fetchurl {
-    url = "https://github.com/google-antigravity/antigravity-cli/releases/download/${finalAttrs.version}/agy_cli_linux_x64_musl.tar.gz";
-    hash = "sha256-6nSuWn1vVNkfc+QA1r8h9K1EGNQQq4lK1Q7mP7DmRL4=";
-  };
+  src = fetchurl { inherit (pin.srcs.${stdenvNoCC.hostPlatform.system}) url hash; };
 
   sourceRoot = ".";
+  nativeBuildInputs = [ makeBinaryWrapper ];
   dontConfigure = true;
   dontBuild = true;
   dontStrip = true;
 
   installPhase = ''
     runHook preInstall
-    install -Dm755 antigravity $out/bin/agy
+    install -Dm755 antigravity $out/libexec/agy
+    makeWrapper $out/libexec/agy $out/bin/agy --set AGY_CLI_DISABLE_AUTO_UPDATE 1
     runHook postInstall
   '';
 
@@ -33,4 +35,4 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     platforms = [ "x86_64-linux" ];
     mainProgram = "agy";
   };
-})
+}

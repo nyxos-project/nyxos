@@ -59,7 +59,7 @@ nyx-system hardware                          # graphics, processor, battery, Blu
 nyx-system hardware apply                    # drivers, power and firmware for it
 nyx-system nvidia-driver on|off              # NVIDIA's own driver (unfree) or nouveau
 
-nyx-system update                            # update NyxOS and its apps, then switch
+nyx-system update [WHAT...] [--dry-run]      # the same as `nyx update` (see Updates)
 nyx-system generations
 nyx-system rollback                          # back to the previous generation
 nyx-system clean [DAYS]                      # ONLY when asked: drops old generations
@@ -116,12 +116,34 @@ sudo nixos-rebuild switch --flake path:/etc/nyxos/flake#$host \
 
 ## Updates and release channels
 
-- `nyx-system update` updates the flake's inputs (NyxOS, nixpkgs, Nyx apps), builds, and
-  switches. It can take a while; the Settings and Welcome Update buttons run the same thing.
-- The user's own packages are separate: `nyx update`. Flatpaks: `flatpak update`.
+One command updates everything, each piece through what owns it:
+
+```bash
+nyx update                   # everything: plans, asks once, then updates (firmware asked apart)
+nyx update system            # the channel: NixOS, NyxOS, Nyx apps, apps from nixpkgs
+nyx update apps              # Flatpaks and the user's Nix profile (and the channel, if it has news)
+nyx update tools             # the coding agents NyxOS packages, in one rebuild
+nyx update firmware          # fwupd; always asked, never undoable
+nyx update claude            # one thing by name: codex, cursor-agent, grok, firefox, gimp...
+nyx update … --dry-run       # the plan only; --yes doesn't ask
+nyx update status            # what has updates
+nyx update history           # what was updated, and how it went
+```
+
+- A name that fits several things (`cursor`: Cursor Agent and the Cursor IDE) is listed,
+  not guessed: use the id it shows.
+- System steps (the channel, tool pins) are one System Manager rebuild: built first, then
+  switched to, undone if either fails. They ask for the administrator's password.
+- `nyx update claude` copies Claude Code's pin from the head of the channel into
+  `/etc/nyxos/overrides/tools.json` and rebuilds, so only it changes. A tool whose new
+  release is built differently says it comes with `nyx update system` instead. A system
+  update empties that file. `/etc/nyxos/tools.json` shows the tools as built.
+- The coding agents' own updaters are off: NyxOS updates them. Don't run `claude update`,
+  `npm i -g`, or an install script over them.
 - The channel is the `nyxos.url` line in `/etc/nyxos/flake/flake.nix`: `.../stable` or
-  `.../testing`. Change it only when the user asks, then `nyx-system update`.
-- Firmware: `fwupdmgr get-updates` / `fwupdmgr update` (real hardware).
+  `.../testing`. Change it only when the user asks, then `nyx update system`.
+- A daily check (`nyx-update-check` user timer) notifies when something's new; it skips
+  metered connections. `nyx-system config set updates check false` stops it.
 
 ## Generations, rollback and recovery
 
@@ -133,8 +155,9 @@ sudo nixos-rebuild switch --flake path:/etc/nyxos/flake#$host \
   and no network that runs `nyx-recovery` as root (generations, configuration repair,
   health checks, accounts, restoring from a backup). Point the user there when the desktop
   won't start.
-- `/etc/nyxos/built-from/` holds the `flake.lock` and `system.json` the running generation
-  was built from, so a broken settings layer can be put back.
+- `/etc/nyxos/built-from/` holds the `flake.lock`, `system.json` and (after a single-tool
+  update) `tools.json` the running generation was built from, so a broken settings layer
+  can be put back.
 
 ## Snapshots and backup
 

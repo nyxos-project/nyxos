@@ -34,6 +34,13 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      # The tools as the channel pins them, built the way a system builds them (unfree
+      # ones too: the checks only build and start them).
+      toolPkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [ self.overlays.tools ];
+      };
     in
     {
       packages.${system} = {
@@ -64,6 +71,14 @@
           modules = [ ./modules/nixos ] ++ modules;
         };
 
+      # The tool pins (pkgs/tools/sources.json): what `nyx update NAME` takes from the head
+      # of a channel.
+      lib.tools = nixpkgs.lib.importJSON ./pkgs/tools/sources.json;
+
+      overlays.tools = import ./pkgs/tools/overlay.nix {
+        pins = import ./pkgs/tools/pins.nix { inherit (nixpkgs) lib; };
+      };
+
       templates.host = {
         path = ./templates/host;
         description = "An installed NyxOS machine's flake (the installer fills it in)";
@@ -90,18 +105,24 @@
         modules = [ ./hosts/incus-dev ];
       };
 
-      checks.${system} = {
-        incus-dev = self.nixosConfigurations.incus-dev.config.system.build.toplevel;
-        catalog = import ./checks/catalog.nix {
-          inherit pkgs;
+      checks.${system} =
+        import ./checks/tools.nix {
+          pkgs = toolPkgs;
           inherit (nixpkgs) lib;
-          catalog = inputs.nyx-packages.lib.catalog;
-          nixos = self.nixosConfigurations.incus-dev;
+          pins = self.lib.tools;
+        }
+        // {
+          incus-dev = self.nixosConfigurations.incus-dev.config.system.build.toplevel;
+          catalog = import ./checks/catalog.nix {
+            inherit pkgs;
+            inherit (nixpkgs) lib;
+            catalog = inputs.nyx-packages.lib.catalog;
+            nixos = self.nixosConfigurations.incus-dev;
+          };
+          inherit (self.packages.${system}) nyx-cli;
+          # An installed machine, as the installer writes one.
+          installed = self.nixosConfigurations.example.config.system.build.toplevel;
         };
-        inherit (self.packages.${system}) nyx-cli;
-        # An installed machine, as the installer writes one.
-        installed = self.nixosConfigurations.example.config.system.build.toplevel;
-      };
 
       formatter.${system} = pkgs.nixfmt;
     };

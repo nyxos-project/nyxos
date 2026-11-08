@@ -1,0 +1,235 @@
+#!/usr/bin/env bash
+# Bring one tool's pin in pkgs/tools/sources.json up to its newest stable release.
+#
+#   scripts/update-tool NAME     check NAME; rewrite its pin if there's a newer release
+#   scripts/update-tool --list   the tools CI can check (those with a release feed)
+#
+# Prints one line of JSON: {tool, name, old, new, status, release}, where status is
+# "current", "updated" or "manual" (no release feed: bumped by hand). Releases come from
+# each upstream's structured feed, never a web page; every hash is checked against what
+# the vendor published (GitHub's asset digest, Anthropic's manifest, OpenAI's apt index,
+# Herdr's latest.json) or, where nothing is published, against the download itself
+# (Grok: the bucket's MD5; Cursor: none, only HTTPS). Exits non-zero, changing nothing,
+# when a release can't be found or doesn't verify. Needs curl, jq, nix and gh.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+sources=pkgs/tools/sources.json
+
+die() {
+  echo "update-tool: $*" >&2
+  exit 1
+}
+
+if [[ ${1:-} == --list ]]; then
+  jq -r 'to_entries[] | select(.value.upstream.kind != "manual") | .key' "$sources"
+  exit 0
+fi
+(($# == 1)) || die "usage: update-tool NAME | --list"
+tool=$1
+pin=$(jq -e --arg t "$tool" '.[$t]' "$sources") || die "there's no pin called $tool"
+upstream=$(jq -c .upstream <<<"$pin")
+kind=$(jq -r .kind <<<"$upstream")
+old=$(jq -r .version <<<"$pin")
+name=$(jq -r .name <<<"$pin")
+
+fetch() {
+  curl -fsSL --retry 3 --max-time 120 "$@"
+}
+
+# hex sha256 → SRI
+sri() {
+  nix hash convert --hash-algo sha256 --to sri "$1"
+}
+
+# Download URL into the store; prints its SRI hash and path.
+prefetch() {
+  nix store prefetch-file --json --hash-type sha256 "$1" | jq -r '"\(.hash) \(.storePath)"'
+}
+
+# Whether version $2 is newer than $1.
+newer() {
+  [[ $1 != "$2" && $(printf '%s\n%s\n' "$1" "$2" | sort -V | tail -n1) == "$2" ]]
+}
+
+report() {
+  jq -nc --arg tool "$tool" --arg name "$name" --arg old "$old" --arg new "$1" --arg status "$2" --arg release "$3" \
+    '{tool: $tool, name: $name, old: $old, new: $new, status: $status, release: $release}'
+}
+
+# Each kind sets: version, release (a page about it), extra (JSON merged into the pin)
+# and srcs (JSON: platform → {url, hash}), the last only when `version` is newer.
+version="" release="" extra='{}' srcs='{}'
+
+platforms() {
+  jq -r "$1 | keys[]" <<<"$upstream"
+}
+
+from_github() {
+  local repo tagtpl rel tag prefix suffix plat asset entry digest
+  repo=$(jq -r .repo <<<"$upstream")
+  tagtpl=$(jq -r .tag <<<"$upstream")
+  # The newest release that isn't a draft or a prerelease.
+  rel=$(gh api "repos/$repo/releases/latest")
+  tag=$(jq -r .tag_name <<<"$rel")
+  prefix=${tagtpl%%"{version}"*}
+  suffix=${tagtpl#*"{version}"}
+  version=${tag#"$prefix"}
+  version=${version%"$suffix"}
+  [[ $version =~ ^[0-9]+(\.[0-9]+)+$ ]] || die "$repo's latest tag $tag isn't $tagtpl"
+  release=$(jq -r .html_url <<<"$rel")
+  newer "$old" "$version" || return 0
+  for plat in $(platforms .assets); do
+    asset=$(jq -r --arg p "$plat" '.assets[$p]' <<<"$upstream")
+    asset=${asset//"{version}"/$version}
+    entry=$(jq -c --arg a "$asset" '.assets[] | select(.name == $a)' <<<"$rel")
+    [[ -n $entry ]] || die "$repo $tag has no $asset"
+    digest=$(jq -r '.digest // ""' <<<"$entry")
+    [[ $digest == sha256:* ]] || die "$repo $tag doesn't publish a sha256 for $asset"
+    srcs=$(jq -c --arg p "$plat" --arg u "$(jq -r .browser_download_url <<<"$entry")" --arg h "$(sri "${digest#sha256:}")" \
+      '.[$p] = {url: $u, hash: $h}' <<<"$srcs")
+  done
+}
+
+from_claude() {
+  local bucket manifest plat key sum
+  bucket=$(jq -r .bucket <<<"$upstream")
+  version=$(fetch "$bucket/stable" | tr -d '[:space:]')
+  [[ $version =~ ^[0-9]+(\.[0-9]+)+$ ]] || die "Claude Code's stable channel says '$version'"
+  release="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"
+  newer "$old" "$version" || return 0
+  manifest=$(fetch "$bucket/$version/manifest.json")
+  [[ $(jq -r .version <<<"$manifest") == "$version" ]] || die "Claude Code's manifest isn't for $version"
+  for plat in $(platforms .platforms); do
+    key=$(jq -r --arg p "$plat" '.platforms[$p]' <<<"$upstream")
+    sum=$(jq -r --arg k "$key" '.platforms[$k].checksum // ""' <<<"$manifest")
+    [[ $sum =~ ^[0-9a-f]{64}$ ]] || die "Claude Code's manifest has no checksum for $key"
+    srcs=$(jq -c --arg p "$plat" --arg u "$bucket/$version/$key/claude" --arg h "$(sri "$sum")" \
+      '.[$p] = {url: $u, hash: $h}' <<<"$srcs")
+  done
+}
+
+from_cursor() {
+  local plat dir url hash
+  # The install script names the release it installs.
+  version=$(fetch https://cursor.com/install | grep -oP 'downloads\.cursor\.com/lab/\K[0-9]{4}\.[0-9]{2}\.[0-9]{2}-[0-9a-f]+' | head -n1)
+  [[ -n $version ]] || die "cursor.com/install names no release"
+  release="https://cursor.com/changelog"
+  newer "$old" "$version" || return 0
+  for plat in $(platforms .platforms); do
+    dir=$(jq -r --arg p "$plat" '.platforms[$p]' <<<"$upstream")
+    url="https://downloads.cursor.com/lab/$version/$dir/agent-cli-package.tar.gz"
+    read -r hash _ < <(prefetch "$url")
+    srcs=$(jq -c --arg p "$plat" --arg u "$url" --arg h "$hash" '.[$p] = {url: $u, hash: $h}' <<<"$srcs")
+  done
+}
+
+from_grok() {
+  local plat key url hash path md5 want
+  version=$(fetch https://x.ai/cli/stable | tr -d '[:space:]')
+  [[ $version =~ ^[0-9]+(\.[0-9]+)+$ ]] || die "x.ai/cli/stable says '$version'"
+  release="https://x.ai/cli"
+  newer "$old" "$version" || return 0
+  for plat in $(platforms .platforms); do
+    key=$(jq -r --arg p "$plat" '.platforms[$p]' <<<"$upstream")
+    url="https://storage.googleapis.com/grok-build-public-artifacts/cli/grok-$version-$key"
+    want=$(curl -fsSI --retry 3 "$url" | tr -d '\r' | sed -n 's/^x-goog-hash: md5=//Ip' | head -n1)
+    [[ -n $want ]] || die "the bucket publishes no MD5 for grok $version"
+    read -r hash path < <(prefetch "$url")
+    md5=$(openssl dgst -md5 -binary "$path" | base64)
+    [[ $md5 == "$want" ]] || die "grok $version doesn't match the bucket's MD5"
+    srcs=$(jq -c --arg p "$plat" --arg u "$url" --arg h "$hash" '.[$p] = {url: $u, hash: $h}' <<<"$srcs")
+  done
+}
+
+from_apt() {
+  local repo suite pkg arch index listed have entry file sum
+  repo=$(jq -r .repo <<<"$upstream")
+  suite=$(jq -r .suite <<<"$upstream")
+  pkg=$(jq -r .package <<<"$upstream")
+  arch=$(jq -r .arch <<<"$upstream")
+  index="main/binary-$arch/Packages"
+  # The Packages index must be the one the suite's Release file lists.
+  listed=$(fetch "$repo/dists/$suite/Release" | awk -v f="$index" '/^SHA256:/ {s = 1; next} /^[^ ]/ {s = 0} s && $3 == f {print $1}')
+  [[ -n $listed ]] || die "$repo's Release lists no $index"
+  fetch "$repo/dists/$suite/$index" >"$tmp/Packages"
+  have=$(sha256sum "$tmp/Packages" | cut -d' ' -f1)
+  [[ $have == "$listed" ]] || die "$repo's $index doesn't match its Release file"
+  # The newest version of the package in the index.
+  entry=$(awk -v p="$pkg" 'BEGIN {RS = ""} $0 ~ "(^|\n)Package: " p "\n" {print; print "\x1e"}' "$tmp/Packages" |
+    awk 'BEGIN {RS = "\x1e"} /Version:/ {v = $0; sub(/.*Version: /, "", v); sub(/\n.*/, "", v); print v "\t" NR}' |
+    sort -V | tail -n1 | cut -f1)
+  [[ -n $entry ]] || die "$repo has no $pkg"
+  version=$entry
+  release="$repo"
+  newer "$old" "$version" || return 0
+  file=$(awk -v p="$pkg" -v v="$version" 'BEGIN {RS = ""} $0 ~ "(^|\n)Package: " p "\n" && $0 ~ "\nVersion: " v "\n" {print}' "$tmp/Packages" |
+    sed -n 's/^Filename: //p' | head -n1)
+  sum=$(awk -v p="$pkg" -v v="$version" 'BEGIN {RS = ""} $0 ~ "(^|\n)Package: " p "\n" && $0 ~ "\nVersion: " v "\n" {print}' "$tmp/Packages" |
+    sed -n 's/^SHA256: //p' | head -n1)
+  [[ -n $file && $sum =~ ^[0-9a-f]{64}$ ]] || die "$repo's entry for $pkg $version has no file or SHA256"
+  srcs=$(jq -c --arg u "$repo/$file" --arg h "$(sri "$sum")" '.["x86_64-linux"] = {url: $u, hash: $h}' <<<"$srcs")
+}
+
+from_herdr() {
+  local app core plat key core_version core_old core_min a c
+  app=$(fetch https://releases.herdr.dev/app/latest.json)
+  core=$(fetch https://releases.herdr.dev/core/latest.json)
+  version=$(jq -r .version <<<"$app")
+  core_version=$(jq -r .version <<<"$core")
+  core_min=$(jq -r '.core_min // "0"' <<<"$app")
+  core_old=$(jq -r .coreVersion <<<"$pin")
+  [[ $version =~ ^[0-9]+(\.[0-9]+)+$ && $core_version =~ ^[0-9]+(\.[0-9]+)+$ ]] || die "Herdr's latest.json files have no versions"
+  release="https://herdr.dev"
+  # A new core alone is an update too; the app's version names the pin.
+  if ! newer "$old" "$version" && ! newer "$core_old" "$core_version"; then
+    version=$old
+    return 0
+  fi
+  newer "$core_version" "$core_min" && die "Herdr $version needs core $core_min, but the newest core is $core_version"
+  extra=$(jq -nc --arg c "$core_version" '{coreVersion: $c}')
+  for plat in $(platforms .platforms); do
+    key=$(jq -r --arg p "$plat" '.platforms[$p]' <<<"$upstream")
+    a=$(jq -c --arg k "$key" '.targets[$k]' <<<"$app")
+    c=$(jq -c --arg k "$key" '.targets[$k]' <<<"$core")
+    [[ $(jq -r '.sha256 // ""' <<<"$a") =~ ^[0-9a-f]{64}$ && $(jq -r '.sha256 // ""' <<<"$c") =~ ^[0-9a-f]{64}$ ]] ||
+      die "Herdr publishes no sha256 for $key"
+    srcs=$(jq -c --arg p "$plat" --arg cp "core-$plat" \
+      --arg au "$(jq -r .url <<<"$a")" --arg ah "$(sri "$(jq -r .sha256 <<<"$a")")" \
+      --arg cu "$(jq -r .url <<<"$c")" --arg ch "$(sri "$(jq -r .sha256 <<<"$c")")" \
+      '.[$p] = {url: $au, hash: $ah} | .[$cp] = {url: $cu, hash: $ch}' <<<"$srcs")
+  done
+  if [[ $version == "$old" ]]; then
+    name="$name (core $core_old → $core_version)"
+  fi
+}
+
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+case $kind in
+  manual)
+    report "$old" manual "$(jq -r .page <<<"$upstream")"
+    exit 0
+    ;;
+  github) from_github ;;
+  claude) from_claude ;;
+  cursor) from_cursor ;;
+  grok) from_grok ;;
+  apt) from_apt ;;
+  herdr) from_herdr ;;
+  *) die "$tool's upstream kind $kind isn't one this script knows" ;;
+esac
+
+if [[ $srcs == '{}' ]]; then
+  report "$version" current "$release"
+  exit 0
+fi
+
+# Every platform the pin had must still have a download.
+missing=$(jq -rn --argjson old "$(jq -c .srcs <<<"$pin")" --argjson new "$srcs" '$old | keys - ($new | keys) | join(" ")')
+[[ -z $missing ]] || die "the new release has nothing for $missing"
+
+jq --arg t "$tool" --arg v "$version" --argjson s "$srcs" --argjson x "$extra" \
+  '.[$t] = (.[$t] + {version: $v, srcs: $s} + $x)' "$sources" >"$tmp/sources.json"
+mv "$tmp/sources.json" "$sources"
+report "$version" updated "$release"

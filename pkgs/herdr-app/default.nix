@@ -20,12 +20,11 @@
   libxi,
   alsa-lib,
   libpulseaudio,
+  pin,
 }:
 let
-  core = fetchurl {
-    url = "https://releases.herdr.dev/core/0.1.18/herdr-core-linux-x86_64.tar.gz";
-    sha256 = "5b2f97cb4b2a9d7a6b2cc5942628203ed9fbb7cc0c2b4b09ad8a6f5648e246b7";
-  };
+  system = stdenv.hostPlatform.system;
+  core = fetchurl { inherit (pin.srcs."core-${system}") url hash; };
   # The app opens these at run time.
   runtime = [
     vulkan-loader
@@ -44,12 +43,9 @@ let
 in
 stdenv.mkDerivation {
   pname = "herdr-app";
-  version = "0.1.13";
+  inherit (pin) version;
 
-  src = fetchurl {
-    url = "https://releases.herdr.dev/app/0.1.13/herdr-app-linux-x86_64.tar.gz";
-    sha256 = "77b0be72a46ca14bb367365a04164641f914b3a69712bac391d39c56a959bef4";
-  };
+  src = fetchurl { inherit (pin.srcs.${system}) url hash; };
 
   nativeBuildInputs = [
     autoPatchelfHook

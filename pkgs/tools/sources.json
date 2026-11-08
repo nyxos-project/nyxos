@@ -1,0 +1,225 @@
+{
+  "antigravity-app": {
+    "name": "Google Antigravity",
+    "version": "2.29.0",
+    "recipe": 1,
+    "aliases": [],
+    "srcs": {
+      "x86_64-linux": {
+        "url": "https://storage.googleapis.com/antigravity-public/antigravity-hub/2.29.0-5723181030440960/linux-x64/Antigravity.AppImage",
+        "hash": "sha512-D8NY3sxLGAfFgl8Y2Rk1IarFXFlcD/A3omEcAM7hTUOtAAvLKE9c9QxaVSQvxg65w3MPUr8Uhy0dXsHJcUSYyQ=="
+      }
+    },
+    "upstream": {
+      "kind": "manual",
+      "page": "https://antigravity.google/download"
+    }
+  },
+  "antigravity-cli": {
+    "name": "Antigravity CLI",
+    "version": "1.5.1",
+    "recipe": 1,
+    "aliases": [
+      "agy"
+    ],
+    "srcs": {
+      "x86_64-linux": {
+        "url": "https://github.com/google-antigravity/antigravity-cli/releases/download/1.5.1/agy_cli_linux_x64_musl.tar.gz",
+        "hash": "sha256-6nSuWn1vVNkfc+QA1r8h9K1EGNQQq4lK1Q7mP7DmRL4="
+      }
+    },
+    "upstream": {
+      "kind": "github",
+      "repo": "google-antigravity/antigravity-cli",
+      "tag": "{version}",
+      "assets": {
+        "x86_64-linux": "agy_cli_linux_x64_musl.tar.gz"
+      }
+    }
+  },
+  "antigravity-ide": {
+    "name": "Antigravity IDE",
+    "version": "2.6.0",
+    "recipe": 1,
+    "aliases": [],
+    "vscodeVersion": "1.107.0",
+    "srcs": {
+      "x86_64-linux": {
+        "url": "https://edgedl.me.gvt1.com/edgedl/release2/j0qc3/antigravity/stable/2.6.0-5526304964083712/linux-x64/Antigravity%20IDE.tar.gz",
+        "hash": "sha256-sGCnx2eRA7K2GXUvjuejCI3SQafSB9QxGXS1bqb5Q1Y="
+      }
+    },
+    "upstream": {
+      "kind": "manual",
+      "page": "https://antigravity.google/download"
+    }
+  },
+  "chatgpt-desktop": {
+    "name": "ChatGPT",
+    "version": "26.1103.31037",
+    "recipe": 1,
+    "aliases": [
+      "chatgpt"
+    ],
+    "srcs": {
+      "x86_64-linux": {
+        "url": "https://persistent.oaistatic.com/codex-app-prod/linux/deb/pool/main/c/chatgpt/chatgpt_26.1103.31037_amd64.deb",
+        "hash": "sha256-Mv7YCtP4yvZm5YYAIjYelwnWSqMYz7GfVI6LRY1PZ5M="
+      }
+    },
+    "upstream": {
+      "kind": "apt",
+      "repo": "https://persistent.oaistatic.com/codex-app-prod/linux/deb",
+      "suite": "stable",
+      "package": "chatgpt",
+      "arch": "amd64"
+    }
+  },
+  "claude-code": {
+    "name": "Claude Code",
+    "version": "2.1.152",
+    "recipe": 1,
+    "aliases": [
+      "claude"
+    ],
+    "srcs": {
+      "x86_64-linux": {
+        "url": "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.152/linux-x64/claude",
+        "hash": "sha256-UVW9yif3VKug0v4vgDNvX9R5MiRWHCNKcj8MzvZUqOg="
+      }
+    },
+    "upstream": {
+      "kind": "claude",
+      "bucket": "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases",
+      "platforms": {
+        "x86_64-linux": "linux-x64"
+      }
+    }
+  },
+  "codex": {
+    "name": "Codex CLI",
+    "version": "0.134.0",
+    "recipe": 1,
+    "aliases": [],
+    "srcs": {
+      "x86_64-linux": {
+        "url": "https://github.com/openai/codex/releases/download/rust-v0.134.0/codex-package-x86_64-unknown-linux-musl.tar.gz",
+        "hash": "sha256-L0aJgFtTA+8yXADUqLFrZHAETNlWI46hoWN6PEygfYg="
+      }
+    },
+    "upstream": {
+      "kind": "github",
+      "repo": "openai/codex",
+      "tag": "rust-v{version}",
+      "assets": {
+        "x86_64-linux": "codex-package-x86_64-unknown-linux-musl.tar.gz"
+      }
+    }
+  },
+  "crush": {
+    "name": "Crush",
+    "version": "0.70.0",
+    "recipe": 1,
+    "aliases": [],
+    "srcs": {
+      "x86_64-linux": {
+        "url": "https://github.com/charmbracelet/crush/releases/download/v0.70.0/crush_0.70.0_Linux_x86_64.tar.gz",
+        "hash": "sha256-dtLn4MFdze9XoYv5JqbOcVrpAKiE7sCoEGIHTJ9Z/0I="
+      }
+    },
+    "upstream": {
+      "kind": "github",
+      "repo": "charmbracelet/crush",
+      "tag": "v{version}",
+      "assets": {
+        "x86_64-linux": "crush_{version}_Linux_x86_64.tar.gz"
+      }
+    }
+  },
+  "cursor-cli": {
+    "name": "Cursor Agent",
+    "version": "2026.05.16-0338208",
+    "recipe": 1,
+    "aliases": [
+      "cursor-agent",
+      "cursor"
+    ],
+    "srcs": {
+      "x86_64-linux": {
+        "url": "https://downloads.cursor.com/lab/2026.05.16-0338208/linux/x64/agent-cli-package.tar.gz",
+        "hash": "sha256-E2YeEnyAjbGXe1lpcpZnb/NBWNOoQYRkCfuokvkQsaI="
+      }
+    },
+    "upstream": {
+      "kind": "cursor",
+      "platforms": {
+        "x86_64-linux": "linux/x64"
+      }
+    }
+  },
+  "grok-build": {
+    "name": "Grok Build",
+    "version": "1.0.77",
+    "recipe": 1,
+    "aliases": [
+      "grok"
+    ],
+    "srcs": {
+      "x86_64-linux": {
+        "url": "https://storage.googleapis.com/grok-build-public-artifacts/cli/grok-1.0.77-linux-x86_64",
+        "hash": "sha256-twKVCqWCfYVeSTJ4q2IVpOD1vOtbumxiQ6n1XN0UOwo="
+      }
+    },
+    "upstream": {
+      "kind": "grok",
+      "platforms": {
+        "x86_64-linux": "linux-x86_64"
+      }
+    }
+  },
+  "herdr-app": {
+    "name": "Herdr",
+    "version": "0.1.13",
+    "coreVersion": "0.1.18",
+    "recipe": 1,
+    "aliases": [
+      "herdr-core"
+    ],
+    "srcs": {
+      "x86_64-linux": {
+        "url": "https://releases.herdr.dev/app/0.1.13/herdr-app-linux-x86_64.tar.gz",
+        "hash": "sha256-d7C+cqRsoUuzZzZaBBZGQfkUs6aXErrDkdOcVqlZvvQ="
+      },
+      "core-x86_64-linux": {
+        "url": "https://releases.herdr.dev/core/0.1.18/herdr-core-linux-x86_64.tar.gz",
+        "hash": "sha256-Wy+Xy0sqnXprLMWUJiggPtn7t8wMK0sJrYpvVkjiRrc="
+      }
+    },
+    "upstream": {
+      "kind": "herdr",
+      "platforms": {
+        "x86_64-linux": "linux-x86_64"
+      }
+    }
+  },
+  "opencode": {
+    "name": "OpenCode",
+    "version": "1.15.11",
+    "recipe": 1,
+    "aliases": [],
+    "srcs": {
+      "x86_64-linux": {
+        "url": "https://github.com/anomalyco/opencode/releases/download/v1.15.11/opencode-linux-x64.tar.gz",
+        "hash": "sha256-STFyU3IsaYOUmA4ZIf8o6RnXm7KdXD9M8xSkra9wN80="
+      }
+    },
+    "upstream": {
+      "kind": "github",
+      "repo": "anomalyco/opencode",
+      "tag": "v{version}",
+      "assets": {
+        "x86_64-linux": "opencode-linux-x64.tar.gz"
+      }
+    }
+  }
+}
