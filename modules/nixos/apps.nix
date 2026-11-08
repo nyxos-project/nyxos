@@ -46,6 +46,8 @@ in
       flake = lib.mkDefault "/etc/nyxos/flake";
     };
     themes.enable = lib.mkDefault true;
+    # Nyx AI Core: the local model runtime the apps share (starts on first use).
+    ai.enable = lib.mkDefault true;
     locker.enable = lib.mkDefault true;
     prompt.enable = lib.mkDefault true;
   };

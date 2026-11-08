@@ -83,6 +83,8 @@ in
       nixpkgs.config.allowUnfreePredicate = lib.mkIf (config.nyxos.unfree != [ ]) (
         pkg: builtins.elem (lib.getName pkg) config.nyxos.unfree
       );
+      # What Nyx AI Core's worker needs (CUDA's runtime, on NVIDIA's own driver).
+      nyxos.unfree = lib.mkIf config.nyx.ai.enable config.nyx.ai.unfree;
 
       # Firmware for Wi-Fi, Bluetooth, graphics and sound, and the processor's fixes.
       hardware.enableRedistributableFirmware = lib.mkDefault true;
@@ -113,6 +115,8 @@ in
         "nvidia-settings"
         "nvidia-persistenced"
       ];
+      # Nyx AI Core runs Prism's prebuilt CUDA build of llama.cpp on NVIDIA's own driver.
+      nyx.ai.acceleration = lib.mkDefault "cuda";
       services.xserver.videoDrivers = [ "nvidia" ];
       hardware.nvidia = {
         open = lib.mkDefault true;
