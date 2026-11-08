@@ -29,12 +29,14 @@ in
       if [[ -r ''${XDG_CONFIG_HOME:-$HOME/.config}/nyx/editor ]]; then
         export EDITOR=$(<''${XDG_CONFIG_HOME:-$HOME/.config}/nyx/editor) VISUAL=$EDITOR
       fi
+      # The system theme's colours, until nyx-themed writes the user's theme's.
       NYX_PROMPT_DIR='#${c.text}'
       NYX_PROMPT_DIM='#${c.dimText}'
       NYX_PROMPT_GIT='#${theme.swatches.violet}'
       NYX_PROMPT_ACCENT='#${c.accent}'
       NYX_PROMPT_ERROR='#${c.danger}'
       ${builtins.readFile ./zsh/prompt.zsh}
+      ${builtins.readFile ./zsh/theme.zsh}
 
       # mise, once installed: the tool versions a project's mise.toml asks for.
       if (( $+commands[mise] )); then

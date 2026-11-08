@@ -4,6 +4,7 @@
   lib,
   pkgs,
   inputs,
+  osConfig,
   ...
 }:
 {
@@ -17,7 +18,11 @@
     ./power.nix
   ];
 
-  _module.args.theme = import ../../themes/nyx-dark.nix;
+  # The system theme's colours, for what's built before nyx-themed writes the user's own.
+  _module.args.theme = import ../../themes {
+    inherit lib;
+    inherit (inputs.nyx-packages.inputs) nyx-design;
+  } osConfig.nyxos.theme.system;
 
   xdg.enable = true;
 

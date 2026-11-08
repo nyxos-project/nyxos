@@ -1,5 +1,5 @@
-# The boot menu and splash: Limine, plain and quiet (Nyx Dark's background and text, no
-# wallpaper or help, three seconds; every generation and its NyxOS Recovery entry,
+# The boot menu and splash: Limine, plain and quiet (the boot theme's background and
+# text, no wallpaper or help, three seconds; every generation and its NyxOS Recovery entry,
 # Windows when it's beside NyxOS, Secure Boot when asked for), then Nyx Plymouth in the
 # boot theme with the kernel and udev quiet.
 {
@@ -12,8 +12,12 @@
 let
   cfg = config.nyxos.boot;
   nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
-  c = (import ../../themes/nyx-dark.nix).colors;
-  s = (import ../../themes/nyx-dark.nix).swatches;
+  bootTheme = import ../../themes {
+    inherit lib;
+    inherit (inputs.nyx-packages.inputs) nyx-design;
+  } config.nyxos.theme.boot;
+  c = bootTheme.colors;
+  s = bootTheme.swatches;
   palette = lib.concatStringsSep ";";
 in
 {
