@@ -13,11 +13,50 @@ concurrency:
 permissions:
   contents: read
 
+# Everything is evaluated in one job, then the checks (the development VM system, an
+# installed machine, the catalog, each tool) are built in parallel shards: built one
+# after another they no longer fit a job's time.
 jobs:
-  check:
+  evaluate:
     runs-on: ubuntu-latest
-    # A hung test otherwise holds the runner for GitHub's six-hour default.
-    timeout-minutes: 90
+    timeout-minutes: 30
+    outputs:
+      shards: ${{ steps.shards.outputs.shards }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          # An HTTP/2 framing error from the binary cache once stalled a run for an
+          # hour; HTTP/1.1 and a short stall timeout make Nix retry instead.
+          extra_nix_config: |
+            http2 = false
+            stalled-download-timeout = 60
+
+      - name: Format
+        run: nix fmt -- --check $(git ls-files '*.nix')
+
+      - name: Evaluate every output
+        run: nix flake check --no-build -L
+
+      # Round-robin, so the two NixOS systems land in different shards.
+      - id: shards
+        run: |
+          nix eval --json .#checks.x86_64-linux --apply builtins.attrNames |
+            jq -c '[range(4) as $i | [to_entries[] | select(.key % 4 == $i) | .value]] | map(select(length > 0))' |
+            sed 's/^/shards=/' >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: evaluate
+    runs-on: ubuntu-latest
+    # A hung build otherwise holds the runner for GitHub's six-hour default; a first
+    # build of a NixOS system with nothing cached takes a few hours.
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.evaluate.outputs.shards) }}
     steps:
       # A full NixOS closure plus the Rust builds doesn't fit the runner's default
       # free space.
@@ -29,8 +68,6 @@ jobs:
       - uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
-          # An HTTP/2 framing error from the binary cache once stalled a run for an
-          # hour; HTTP/1.1 and a short stall timeout make Nix retry instead.
           extra_nix_config: |
             http2 = false
             stalled-download-timeout = 60
@@ -43,8 +80,9 @@ jobs:
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
           skipPush: ${{ startsWith(github.head_ref, 'tool-update/') }}
 
-      - name: Format
-        run: nix fmt -- --check $(git ls-files '*.nix')
-
-      - name: Build the development VM system
-        run: nix flake check -L
+      - name: Build ${{ join(matrix.shard, ', ') }}
+        env:
+          SHARD: ${{ toJSON(matrix.shard) }}
+        run: |
+          mapfile -t checks < <(jq -r '.[] | ".#checks.x86_64-linux.\(.)"' <<<"$SHARD")
+          nix build -L --no-link --keep-going "${checks[@]}"
