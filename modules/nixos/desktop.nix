@@ -95,7 +95,6 @@ in
       ${lib.optionalString (nyxPkgs.nyx-wallpapers.passthru.defaults ? ${loginTheme})
         ''wallpaper = "${nyxPkgs.nyx-wallpapers.passthru.defaults.${loginTheme}}"''
       }
-      mark = "${greeter}/share/nyx-greeter/mark.png"
       default_session = "hyprland-uwsm"
       style = "${config.nyxos.signinStyle}"
     '';

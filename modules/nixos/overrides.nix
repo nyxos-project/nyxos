@@ -30,6 +30,12 @@ let
   # Unfree packages the administrator accepted, by package name.
   unfree = map (attr: lib.last (lib.splitString "." attr)) (o.unfree or [ ]);
   theme = name: lib.mkIf (themes ? ${name}) (over themes.${name});
+  # The logo file's kind, by its extension (`svg` or `png`).
+  logoKind =
+    if config.nyxos.logo == null then
+      null
+    else
+      lib.last (lib.splitString "." (baseNameOf config.nyxos.logo));
   package =
     attr:
     let
@@ -46,6 +52,17 @@ let
     };
 in
 {
+  options.nyxos.logo = lib.mkOption {
+    type = lib.types.nullOr lib.types.path;
+    default = null;
+    description = ''
+      The system logo, an SVG or PNG file, in place of the Nyx mark: /etc/nyx/logo.svg or
+      .png (every Nyx app and the shell), the sign-in screen and the boot splash. An
+      SVG's `currentColor` parts take each theme's logo colour; a PNG is shown as it is.
+      Settings sets it under Boot & Sign-in.
+    '';
+  };
+
   options.nyxos.theme = {
     system = lib.mkOption {
       type = lib.types.strMatching "[A-Za-z0-9-]+";
@@ -182,6 +199,21 @@ in
       boot = theme "boot";
       login = theme "login";
     };
+
+    # The System Manager keeps the logo in system.json: an SVG's text, a PNG in base64.
+    nyxos.logo = lib.mkIf (o ? logo) (
+      over (
+        if o.logo.format == "png" then
+          pkgs.runCommand "nyx-logo.png" {
+            data = o.logo.data;
+            passAsFile = [ "data" ];
+          } ''base64 -d "$dataPath" > $out''
+        else
+          pkgs.writeText "nyx-logo.svg" o.logo.data
+      )
+    );
+    environment.etc."nyx/logo.svg" = lib.mkIf (logoKind == "svg") { source = config.nyxos.logo; };
+    environment.etc."nyx/logo.png" = lib.mkIf (logoKind == "png") { source = config.nyxos.logo; };
 
     # Layer 1 for every user's settings; the overrides layer and the user's own win.
     environment.etc."nyxos/defaults/appearance.toml".text = ''

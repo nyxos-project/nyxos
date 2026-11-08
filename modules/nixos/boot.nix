@@ -52,7 +52,15 @@ in
     {
       boot.plymouth = {
         enable = lib.mkDefault true;
-        themePackages = [ nyxPkgs.nyx-plymouth ];
+        # The system logo, in each theme's colours, when one is set.
+        themePackages = [
+          (
+            if config.nyxos.logo == null then
+              nyxPkgs.nyx-plymouth
+            else
+              nyxPkgs.nyx-plymouth.override { logo = config.nyxos.logo; }
+          )
+        ];
         theme = config.nyxos.theme.boot;
       };
       boot.consoleLogLevel = lib.mkDefault 3;
