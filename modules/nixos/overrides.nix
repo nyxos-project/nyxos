@@ -40,9 +40,8 @@ let
     what:
     lib.mkOption {
       type = lib.types.strMatching "[A-Za-z0-9-]+";
-      # The boot and login screens keep their Nyx Dark design whatever the desktop
-      # theme is, until they get their own redesign.
-      default = "nyx-dark";
+      default = config.nyxos.theme.system;
+      defaultText = lib.literalExpression "config.nyxos.theme.system";
       description = "The ${what} theme.";
     };
 in
@@ -53,7 +52,8 @@ in
       default = "catppuccin-mocha";
       description = ''
         The system's Nyx theme: every user's default desktop and lock-screen theme
-        (Theme Engine 2.0's default, built into every Nyx app).
+        (Theme Engine 2.0's default, built into every Nyx app), and the boot and login
+        screens' unless those are set on their own.
       '';
     };
     boot = themeOption "boot screen's";
