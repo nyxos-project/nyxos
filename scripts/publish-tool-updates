@@ -60,7 +60,7 @@ propose() {
   else
     git push -q --force origin "$branch" || return 1
     # Pushed with the workflow's own token, the branch starts no CI by itself.
-    gh workflow run ci.yml --ref "$branch" || return 1
+    gh api -X POST "repos/{owner}/{repo}/actions/workflows/ci.yml/dispatches" -f ref="$branch" || return 1
   fi
 
   body=$(
@@ -125,13 +125,16 @@ EOF
 }
 
 status=0
-for d in "$dir"/tool-*/; do
-  [ -f "$d/report.json" ] || continue
-  tool=$(jq -r .tool "$d/report.json")
-  case $(jq -r .status "$d/report.json") in
-    proposed) propose "$tool" "$d/report.json" "$d/change.patch" || status=1 ;;
-    failed) failed "$tool" "$d/report.json" ;;
-    *) ;;
+# One artifact is unpacked straight into DIR, several each into DIR/tool-NAME.
+mapfile -t reports < <(find "$dir" -name report.json | sort)
+((${#reports[@]})) || echo "Nothing to publish."
+for report in "${reports[@]}"; do
+  d=$(dirname "$report")
+  tool=$(jq -r .tool "$report")
+  case $(jq -r .status "$report") in
+    proposed) propose "$tool" "$report" "$d/change.patch" || status=1 ;;
+    failed) failed "$tool" "$report" ;;
+    *) echo "$tool: $(jq -r '.status + " " + (.new // "")' "$report")" ;;
   esac
 done
 git checkout -q --detach origin/main
