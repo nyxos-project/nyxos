@@ -29,7 +29,15 @@ in
       type = lib.types.listOf (
         lib.types.submodule {
           options = {
-            vendor = lib.mkOption { type = lib.types.enum [ "amd" "intel" "nvidia" "virtio" "other" ]; };
+            vendor = lib.mkOption {
+              type = lib.types.enum [
+                "amd"
+                "intel"
+                "nvidia"
+                "virtio"
+                "other"
+              ];
+            };
             bus = lib.mkOption {
               type = lib.types.strMatching "PCI:[0-9]+:[0-9]+:[0-9]+";
               description = "Its PCI address in NixOS's form.";
@@ -41,7 +49,12 @@ in
       description = "The graphics cards.";
     };
     cpu = lib.mkOption {
-      type = lib.types.nullOr (lib.types.enum [ "amd" "intel" ]);
+      type = lib.types.nullOr (
+        lib.types.enum [
+          "amd"
+          "intel"
+        ]
+      );
       default = null;
     };
     battery = lib.mkOption {

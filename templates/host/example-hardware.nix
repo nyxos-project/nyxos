@@ -11,7 +11,8 @@
     "usb_storage"
     "sd_mod"
   ];
-  boot.initrd.luks.devices.cryptroot.device = "/dev/disk/by-uuid/00000000-0000-4000-8000-000000000002";
+  boot.initrd.luks.devices.cryptroot.device =
+    "/dev/disk/by-uuid/00000000-0000-4000-8000-000000000002";
   fileSystems = {
     "/" = {
       device = "/dev/mapper/cryptroot";

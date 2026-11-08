@@ -76,16 +76,26 @@ in
         Type = "oneshot";
         RemainAfterExit = true;
       };
-      script = lib.concatMapStrings (m: let s = "${lib.removeSuffix "/" m}/.snapshots"; in ''
-        if [ ! -e ${s} ]; then btrfs subvolume create ${s}; fi
-        chmod 0750 ${s}
-        chgrp wheel ${s}
-      '') btrfs;
+      script = lib.concatMapStrings (
+        m:
+        let
+          s = "${lib.removeSuffix "/" m}/.snapshots";
+        in
+        ''
+          if [ ! -e ${s} ]; then btrfs subvolume create ${s}; fi
+          chmod 0750 ${s}
+          chgrp wheel ${s}
+        ''
+      ) btrfs;
     };
 
     environment.etc."nyxos/snapshots.toml".text = ''
       # The snapper configurations the System Manager snapshots around each change.
-      around_changes = [${lib.concatMapStringsSep ", " (m: ''"${name m}"'') (builtins.filter (m: builtins.elem m btrfs) cfg.aroundChanges)}]
+      around_changes = [${
+        lib.concatMapStringsSep ", " (m: ''"${name m}"'') (
+          builtins.filter (m: builtins.elem m btrfs) cfg.aroundChanges
+        )
+      }]
     '';
   };
 }

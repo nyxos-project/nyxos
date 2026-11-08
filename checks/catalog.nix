@@ -22,22 +22,31 @@ let
       if !(lib.isDerivation p) then
         [ "${item.id}: nixpkgs has no package ${attr}" ]
       else
-        lib.optional (!(lib.meta.availableOn sysPkgs.stdenv.hostPlatform p)) "${item.id}: ${attr} isn't available on x86_64-linux"
-        ++ lib.optional (unfree != (item.unfree or false)) "${item.id}: ${attr} is ${
-          if unfree then "unfree" else "free"
-        } in nixpkgs, but the catalog says otherwise"
-        ++ lib.optional (item.tier == "base" && !(lib.elem (lib.getName p) installed)) "${item.id}: base, but NyxOS doesn't install ${attr}"
+        lib.optional (
+          !(lib.meta.availableOn sysPkgs.stdenv.hostPlatform p)
+        ) "${item.id}: ${attr} isn't available on x86_64-linux"
+        ++
+          lib.optional (unfree != (item.unfree or false))
+            "${item.id}: ${attr} is ${
+              if unfree then "unfree" else "free"
+            } in nixpkgs, but the catalog says otherwise"
+        ++ lib.optional (
+          item.tier == "base" && !(lib.elem (lib.getName p) installed)
+        ) "${item.id}: base, but NyxOS doesn't install ${attr}"
     ) (item.packages or [ ])
     ++ lib.concatMap (
       app:
       if !(nixos.options.nyx ? ${app}) then
         [ "${item.id}: nyx-packages has no Nyx app ${app}" ]
       else
-        lib.optional (item.tier == "base" && !cfg.nyx.${app}.enable) "${item.id}: base, but NyxOS doesn't turn on nyx.${app}"
+        lib.optional (
+          item.tier == "base" && !cfg.nyx.${app}.enable
+        ) "${item.id}: base, but NyxOS doesn't turn on nyx.${app}"
     ) (item.nyx or [ ])
   ) catalog.item;
 in
 if problems == [ ] then
-  pkgs.runCommand "nyxos-catalog-check" { } "echo ${toString (lib.length catalog.item)} items checked > $out"
+  pkgs.runCommand "nyxos-catalog-check" { }
+    "echo ${toString (lib.length catalog.item)} items checked > $out"
 else
   throw ("The software catalog doesn't match NyxOS:\n" + lib.concatLines problems)

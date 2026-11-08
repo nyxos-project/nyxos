@@ -27,7 +27,9 @@ in
       description = "The boot menu.";
     };
     windows = lib.mkOption {
-      type = lib.types.nullOr (lib.types.strMatching "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
+      type = lib.types.nullOr (
+        lib.types.strMatching "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+      );
       default = null;
       description = ''
         Windows Boot Manager's EFI partition (its GPT partition GUID), to offer Windows

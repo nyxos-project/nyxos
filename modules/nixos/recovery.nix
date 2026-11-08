@@ -26,9 +26,14 @@ in
   config = lib.mkMerge [
     {
       # The machine's own flake when it has one (templates/host), else NyxOS's.
-      environment.etc."nyxos/built-from/flake.lock".source = "${inputs.machine or inputs.self}/flake.lock";
-      environment.etc."nyxos/built-from/system.json" = lib.mkIf (builtins.pathExists settings) { source = settings; };
-      environment.etc."nyxos/built-from/tools.json" = lib.mkIf (builtins.pathExists toolPins) { source = toolPins; };
+      environment.etc."nyxos/built-from/flake.lock".source =
+        "${inputs.machine or inputs.self}/flake.lock";
+      environment.etc."nyxos/built-from/system.json" = lib.mkIf (builtins.pathExists settings) {
+        source = settings;
+      };
+      environment.etc."nyxos/built-from/tools.json" = lib.mkIf (builtins.pathExists toolPins) {
+        source = toolPins;
+      };
     }
 
     (lib.mkIf cfg.enable {
