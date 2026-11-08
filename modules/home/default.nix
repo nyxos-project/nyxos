@@ -21,6 +21,9 @@
 
   xdg.enable = true;
 
+  # Where `uv tool install`, pipx and others put the commands they install.
+  home.sessionPath = [ "$HOME/.local/bin" ];
+
   # uuctl picks units through a dmenu-style menu NyxOS doesn't have: in the app drawer
   # it did nothing. (Not uwsm without it: a new uwsm restarts its units and ends the
   # session on switch.)

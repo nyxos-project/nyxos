@@ -13,7 +13,8 @@ or `dnf`, and programs don't install into `/usr`. Downloaded installers (`curl |
 | A program for every account | `nyx-system install PKG` | everyone | yes |
 | A desktop app from Flathub | Nyx Store, or `flatpak install --user flathub APP` | this user | no |
 | To try something once | `nyx run PKG` / `nyx shell PKG` | nobody keeps it | no |
-| Tools for one project | a `flake.nix` dev shell, `nix develop` | that project | no |
+| Tools for one project | a `flake.nix` dev shell, `nix develop`; or mise (`mise use node@22`) | that project | no |
+| A Python command-line tool | `uv tool install NAME` (lands in `~/.local/bin`) | this user | no |
 | A Nyx app | `nyx-system app NAME on` (or its catalog item) | everyone | yes |
 | A system service (Docker, SSH…) | `nyx-system service NAME on` | the system | yes |
 
@@ -105,10 +106,14 @@ project a dev shell:
 Then `nix develop` (or direnv with `use flake`). In a Git repository, `git add flake.nix`
 first: flakes only see tracked files.
 
+- mise (catalog item `mise`) is the other way, for people used to it or a project that
+  ships a `mise.toml`/`.tool-versions`: `mise use node@22` in the project, `mise use -g`
+  for the user's default. Its downloads run through nix-ld. `nyx update tools` keeps the
+  user's global ones current; don't use it for the coding agents NyxOS packages.
 - Python: `python3` is there; for packages use a dev shell with
   `python3.withPackages (p: [ p.requests ])`, or `uv` / a venv inside the project.
-  `pip install` outside a venv fails on purpose.
-- Node: `npm -g` can't write to the system; use the dev shell, `npx`, or `pnpm dlx`.
+  `pip install` outside a venv fails on purpose. Python tools: `uv tool install`.
+- Node: `npm -g` can't write to the system; use the dev shell, mise, `npx`, or `pnpm dlx`.
 - Rust: `rustup` from nixpkgs (`nyx install rustup`) works as usual in `~/.rustup`.
 - Prebuilt Linux binaries that expect `/lib64/ld-linux-x86-64.so.2` fail on NixOS. Prefer
   the nixpkgs package; else `nyx shell steam-run -c steam-run ./binary`, or ask whether to

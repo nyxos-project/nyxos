@@ -122,7 +122,7 @@ One command updates everything, each piece through what owns it:
 nyx update                   # everything: plans, asks once, then updates (firmware asked apart)
 nyx update system            # the channel: NixOS, NyxOS, Nyx apps, apps from nixpkgs
 nyx update apps              # Flatpaks and the user's Nix profile (and the channel, if it has news)
-nyx update tools             # the coding agents NyxOS packages, in one rebuild
+nyx update tools             # the coding agents NyxOS packages (one rebuild), and the user's mise and uv tools
 nyx update firmware          # fwupd; always asked, never undoable
 nyx update claude            # one thing by name: codex, cursor-agent, grok, firefox, gimp...
 nyx update … --dry-run       # the plan only; --yes doesn't ask
@@ -139,7 +139,10 @@ nyx update history           # what was updated, and how it went
   release is built differently says it comes with `nyx update system` instead. A system
   update empties that file. `/etc/nyxos/tools.json` shows the tools as built.
 - The coding agents' own updaters are off: NyxOS updates them. Don't run `claude update`,
-  `npm i -g`, or an install script over them.
+  `npm i -g`, or an install script over them, and don't install them with mise too.
+- Project languages and tools come from mise (`mise use node@22` in the project) and
+  Python tools from `uv tool install`; they're the user's, and `nyx update tools` runs
+  `mise upgrade` and `uv tool upgrade --all` for them. nix-ld lets their downloads run.
 - The channel is the `nyxos.url` line in `/etc/nyxos/flake/flake.nix`: `.../stable` or
   `.../testing`. Change it only when the user asks, then `nyx update system`.
 - A daily check (`nyx-update-check` user timer) notifies when something's new; it skips

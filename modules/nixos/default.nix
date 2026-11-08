@@ -20,6 +20,7 @@ in
     ./desktop.nix
     ./shell.nix
     ./packages.nix
+    ./toolchains.nix
     ./overrides.nix
     ./recovery.nix
     ./snapshots.nix

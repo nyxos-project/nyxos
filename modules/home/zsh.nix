@@ -36,6 +36,11 @@ in
       NYX_PROMPT_ERROR='#${c.danger}'
       ${builtins.readFile ./zsh/prompt.zsh}
 
+      # mise, once installed: the tool versions a project's mise.toml asks for.
+      if (( $+commands[mise] )); then
+        eval "$(mise activate zsh)"
+      fi
+
       # The user's own lines; NyxOS never writes this file.
       if [[ -r ''${XDG_CONFIG_HOME:-$HOME/.config}/zsh/user.zsh ]]; then
         source ''${XDG_CONFIG_HOME:-$HOME/.config}/zsh/user.zsh
