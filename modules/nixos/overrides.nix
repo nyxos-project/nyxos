@@ -149,7 +149,8 @@ in
       lib.nameValuePair m.dir {
         device = if lib.elem m.fsType networkTypes then m.what else "/dev/disk/by-uuid/${m.what}";
         inherit (m) fsType;
-        options = (m.options or [ ]) ++ lib.optional (m.login or false) "credentials=/etc/nyxos/secrets/mounts/${id}";
+        options =
+          (m.options or [ ]) ++ lib.optional (m.login or false) "credentials=/etc/nyxos/secrets/mounts/${id}";
       }
     ) mounts;
     boot.supportedFilesystems = lib.genAttrs (lib.unique (
@@ -172,7 +173,9 @@ in
     };
 
     services.logind.settings.Login = lib.mapAttrs (_: over) (power.login or { });
-    systemd.sleep.settings.Sleep.HibernateDelaySec = lib.mkIf (power ? hibernateDelay) (over power.hibernateDelay);
+    systemd.sleep.settings.Sleep.HibernateDelaySec = lib.mkIf (power ? hibernateDelay) (
+      over power.hibernateDelay
+    );
 
     nyxos.theme = {
       system = theme "system";
