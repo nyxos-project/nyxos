@@ -26,4 +26,12 @@
         sqlite
       ]);
   };
+
+  # On NixOS mise builds Node and Python from source unless told otherwise; with nix-ld
+  # their prebuilt releases run, and install in seconds. A user's own mise config wins.
+  environment.etc."mise/conf.d/nyxos.toml".text = ''
+    [settings]
+    node.compile = false
+    python.compile = false
+  '';
 }
