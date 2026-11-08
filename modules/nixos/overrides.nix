@@ -40,8 +40,9 @@ let
     what:
     lib.mkOption {
       type = lib.types.strMatching "[A-Za-z0-9-]+";
-      default = config.nyxos.theme.system;
-      defaultText = lib.literalExpression "config.nyxos.theme.system";
+      # The boot and login screens keep their Nyx Dark design whatever the desktop
+      # theme is, until they get their own redesign.
+      default = "nyx-dark";
       description = "The ${what} theme.";
     };
 in
@@ -49,10 +50,10 @@ in
   options.nyxos.theme = {
     system = lib.mkOption {
       type = lib.types.strMatching "[A-Za-z0-9-]+";
-      default = "nyx-dark";
+      default = "catppuccin-mocha";
       description = ''
-        The system's Nyx theme: every user's default desktop and lock-screen theme, and
-        the boot and login screens' unless those are set on their own.
+        The system's Nyx theme: every user's default desktop and lock-screen theme
+        (Theme Engine 2.0's default, built into every Nyx app).
       '';
     };
     boot = themeOption "boot screen's";
@@ -148,8 +149,7 @@ in
       lib.nameValuePair m.dir {
         device = if lib.elem m.fsType networkTypes then m.what else "/dev/disk/by-uuid/${m.what}";
         inherit (m) fsType;
-        options =
-          (m.options or [ ]) ++ lib.optional (m.login or false) "credentials=/etc/nyxos/secrets/mounts/${id}";
+        options = (m.options or [ ]) ++ lib.optional (m.login or false) "credentials=/etc/nyxos/secrets/mounts/${id}";
       }
     ) mounts;
     boot.supportedFilesystems = lib.genAttrs (lib.unique (
@@ -172,9 +172,7 @@ in
     };
 
     services.logind.settings.Login = lib.mapAttrs (_: over) (power.login or { });
-    systemd.sleep.settings.Sleep.HibernateDelaySec = lib.mkIf (power ? hibernateDelay) (
-      over power.hibernateDelay
-    );
+    systemd.sleep.settings.Sleep.HibernateDelaySec = lib.mkIf (power ? hibernateDelay) (over power.hibernateDelay);
 
     nyxos.theme = {
       system = theme "system";
