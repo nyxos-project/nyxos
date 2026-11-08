@@ -37,8 +37,12 @@ jobs:
       - name: Format
         run: nix fmt -- --check $(git ls-files '*.nix')
 
-      - name: Evaluate every output
-        run: nix flake check --no-build -L
+      # Instantiating every check and package (not `nix flake check --no-build`, which
+      # can't read the example machine's overrides folder without copying it first).
+      - name: Evaluate every check and package
+        run: |
+          nix eval --json .#checks.x86_64-linux --apply 'builtins.mapAttrs (_: c: c.drvPath)' > /dev/null
+          nix eval --json .#packages.x86_64-linux --apply 'builtins.mapAttrs (_: p: p.drvPath)' > /dev/null
 
       # Round-robin, so the two NixOS systems land in different shards.
       - id: shards
