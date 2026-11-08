@@ -6,8 +6,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+# A commit on main or stable is a candidate for known-good: each gets its own run, which
+# a later push doesn't cancel. On other branches a push replaces the run before it.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ contains(fromJSON('["refs/heads/main", "refs/heads/stable"]'), github.ref) && github.sha || github.ref }}
   cancel-in-progress: true
 
 permissions:
