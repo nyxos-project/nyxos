@@ -1,0 +1,11 @@
+# nyx-notifyd's NyxOS defaults (/etc/nyxos/defaults/notifications.toml), below the
+# settings each user changes in the Notification Center or Settings.
+schema = 1
+retention_days = 30
+excluded = []
+no_popups = []
+hide_popup_text = false
+keep_codes = false
+
+[schedule]
+enabled = false

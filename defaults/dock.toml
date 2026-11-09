@@ -1,0 +1,7 @@
+# Nyx Dock's NyxOS defaults (/etc/nyxos/defaults/dock.toml), below each user's
+# ~/.config/nyx/dock.toml. Only what differs from the dock's built-in values is here; the
+# pinned apps aren't, so the dock still pins the installed Nyx apps and the default browser
+# on first start.
+schema = 1
+icon_size = 42
+hide = "never"

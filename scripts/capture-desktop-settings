@@ -174,15 +174,27 @@ def same(shipped, live):
     return str(shipped) == str(live)
 
 
+# Shipped on purpose with another value than the reference (desktop-defaults.md says why).
+TRANSLATED = {
+    "input:kb_options": "omarchy:shift_caps_compose is Omarchy's own xkb rule",
+}
+
+
 def compare(path):
     shipped = tomllib.loads(Path(path).read_text()).get("options", {})
-    differ = 0
+    differ = unreadable = 0
     for name, value in flatten(shipped):
         live = option_value(hypr_json("getoption", name.replace("tap_to_click", "tap-to-click")))
-        if not same(value, live):
+        if live is None:
+            unreadable += 1
+            print(f"{name}: Hyprland doesn't report it")
+        elif name in TRANSLATED and not same(value, live):
+            print(f"{name}: translated ({TRANSLATED[name]}): shipped {value!r}, live {live!r}")
+        elif not same(value, live):
             differ += 1
             print(f"{name}: shipped {value!r}, live {live!r}")
-    print(f"{differ} of {sum(1 for _ in flatten(shipped))} options differ")
+    total = sum(1 for _ in flatten(shipped))
+    print(f"{differ} of {total} options differ ({unreadable} not reported by Hyprland)")
     return 1 if differ else 0
 
 

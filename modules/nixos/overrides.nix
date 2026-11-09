@@ -104,11 +104,11 @@ in
       )
       {
         lock = {
-          default = 300;
+          default = 600;
           what = "the screen locks";
         };
         screenOff = {
-          default = 360;
+          default = 660;
           what = "the screen turns off";
         };
         suspend = {
@@ -226,5 +226,13 @@ in
       screen-off = ${toString config.nyxos.idle.screenOff}
       suspend = ${toString config.nyxos.idle.suspend}
     '';
+    # The shell's and Hyprland's defaults, from the repository's defaults/ (the reference
+    # desktop, docs/audit/desktop-defaults.md). Hyprland's is rendered into hyprland.lua
+    # by modules/home/hyprland.nix; the copy here is what Settings shows a reset going
+    # back to.
+    environment.etc."nyxos/defaults/hyprland.toml".source = ../../defaults/hyprland.toml;
+    environment.etc."nyxos/defaults/dock.toml".source = ../../defaults/dock.toml;
+    environment.etc."nyxos/defaults/control-center.toml".source = ../../defaults/control-center.toml;
+    environment.etc."nyxos/defaults/notifications.toml".source = ../../defaults/notifications.toml;
   };
 }

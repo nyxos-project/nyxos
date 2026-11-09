@@ -1,0 +1,259 @@
+# NyxOS's Hyprland defaults: the reference desktop's effective behaviour, translated
+# (docs/audit/desktop-defaults.md). modules/home/hyprland.nix renders this into every
+# user's hyprland.lua, and it's installed as /etc/nyxos/defaults/hyprland.toml so Nyx
+# Settings can show what a reset goes back to. A user's own values (Settings' settings.lua,
+# loaded last) win over these.
+#
+# scripts/capture-desktop-settings --compare defaults/hyprland.toml checks [options]
+# against a running desktop.
+schema = 1
+
+# hl.config, key for key. Colours come from the theme, not from here.
+[options.general]
+gaps_in = 0
+gaps_out = 0
+border_size = 0
+layout = "dwindle"
+resize_on_border = true
+extend_border_grab_area = 8
+hover_icon_on_border = true
+
+[options.decoration]
+rounding = 0
+
+[options.decoration.shadow]
+enabled = false
+
+[options.decoration.blur]
+enabled = false
+
+[options.group.groupbar]
+font_size = 12
+font_family = "monospace"
+font_weight_active = "ultraheavy"
+font_weight_inactive = "normal"
+indicator_height = 1
+indicator_gap = 5
+height = 22
+gaps_in = 5
+gaps_out = 0
+gradients = true
+gradient_rounding = 0
+gradient_round_only_edges = false
+
+[options.animations]
+enabled = true
+workspace_wraparound = true
+
+[options.dwindle]
+preserve_split = true
+force_split = 2
+
+[options.master]
+new_status = "master"
+
+[options.scrolling]
+column_width = 0.49
+
+[options.misc]
+focus_on_activate = true
+vrr = 1
+on_focus_under_fullscreen = 1
+initial_workspace_tracking = 0
+disable_scale_notification = true
+anr_missed_pings = 3
+
+[options.cursor]
+hide_on_key_press = true
+warp_on_change_workspace = 1
+
+[options.binds]
+hide_special_on_workspace_change = true
+
+[options.xwayland]
+force_zero_scaling = true
+
+[options.input]
+kb_options = "compose:caps"
+follow_mouse = 1
+repeat_rate = 40
+repeat_delay = 350
+numlock_by_default = true
+sensitivity = 0.2
+
+[options.input.touchpad]
+natural_scroll = true
+scroll_factor = 1.25
+tap_to_click = true
+tap_button_map = "lrm"
+clickfinger_behavior = true
+disable_while_typing = true
+drag_lock = false
+middle_button_emulation = false
+
+# workspace_swipe_wrap is hyprland-nyx's (nyx-packages/pkgs/hyprland.nix); it's set only
+# where Hyprland has it.
+[options.gestures]
+workspace_swipe_invert = true
+workspace_swipe_create_new = false
+workspace_swipe_wrap = true
+
+[workspaces]
+# 1..N always exist, on whichever monitor Hyprland puts them.
+persistent = 5
+
+[[curves]]
+name = "easeOutQuint"
+points = [[0.23, 1.0], [0.32, 1.0]]
+
+[[curves]]
+name = "easeInOutCubic"
+points = [[0.65, 0.05], [0.36, 1.0]]
+
+[[curves]]
+name = "linear"
+points = [[0.0, 0.0], [1.0, 1.0]]
+
+[[curves]]
+name = "almostLinear"
+points = [[0.5, 0.5], [0.75, 1.0]]
+
+[[curves]]
+name = "quick"
+points = [[0.15, 0.0], [0.1, 1.0]]
+
+[[animations]]
+leaf = "global"
+enabled = true
+speed = 10
+bezier = "default"
+
+[[animations]]
+leaf = "border"
+enabled = true
+speed = 5.39
+bezier = "easeOutQuint"
+
+[[animations]]
+leaf = "windows"
+enabled = true
+speed = 3.79
+bezier = "easeOutQuint"
+
+[[animations]]
+leaf = "windowsIn"
+enabled = true
+speed = 4.1
+bezier = "easeOutQuint"
+style = "popin 87%"
+
+[[animations]]
+leaf = "windowsOut"
+enabled = true
+speed = 1.49
+bezier = "linear"
+style = "popin 87%"
+
+[[animations]]
+leaf = "fadeIn"
+enabled = true
+speed = 1.73
+bezier = "almostLinear"
+
+[[animations]]
+leaf = "fadeOut"
+enabled = true
+speed = 1.46
+bezier = "almostLinear"
+
+[[animations]]
+leaf = "fade"
+enabled = true
+speed = 3.03
+bezier = "quick"
+
+[[animations]]
+leaf = "fadeSwitch"
+enabled = false
+
+[[animations]]
+leaf = "layers"
+enabled = true
+speed = 3.81
+bezier = "easeOutQuint"
+
+[[animations]]
+leaf = "layersIn"
+enabled = true
+speed = 4.0
+bezier = "easeOutQuint"
+style = "fade"
+
+[[animations]]
+leaf = "layersOut"
+enabled = true
+speed = 1.5
+bezier = "linear"
+style = "fade"
+
+[[animations]]
+leaf = "fadeLayersIn"
+enabled = true
+speed = 1.79
+bezier = "almostLinear"
+
+[[animations]]
+leaf = "fadeLayersOut"
+enabled = true
+speed = 1.39
+bezier = "almostLinear"
+
+[[animations]]
+leaf = "workspaces"
+enabled = false
+
+# Touchpad gestures. `action` is one of Hyprland's; `workspace` focuses one (m-1, m+1);
+# `exec` runs a command. One with `app` is there only when that Nyx app is enabled
+# (nyx.<app>.enable). Nyx Settings unsets these before setting its own on the same
+# fingers and direction.
+[[gestures]]
+fingers = 3
+direction = "horizontal"
+action = "workspace"
+
+[[gestures]]
+fingers = 3
+direction = "up"
+exec = "nyx-glimpse --toggle"
+app = "glimpse"
+
+[[gestures]]
+fingers = 3
+direction = "down"
+exec = "nyx-glimpse --toggle"
+app = "glimpse"
+
+[[gestures]]
+fingers = 4
+direction = "left"
+workspace = "m-1"
+
+[[gestures]]
+fingers = 4
+direction = "right"
+workspace = "m+1"
+
+[[gestures]]
+fingers = 4
+direction = "up"
+action = "fullscreen"
+
+[[gestures]]
+fingers = 4
+direction = "down"
+action = "close"
+
+[[gestures]]
+fingers = 4
+direction = "pinchin"
+action = "float"

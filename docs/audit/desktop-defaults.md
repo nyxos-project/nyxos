@@ -35,7 +35,7 @@ settings with the same destination.
 
 | Destination | Owner | Shipped default | User override | Reset |
 | --- | --- | --- | --- | --- |
-| `hyprland` | Hyprland, through NyxOS's generated `hyprland.lua` | `defaults/hyprland.toml`, rendered by `modules/home/hyprland.nix`; also `/etc/nyxos/defaults/hyprland.toml` so Settings can show it | Nyx Settings' `state.json` → `~/.config/hypr/settings.lua`, loaded last | The key leaves `state.json`; Hyprland reloads and the NyxOS value shows through |
+| `hyprland` | Hyprland, through NyxOS's generated `hyprland.lua` | `defaults/hyprland.toml`, rendered by `modules/home/hyprland.nix`; also `/etc/nyxos/defaults/hyprland.toml` so Settings can show it | Nyx Settings' `state.json` → `~/.config/hypr/settings.lua`, loaded last. Hyprland refuses a gesture an earlier one shadows, so Settings unsets each shipped gesture (read from the installed copy) before setting its own on the same fingers and direction | The key leaves `state.json`; Hyprland reloads and the NyxOS value shows through |
 | `binds` | Hyprland, through `hyprland.nix` (one block per enabled app) | `modules/home/hyprland.nix` | Settings' Keyboard Shortcuts (`state.binds`/`unbinds`) | The bind leaves `state.json` |
 | `dock` | Nyx Dock | `defaults/dock.toml` → `/etc/nyxos/defaults/dock.toml` | `~/.config/nyx/dock.toml`, only the keys the user changed | The key leaves the user file (`nyx-config` reset) |
 | `control-center` | Nyx Control Center | `defaults/control-center.toml` | `~/.config/nyx/control-center.toml` | Same |

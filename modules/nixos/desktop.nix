@@ -56,13 +56,14 @@ in
 
     fonts = {
       packages = with pkgs; [
+        adwaita-fonts
         inter
         nerd-fonts.jetbrains-mono
         noto-fonts
         noto-fonts-color-emoji
       ];
       fontconfig.defaultFonts = {
-        sansSerif = [ "Inter" ];
+        sansSerif = [ "Adwaita Sans" ];
         monospace = [ "JetBrainsMono Nerd Font" ];
         emoji = [ "Noto Color Emoji" ];
       };
@@ -80,10 +81,22 @@ in
         ln -s ${pkgs.gtk3}/bin/gtk-launch $out/bin/gtk-launch
       '')
     ];
-    # Every account's default; a choice in Settings (the user's own dconf) wins.
+    # Every account's default; a choice in Settings (the user's own dconf) wins, and
+    # `gsettings reset` goes back to these. Fonts and cursor size are the reference
+    # desktop's (docs/audit/desktop-defaults.md).
     programs.dconf = {
       enable = true;
-      profiles.user.databases = [ { settings."org/gnome/desktop/interface".icon-theme = "Umbra"; } ];
+      profiles.user.databases = [
+        {
+          settings."org/gnome/desktop/interface" = {
+            icon-theme = "Umbra";
+            font-name = "Adwaita Sans 11";
+            document-font-name = "Adwaita Sans 12";
+            monospace-font-name = "JetBrainsMono Nerd Font 11";
+            cursor-size = lib.gvariant.mkInt32 24;
+          };
+        }
+      ];
     };
     environment.etc."xdg/gtk-3.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\n";
     environment.etc."xdg/gtk-4.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\n";

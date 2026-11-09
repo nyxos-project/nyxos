@@ -51,8 +51,8 @@ let
       case "$v" in "" | *[!0-9]*) v=$2 ;; esac
       echo "$v"
     }
-    lock=$(get lock 300)
-    off=$(get screen-off 360)
+    lock=$(get lock 600)
+    off=$(get screen-off 660)
     sleep=$(get suspend 0)
     dir="''${XDG_CONFIG_HOME:-$HOME/.config}/hypr"
     mkdir -p "$dir"
