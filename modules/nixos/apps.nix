@@ -54,14 +54,14 @@ in
     prompt.enable = lib.mkDefault true;
   };
 
-  # Without a suite theme file Nyx apps fall back to Catppuccin Mocha. Seed the theme a
-  # new user starts with (the distribution's, or the administrator's from the overrides
-  # layer) once; the file stays the user's to change.
+  # Nyx apps take the system theme from the appearance layers (/etc/nyxos/defaults, under
+  # the administrator's overrides) until the user chooses one, so a new default reaches
+  # everyone who didn't. A new user's file only says to use an installed theme rather
+  # than Omarchy's.
   system.userActivationScripts.nyx-theme-default = ''
     if [ ! -e "$HOME/.config/nyx/theme.toml" ]; then
-      theme=$(${nyxPkgs.nyx-system}/bin/nyx-system config get appearance theme --below-user || echo catppuccin-mocha)
       mkdir -p "$HOME/.config/nyx"
-      printf 'mode = "theme"\ntheme = "%s"\n' "$theme" > "$HOME/.config/nyx/theme.toml"
+      printf 'mode = "theme"\n' > "$HOME/.config/nyx/theme.toml"
     fi
   '';
 }
