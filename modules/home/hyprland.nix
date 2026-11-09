@@ -212,6 +212,23 @@ in
   + lib.optionalString (enabled "files") ''
     hl.bind("SUPER + SHIFT + F", launch("nyx-files"), { description = "File manager" })
   ''
+  # Dictation with Nyx Voice: hold F9 (or Right Alt) to talk, Super+Ctrl+X to start and
+  # stop. The text is typed into the focused window. The release half runs only after
+  # its own press, ignores modifiers and doesn't consume the key, as Omarchy's hold binds.
+  + lib.optionalString (enabled "voice") ''
+
+    local function dictation_hold(keys, options)
+      local held = false
+      local press = { description = "Start dictation (push to talk)" }
+      local release = { release = true, transparent = true, ignore_mods = true, non_consuming = true, description = "Stop dictation (push to talk)" }
+      for k, v in pairs(options or {}) do press[k] = v end
+      hl.bind(keys, function() held = true; hl.exec_cmd("nyx-voice dictate start") end, press)
+      hl.bind(keys, function() if held then held = false; hl.exec_cmd("nyx-voice dictate stop") end end, release)
+    end
+    dictation_hold("F9")
+    dictation_hold("ALT + Alt_R", { ignore_mods = true })
+    hl.bind("SUPER + CTRL + X", hl.dsp.exec_cmd("nyx-voice dictate toggle"), { description = "Toggle dictation" })
+  ''
   # Hold Alt+Space to talk to the Assistant (the repeating bind is the hold signal);
   # Super+Shift+Escape stops everything it is doing.
   + lib.optionalString (enabled "assistant") ''
