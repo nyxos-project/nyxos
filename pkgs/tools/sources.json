@@ -204,13 +204,13 @@
   },
   "opencode": {
     "name": "OpenCode",
-    "version": "1.15.11",
+    "version": "1.19.5",
     "recipe": 1,
     "aliases": [],
     "srcs": {
       "x86_64-linux": {
-        "url": "https://github.com/anomalyco/opencode/releases/download/v1.15.11/opencode-linux-x64.tar.gz",
-        "hash": "sha256-STFyU3IsaYOUmA4ZIf8o6RnXm7KdXD9M8xSkra9wN80="
+        "url": "https://github.com/anomalyco/opencode/releases/download/v1.19.5/opencode-linux-x64.tar.gz",
+        "hash": "sha256-WIMQozb6O53zaz8CJbJvZ51FPvqtDPPWbDZR7z7BZHo="
       }
     },
     "upstream": {
