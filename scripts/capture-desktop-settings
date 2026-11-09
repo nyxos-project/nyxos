@@ -1,0 +1,205 @@
+#!/usr/bin/env python3
+"""capture-desktop-settings [--compare DEFAULTS.toml]
+
+Prints the running desktop's effective settings as JSON: Hyprland options (as Hyprland
+resolved them), key bindings, input devices, monitors, GNOME interface settings and the
+Nyx components' own files. This is how docs/audit/desktop-defaults.md was captured, and
+how to capture it again.
+
+It only reads: `hyprctl getoption/binds/devices/monitors -j`, `gsettings get`, and files.
+Credentials are never printed: files that hold them are listed by name, keys that look
+like secrets are replaced with "<redacted>", and monitor serials are dropped.
+
+With --compare, it checks every option under [options] in a NyxOS defaults file
+(defaults/hyprland.toml) against the live value and prints the ones that differ; it exits
+1 if any do.
+"""
+
+import json
+import os
+import re
+import subprocess
+import sys
+import tomllib
+from pathlib import Path
+
+HOME = Path.home()
+CONFIG = Path(os.environ.get("XDG_CONFIG_HOME") or HOME / ".config")
+
+# The options the reference desktop sets, in Hyprland's colon form.
+OPTIONS = [
+    "general:gaps_in", "general:gaps_out", "general:border_size", "general:layout",
+    "general:resize_on_border", "general:extend_border_grab_area", "general:hover_icon_on_border",
+    "decoration:rounding", "decoration:shadow:enabled", "decoration:blur:enabled",
+    "animations:enabled", "animations:workspace_wraparound",
+    "dwindle:preserve_split", "dwindle:force_split", "master:new_status", "scrolling:column_width",
+    "misc:focus_on_activate", "misc:vrr", "misc:on_focus_under_fullscreen",
+    "misc:initial_workspace_tracking", "misc:disable_scale_notification", "misc:anr_missed_pings",
+    "cursor:hide_on_key_press", "cursor:warp_on_change_workspace", "cursor:no_hardware_cursors",
+    "binds:hide_special_on_workspace_change", "xwayland:force_zero_scaling",
+    "input:kb_layout", "input:kb_variant", "input:kb_options", "input:follow_mouse",
+    "input:repeat_rate", "input:repeat_delay", "input:numlock_by_default", "input:sensitivity",
+    "input:accel_profile",
+    "input:touchpad:natural_scroll", "input:touchpad:scroll_factor", "input:touchpad:tap-to-click",
+    "input:touchpad:tap_button_map", "input:touchpad:clickfinger_behavior",
+    "input:touchpad:disable_while_typing", "input:touchpad:drag_lock",
+    "input:touchpad:middle_button_emulation",
+    "gestures:workspace_swipe_invert", "gestures:workspace_swipe_create_new",
+    "gestures:workspace_swipe_wrap", "gestures:workspace_swipe_distance",
+]
+
+GSETTINGS = [
+    ("org.gnome.desktop.interface", k)
+    for k in ("gtk-theme", "color-scheme", "icon-theme", "cursor-theme", "cursor-size",
+              "font-name", "document-font-name", "monospace-font-name")
+]
+
+# Component files whose contents are preferences (and hold no credentials).
+NYX_FILES = [
+    "nyx/dock.toml", "nyx/control-center.toml", "nyx/bar.toml", "nyx/switcher.toml",
+    "nyx/shell.toml", "nyx/theme.toml", "nyx/idle.toml", "nyx/appearance.toml",
+    "nyx-settings/settings.toml", "nyx-settings/state.json", "nyx-settings/audio.toml",
+    "nyx-settings/keyboard-idle.toml", "nyx-glimpse/settings.toml",
+    "omarchy/shell.json", "omarchy/shell.toml",
+]
+
+# Listed by name only.
+CREDENTIAL_FILES = [
+    "nyx-chat/huggingface.token", "nyx/cloud/rclone.conf", "nyx/cloud/accounts.json",
+    "nyx-assistant/runtime.env", "omarchy/asus-g16/settings.json",
+]
+
+SECRET_KEY = re.compile(r"(token|secret|password|passwd|api[_-]?key|auth|credential|cookie)", re.I)
+
+
+def run(*cmd):
+    try:
+        out = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return out.stdout if out.returncode == 0 else None
+
+
+def hypr_json(*args):
+    text = run("hyprctl", *args, "-j")
+    try:
+        return json.loads(text) if text else None
+    except json.JSONDecodeError:
+        return None
+
+
+def option_value(reply):
+    """The value from `hyprctl getoption -j`, whichever field Hyprland used."""
+    if not reply:
+        return None
+    for field in ("int", "float", "bool", "str"):
+        if field in reply:
+            return reply[field]
+    if "css" in reply:
+        parts = reply["css"].split()
+        if parts and all(p == parts[0] for p in parts):
+            return int(parts[0])
+        return reply["css"]
+    if "custom" in reply:
+        return reply["custom"]
+    return None
+
+
+def redact(value):
+    if isinstance(value, dict):
+        return {k: "<redacted>" if SECRET_KEY.search(k) else redact(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [redact(v) for v in value]
+    return value
+
+
+def read_file(path):
+    try:
+        text = path.read_text()
+    except OSError:
+        return None
+    try:
+        data = json.loads(text) if path.suffix == ".json" else tomllib.loads(text)
+    except (json.JSONDecodeError, tomllib.TOMLDecodeError):
+        return {"unparsed": True}
+    return redact(data)
+
+
+def capture():
+    options = {name: option_value(hypr_json("getoption", name)) for name in OPTIONS}
+    binds = [
+        {k: b.get(k) for k in ("modmask", "key", "description", "dispatcher", "arg", "locked", "repeat", "release")}
+        for b in hypr_json("binds") or []
+    ]
+    devices = hypr_json("devices") or {}
+    monitors = [
+        {k: m.get(k) for k in ("name", "make", "model", "width", "height", "refreshRate", "scale", "transform", "vrr")}
+        for m in hypr_json("monitors", "all") or []
+    ]
+    gsettings = {}
+    for schema, key in GSETTINGS:
+        out = run("gsettings", "get", schema, key)
+        gsettings[f"{schema}.{key}"] = out.strip().strip("'") if out else None
+    files = {}
+    for rel in NYX_FILES:
+        data = read_file(CONFIG / rel)
+        if data is not None:
+            files[rel] = data
+    return {
+        "hyprland": {"options": options, "binds": binds},
+        "input_devices": {
+            kind: [d.get("name") for d in devices.get(kind, [])] for kind in ("mice", "keyboards", "touch", "tablets")
+        },
+        "monitors": monitors,
+        "gsettings": gsettings,
+        "files": files,
+        "credential_files": [rel for rel in CREDENTIAL_FILES if (CONFIG / rel).exists()],
+    }
+
+
+def flatten(table, prefix=""):
+    for key, value in table.items():
+        name = f"{prefix}:{key}" if prefix else key
+        if isinstance(value, dict):
+            yield from flatten(value, name)
+        else:
+            yield name, value
+
+
+def same(shipped, live):
+    if isinstance(shipped, bool) or isinstance(live, bool):
+        return bool(shipped) == bool(live)
+    if isinstance(shipped, (int, float)) and isinstance(live, (int, float)):
+        return abs(shipped - live) < 1e-6
+    return str(shipped) == str(live)
+
+
+def compare(path):
+    shipped = tomllib.loads(Path(path).read_text()).get("options", {})
+    differ = 0
+    for name, value in flatten(shipped):
+        live = option_value(hypr_json("getoption", name.replace("tap_to_click", "tap-to-click")))
+        if not same(value, live):
+            differ += 1
+            print(f"{name}: shipped {value!r}, live {live!r}")
+    print(f"{differ} of {sum(1 for _ in flatten(shipped))} options differ")
+    return 1 if differ else 0
+
+
+def main():
+    args = sys.argv[1:]
+    if args[:1] in (["-h"], ["--help"]):
+        print(__doc__.strip())
+        return 0
+    if args[:1] == ["--compare"] and len(args) == 2:
+        return compare(args[1])
+    if args:
+        print(__doc__.strip(), file=sys.stderr)
+        return 2
+    json.dump(capture(), sys.stdout, indent=2, sort_keys=True)
+    print()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
