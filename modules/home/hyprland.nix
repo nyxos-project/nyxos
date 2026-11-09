@@ -125,6 +125,18 @@ in
       dofile((os.getenv("HOME") or "") .. "/.config/hypr/nyx-switcher.lua")
     end
   ''
+  # Nyx Shell Core: Hyprland's event socket doesn't report monitor mode, scale or
+  # position changes, so they're posted as custom>>nyx-monitors (nyx-desktop reads it); then its
+  # shortcuts, written by `nyx-shellctl shortcuts --apply` from [shortcuts].
+  + lib.optionalString osConfig.nyx.shell.enable ''
+
+    hl.on("monitor.layout_changed", function() hl.dispatch(hl.dsp.event("nyx-monitors")) end)
+    local nyx_shell = io.open((os.getenv("HOME") or "") .. "/.config/hypr/nyx-shell.lua")
+    if nyx_shell then
+      nyx_shell:close()
+      dofile((os.getenv("HOME") or "") .. "/.config/hypr/nyx-shell.lua")
+    end
+  ''
   # The user's Nyx theme (written by nyx-themed), then the values set in Nyx Settings,
   # last so they win; Settings looks for its require line.
   + lib.optionalString osConfig.nyx.themes.enable ''

@@ -36,6 +36,8 @@ in
     dock.enable = lib.mkDefault true;
     control-center.enable = lib.mkDefault true;
     switcher.enable = lib.mkDefault true;
+    # Nyx Shell Core: off until components move onto it (handoff 03).
+    shell.enable = lib.mkDefault false;
     settings.enable = lib.mkDefault true;
     wallpapers.enable = lib.mkDefault true;
     store.enable = lib.mkDefault true;
