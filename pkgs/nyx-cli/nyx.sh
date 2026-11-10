@@ -22,9 +22,14 @@ nyx system …              the system: settings, packages for everyone, update,
                           (nyx system help)
 nyx service NAME on|off   system services NyxOS manages (nyx system services)
 nyx agent [ARGS…]         start your default coding agent (nyx agent help)
+nyx apps                  what Nyx apps can do from here (nyx apps help APP)
+nyx APP [ACTION] [ARGS…]  an app's action: nyx notes create "Ideas", nyx music jazz
+                          (nyx APP --help lists them)
+nyx completion SHELL      completions for bash, zsh or fish
 
 PKG is a package name (firefox), a Nyx app (nyx-pdf) or any flake reference.
-Any other command goes to nix: nyx build, nyx flake, nyx develop…
+Any other command goes to an app that answers to it, else to nix: nyx build,
+nyx flake, nyx develop…
 EOF
 }
 
@@ -179,6 +184,19 @@ agent() {
   exec "$cmd" $flags "$@"
 }
 
+# ----- Nyx apps' actions (nyx-actions) -----
+
+builtins="install add remove uninstall update upgrade list search run shell rollback history clean icons share display system service agent agents plugin plugins apps completion help"
+
+apps() {
+  command -v nyx-actions >/dev/null || { echo "nyx-actions isn't installed on this system." >&2; exit 1; }
+  case ${1:-} in
+    help) shift; exec nyx-actions help "$@" ;;
+    list) shift; exec nyx-actions apps "$@" ;;
+    *) exec nyx-actions apps "$@" ;;
+  esac
+}
+
 # Package arguments until the first option; the rest pass through untouched.
 refs=()
 expand() {
@@ -254,8 +272,19 @@ case ${1:-} in
     shift
     command -v nyx-plugin >/dev/null || { echo "Plugins come with Nyx Bar, which isn't installed on this system." >&2; exit 1; }
     exec nyx-plugin "$@" ;;
+  apps)
+    shift
+    apps "$@" ;;
+  completion)
+    shift
+    command -v nyx-actions >/dev/null || { echo "nyx-actions isn't installed on this system." >&2; exit 1; }
+    # shellcheck disable=SC2086 # the built-in commands are words
+    exec nyx-actions completion "${1:-bash}" $builtins ;;
   "" | -h | --help | help)
     usage ;;
   *)
+    if command -v nyx-actions >/dev/null && nyx-actions has "$1"; then
+      exec nyx-actions run "$@"
+    fi
     exec nix "$@" ;;
 esac
