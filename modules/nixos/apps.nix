@@ -58,8 +58,9 @@ in
       dock.enable = lib.mkDefault true;
       control-center.enable = lib.mkDefault true;
       switcher.enable = lib.mkDefault true;
-      # Nyx Shell Core: off until components move onto it (handoff 03).
-      shell.enable = lib.mkDefault false;
+      # Nyx Shell Core and nyx-shell-qs, which draws the OSD, the Control Center's panel,
+      # Desktop Widgets and the window menu; window controls need it too.
+      shell.enable = lib.mkDefault true;
       settings.enable = lib.mkDefault true;
       wallpapers.enable = lib.mkDefault true;
       store.enable = lib.mkDefault true;
