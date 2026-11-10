@@ -33,7 +33,10 @@ let
       attr:
       let
         p = lib.attrByPath (lib.splitString "." attr) null from;
-        unfree = p.meta.unfree or false;
+        # Unfree itself, or something it pulls in is (Lutris: Steam's runtime): nixpkgs
+        # without unfree packages can't evaluate it.
+        plain = lib.attrByPath (lib.splitString "." attr) null pkgs;
+        unfree = p.meta.unfree or false || (plain != null && !(builtins.tryEval plain.drvPath).success);
       in
       if !(lib.isDerivation p) then
         [ "${item.id}: ${if user then "the profile packages have" else "nixpkgs has"} no package ${attr}" ]

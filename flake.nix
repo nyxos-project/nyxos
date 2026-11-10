@@ -43,14 +43,30 @@
       };
       inherit (nixpkgs) lib;
       catalog = inputs.nyx-packages.lib.catalog;
-      # The unfree packages the catalog offers, by name: installing one asks the person
-      # to accept its license first. Nothing else unfree is allowed.
-      unfree = lib.concatMap (
-        item:
-        map (attr: lib.getName (lib.getAttrFromPath (lib.splitString "." attr) toolPkgs)) (
-          item.packages or [ ]
+      # What people install for themselves: the channel's nixpkgs, its tool pins and its
+      # standalone Nyx apps.
+      userOverlays = [
+        self.overlays.tools
+        (
+          _: _:
+          lib.filterAttrs (name: _: lib.hasPrefix "nyx-" name) inputs.nyx-packages.packages.${system}
         )
-      ) (lib.filter (item: item.unfree or false) catalog.item);
+      ];
+      userPkgs = import nixpkgs {
+        inherit system;
+        overlays = userOverlays;
+      };
+      # The catalog's unfree items, with what they pull in (Lutris brings Steam's runtime):
+      # installing one asks the person to accept its license first. Nothing else unfree
+      # is allowed.
+      unfreePkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = userOverlays;
+      };
+      unfree = lib.concatMap (item: item.packages or [ ]) (
+        lib.filter (item: item.unfree or false) catalog.item
+      );
     in
     {
       packages.${system} = {
@@ -93,17 +109,7 @@
       # CHANNEL#NAME`, as the catalog and `nyx install` do): the channel's nixpkgs, its tool
       # pins and its standalone Nyx apps, so a profile matches the channel and comes from
       # the same caches. `nix profile upgrade` moves it to the channel's head.
-      legacyPackages.${system} = import nixpkgs {
-        inherit system;
-        config.allowUnfreePredicate = pkg: lib.elem (lib.getName pkg) unfree;
-        overlays = [
-          self.overlays.tools
-          (
-            _: _:
-            lib.filterAttrs (name: _: lib.hasPrefix "nyx-" name) inputs.nyx-packages.packages.${system}
-          )
-        ];
-      };
+      legacyPackages.${system} = userPkgs // lib.genAttrs unfree (attr: unfreePkgs.${attr});
 
       templates.host = {
         path = ./templates/host;
