@@ -1,6 +1,6 @@
 # Nyx Control Center's NyxOS defaults (/etc/nyxos/defaults/control-center.toml): the
-# reference desktop's layout. A tile whose service isn't there (Tailscale, a VPN, a
-# keyboard light) isn't drawn.
+# reference desktop's layout, with Nyx Connect's Devices (fluxd ships with NyxOS). A tile
+# whose service isn't there (Tailscale, a VPN, a keyboard light) isn't drawn.
 schema = 1
 remember_page = true
 version = 3
@@ -11,6 +11,7 @@ tiles = [
   { widget = "bluetooth", size = "2x1" },
   { widget = "vpn", size = "2x1" },
   { widget = "tailscale", size = "2x1" },
+  { widget = "devices", size = "2x1" },
   { widget = "dnd", size = "1x1" },
   { widget = "mode", size = "1x1" },
   { widget = "sound", size = "4x1" },
