@@ -100,6 +100,11 @@ in
     };
     environment.etc."xdg/gtk-3.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\n";
     environment.etc."xdg/gtk-4.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\n";
+    # Quickshell reads no GTK setting: nyx-shell-qs (the OSD, the Control Center's
+    # panel, the window menu) is told the theme, else it has only hicolor.
+    systemd.user.services.nyx-shell-qs = lib.mkIf config.nyx.shell.enable {
+      environment.QS_ICON_THEME = "Umbra";
+    };
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
