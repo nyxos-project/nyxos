@@ -16,6 +16,7 @@ nyx history               past installs, removals and updates
 nyx clean                 delete old versions to free disk space
 nyx icons …               theme launcher icons (nyx icons --help)
 nyx share FILE…           share through the Share Sheet
+nyx display virtual …     split a wide screen into virtual monitors (nyx display --help)
 nyx plugin …              bar plugins: list, add, configure, update… (nyx plugin help)
 nyx system …              the system: settings, packages for everyone, update, rollback
                           (nyx system help)
@@ -234,6 +235,10 @@ case ${1:-} in
     shift
     command -v nyx-share >/dev/null || { echo "Share isn't installed on this system." >&2; exit 1; }
     exec nyx-share "$@" ;;
+  display)
+    shift
+    command -v nyx-display >/dev/null || { echo "nyx display comes with Nyx Settings, which isn't installed on this system." >&2; exit 1; }
+    exec nyx-display "$@" ;;
   system)
     shift
     command -v nyx-system >/dev/null || { echo "The Nyx System Manager isn't installed on this system." >&2; exit 1; }

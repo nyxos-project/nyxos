@@ -258,6 +258,16 @@ in
       dofile((os.getenv("HOME") or "") .. "/.config/hypr/nyx-theme.lua")
     end
   ''
+  # Virtual monitors (a wide screen split in two or three), written by Nyx Settings and
+  # `nyx display virtual`. The file checks that this Hyprland has them.
+  + ''
+
+    local nyx_virtual = io.open((os.getenv("HOME") or "") .. "/.config/hypr/nyx-virtual-monitors.lua")
+    if nyx_virtual then
+      nyx_virtual:close()
+      dofile((os.getenv("HOME") or "") .. "/.config/hypr/nyx-virtual-monitors.lua")
+    end
+  ''
   # The user's own Hyprland settings, for hand edits; NyxOS never writes this file.
   + ''
 
