@@ -41,6 +41,16 @@
         config.allowUnfree = true;
         overlays = [ self.overlays.tools ];
       };
+      inherit (nixpkgs) lib;
+      catalog = inputs.nyx-packages.lib.catalog;
+      # The unfree packages the catalog offers, by name: installing one asks the person
+      # to accept its license first. Nothing else unfree is allowed.
+      unfree = lib.concatMap (
+        item:
+        map (attr: lib.getName (lib.getAttrFromPath (lib.splitString "." attr) toolPkgs)) (
+          item.packages or [ ]
+        )
+      ) (lib.filter (item: item.unfree or false) catalog.item);
     in
     {
       packages.${system} = {
@@ -77,6 +87,22 @@
 
       overlays.tools = import ./pkgs/tools/overlay.nix {
         pins = import ./pkgs/tools/pins.nix { inherit (nixpkgs) lib; };
+      };
+
+      # What people install for themselves (`nix profile add github:nyxos-project/nyxos/
+      # CHANNEL#NAME`, as the catalog and `nyx install` do): the channel's nixpkgs, its tool
+      # pins and its standalone Nyx apps, so a profile matches the channel and comes from
+      # the same caches. `nix profile upgrade` moves it to the channel's head.
+      legacyPackages.${system} = import nixpkgs {
+        inherit system;
+        config.allowUnfreePredicate = pkg: lib.elem (lib.getName pkg) unfree;
+        overlays = [
+          self.overlays.tools
+          (
+            _: _:
+            lib.filterAttrs (name: _: lib.hasPrefix "nyx-" name) inputs.nyx-packages.packages.${system}
+          )
+        ];
       };
 
       templates.host = {
@@ -118,6 +144,7 @@
             inherit (nixpkgs) lib;
             catalog = inputs.nyx-packages.lib.catalog;
             nixos = self.nixosConfigurations.incus-dev;
+            userPkgs = self.legacyPackages.${system};
           };
           inherit (self.packages.${system}) nyx-cli;
           # An installed machine, as the installer writes one.

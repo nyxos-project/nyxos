@@ -120,24 +120,30 @@ One command updates everything, each piece through what owns it:
 
 ```bash
 nyx update                   # everything: plans, asks once, then updates (firmware asked apart)
-nyx update system            # the channel: NixOS, NyxOS, Nyx apps, apps from nixpkgs
-nyx update apps              # Flatpaks and the user's Nix profile (and the channel, if it has news)
-nyx update tools             # the coding agents NyxOS packages (one rebuild), and the user's mise and uv tools
+nyx update system            # the channel: NixOS, NyxOS, the Nyx apps built into the desktop
+nyx update apps              # the user's own apps (their Nix profile) and Flatpaks
+nyx update tools             # coding agents and the user's mise and uv tools
 nyx update firmware          # fwupd; always asked, never undoable
 nyx update claude            # one thing by name: codex, cursor-agent, grok, firefox, gimp...
-nyx update … --dry-run       # the plan only; --yes doesn't ask
-nyx update status            # what has updates
+nyx update … --dry-run       # the plan only; --yes doesn't ask; --json for scripts
+nyx update check             # what has updates (offline: the last check's, and when)
+nyx update status            # everything installed: version, what's newer, how, its setting
 nyx update history           # what was updated, and how it went
 ```
 
-- A name that fits several things (`cursor`: Cursor Agent and the Cursor IDE) is listed,
-  not guessed: use the id it shows.
-- System steps (the channel, tool pins) are one System Manager rebuild: built first, then
-  switched to, undone if either fails. They ask for the administrator's password.
-- `nyx update claude` copies Claude Code's pin from the head of the channel into
-  `/etc/nyxos/overrides/tools.json` and rebuilds, so only it changes. A tool whose new
-  release is built differently says it comes with `nyx update system` instead. A system
-  update empties that file. `/etc/nyxos/tools.json` shows the tools as built.
+- Names resolve the way `nyx install` resolves them. One that fits several things
+  (`cursor`: Cursor Agent and the Cursor IDE) is asked about on a terminal and listed
+  otherwise: use the id it shows. `system`, `apps`, `tools`, `firmware`, `check`,
+  `status`, `history`, `report`, `auto` and `help` are never package names.
+- Exit codes: 0 done or nothing to do, 1 failed, 2 usage, 3 partly updated, 4 unknown or
+  ambiguous name, 5 offline, 6 another update running, 7 declined. With `--json` a failed
+  step is in the outcome and the code stays 0.
+- The user's own apps and tools update from the channel's head with `nix profile
+  upgrade`: no password, no rebuild, `nyx rollback` undoes it. Programs still running
+  keep their version until reopened (it says which).
+- System steps (the channel, and tools still installed for everyone) are one System
+  Manager rebuild: built first, then switched to, undone if either fails. They ask for
+  the administrator's password. `/etc/nyxos/tools.json` shows the system's tools as built.
 - The coding agents' own updaters are off: NyxOS updates them. Don't run `claude update`,
   `npm i -g`, or an install script over them, and don't install them with mise too.
 - Project languages and tools come from mise (`mise use node@22` in the project) and
@@ -145,8 +151,13 @@ nyx update history           # what was updated, and how it went
   `mise upgrade` and `uv tool upgrade --all` for them. nix-ld lets their downloads run.
 - The channel is the `nyxos.url` line in `/etc/nyxos/flake/flake.nix`: `.../stable` or
   `.../testing`. Change it only when the user asks, then `nyx update system`.
-- A daily check (`nyx-update-check` user timer) notifies when something's new; it skips
-  metered connections. `nyx-system config set updates check false` stops it.
+- Update settings, per kind (`nyx-system config set updates KEY VALUE`, or Settings >
+  Updates): `system`, `apps`, `tools` and `firmware-policy` are `off`, `check`, `notify` or
+  `auto` (defaults: notify, auto, auto, notify; the system and firmware never install by
+  themselves). `install-at = "03:00"` holds automatic installs until then; `check false`
+  turns everything off; `check-on-metered true` allows metered connections.
+- The daily run (`nyx-update-check` user timer, `nyx-system update auto`) installs what's
+  set to auto and notifies about the rest, once per set of updates, and when something fails.
 
 ## Generations, rollback and recovery
 

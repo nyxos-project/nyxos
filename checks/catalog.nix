@@ -1,26 +1,42 @@
-# The software catalog against NyxOS itself: every nixpkgs package exists, builds for
-# this platform and is marked unfree exactly when nixpkgs says so; every Nyx app is one
-# nyx-packages has; and the base tier is what a NyxOS install really ships.
+# The software catalog against NyxOS itself: every package exists, builds for this
+# platform and is marked unfree exactly when nixpkgs says so; a per-user item's packages
+# are in what profiles install from (the flake's legacyPackages, its unfree ones allowed)
+# and a system item's Nyx apps are options nyx-packages has; and the base tier is what a
+# NyxOS install really ships.
 {
   pkgs,
   lib,
   catalog,
   nixos,
+  userPkgs,
 }:
 let
   sysPkgs = nixos.pkgs;
   cfg = nixos.config;
   installed = map lib.getName cfg.environment.systemPackages;
+  # Item.scope in nyx-catalog.
+  scope =
+    item:
+    item.scope or (
+      if item.tier == "base" || (item.services or [ ]) != [ ] || (item.groups or [ ]) != [ ] then
+        "system"
+      else
+        "user"
+    );
   problems = lib.concatMap (
     item:
+    let
+      user = scope item == "user";
+      from = if user then userPkgs else sysPkgs;
+    in
     lib.concatMap (
       attr:
       let
-        p = lib.attrByPath (lib.splitString "." attr) null sysPkgs;
+        p = lib.attrByPath (lib.splitString "." attr) null from;
         unfree = p.meta.unfree or false;
       in
       if !(lib.isDerivation p) then
-        [ "${item.id}: nixpkgs has no package ${attr}" ]
+        [ "${item.id}: ${if user then "the profile packages have" else "nixpkgs has"} no package ${attr}" ]
       else
         lib.optional (
           !(lib.meta.availableOn sysPkgs.stdenv.hostPlatform p)
@@ -31,12 +47,17 @@ let
               if unfree then "unfree" else "free"
             } in nixpkgs, but the catalog says otherwise"
         ++ lib.optional (
+          user && !(builtins.tryEval p.drvPath).success
+        ) "${item.id}: ${attr} can't be installed per user (an unfree license the profile packages don't allow?)"
+        ++ lib.optional (
           item.tier == "base" && !(lib.elem (lib.getName p) installed)
         ) "${item.id}: base, but NyxOS doesn't install ${attr}"
     ) (item.packages or [ ])
     ++ lib.concatMap (
       app:
-      if !(nixos.options.nyx ? ${app}) then
+      if user then
+        lib.optional (!(userPkgs ? "nyx-${app}")) "${item.id}: the profile packages have no nyx-${app}"
+      else if !(nixos.options.nyx ? ${app}) then
         [ "${item.id}: nyx-packages has no Nyx app ${app}" ]
       else
         lib.optional (

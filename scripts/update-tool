@@ -2,7 +2,12 @@
 # Bring one tool's pin in pkgs/tools/sources.json up to its newest stable release.
 #
 #   scripts/update-tool NAME     check NAME; rewrite its pin if there's a newer release
-#   scripts/update-tool --list   the tools CI can check (those with a release feed)
+#   scripts/update-tool --list   the tools CI can check (those with a release feed, and
+#                                not "update": {"enabled": false})
+#
+# A pin's optional "update" object: "enabled" (true; false keeps CI off it) and
+# "autoMerge" (false; true lets a release that isn't a new major version merge itself once
+# the required checks pass).
 #
 # Prints one line of JSON: {tool, name, old, new, status, release}, where status is
 # "current", "updated" or "manual" (no release feed: bumped by hand). Releases come from
@@ -21,7 +26,7 @@ die() {
 }
 
 if [[ ${1:-} == --list ]]; then
-  jq -r 'to_entries[] | select(.value.upstream.kind != "manual") | .key' "$sources"
+  jq -r 'to_entries[] | select(.value.upstream.kind != "manual" and .value.update.enabled != false) | .key' "$sources"
   exit 0
 fi
 (($# == 1)) || die "usage: update-tool NAME | --list"

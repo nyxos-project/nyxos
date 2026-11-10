@@ -12,5 +12,6 @@
       description = "FULL NAME";
     };
     snapshots.enable = true;
+    standaloneApps = "per-user";
   };
 }

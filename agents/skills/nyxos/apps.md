@@ -43,9 +43,14 @@ desktop file, D-Bus name) `io.github.design_nexus.nyx.<Name>`, and its files are
 | Store | `nyx-store` | Software |
 | Welcome | `nyx-welcome` | Setup after installing; can be run again |
 
-Which apps are installed: `ls /run/current-system/sw/share/applications | grep nyx`.
-Turn one on or off for everyone: `nyx-system app NAME on|off|default` (names as in
-`nyx.<name>.enable`: `mail`, `media-player`, `office`, `photos`…), or its catalog item.
+The Nyx apps built into the desktop (Settings, Store, Welcome, Files, Capture, Backup,
+Share, Clipboard, Glimpse, Assistant, Activity, the shell) are the system's, for everyone.
+The standalone ones (Mail, Notes, Music, Notepad, Photos…) are each person's:
+`nyx install notepad`, in their Nix profile, with their services started for them.
+
+Which apps are installed: `ls /run/current-system/sw/share/applications | grep nyx` (the
+system's) and `nyx list` (the user's). A system one is turned on or off with
+`nyx-system app NAME on|off|default` (names as in `nyx.<name>.enable`).
 
 Start an app from a script with `uwsm app -- nyx-files`; quit it with
 `pkill -x nyx-files` only when the user agrees (unsaved work). Background services are

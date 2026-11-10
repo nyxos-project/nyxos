@@ -103,10 +103,11 @@ nyx agent help           # the default coding agent and these skills
 
 ## Decision framework
 
-1. **Software?** Follow [`software.md`](software.md): the catalog (`nyx-system catalog`) for
-   anything NyxOS offers, `nyx install` for one user, `nyx-system install` for everyone,
-   `nyx shell` / `nyx run` for a one-off. Never `pip install --user`, `npm -g` into the
-   system or a downloaded installer.
+1. **Software?** Follow [`software.md`](software.md): `nyx install NAME` (it goes through the
+   catalog: apps and tools for this user, system items for everyone), `nyx shell` /
+   `nyx run` for a one-off, `nyx-system install` only when the user wants something for
+   every account. Never `pip install --user`, `npm -g` into the system or a downloaded
+   installer.
 2. **A system setting?** `nyx-system set/service/app/firewall/port/power/person/...` (see
    [`system.md`](system.md)). Only if it has no command: `host.nix` and a rebuild.
 3. **The desktop?** Settings (`nyx-settings --section ID`) or the files in
@@ -122,9 +123,8 @@ status` for a service, the app itself for its settings, `nyx-system settings` fo
 
 ## Example requests
 
-- "Install GIMP" -> `nyx-system catalog` to see if NyxOS offers it; if so `nyx-system
-  catalog install gimp`, else `nyx install gimp` (just this user) or `nyx-system install
-  gimp` (everyone)
+- "Install GIMP" -> `nyx install gimp` (for this user; it shows the plan and asks), or
+  `nyx-system install gimp` if they want it for every account
 - "Try ripgrep without installing it" -> `nyx shell ripgrep`
 - "Change the computer's name to studio" -> `nyx-system set hostname studio`
 - "Turn on SSH" -> `nyx-system service ssh on` (it opens port 22 too)

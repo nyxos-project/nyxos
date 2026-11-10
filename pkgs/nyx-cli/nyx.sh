@@ -3,12 +3,13 @@
 
 usage() {
   cat <<'EOF'
-nyx install PKG…          install packages for your user
-nyx remove PKG…           remove them (also: uninstall)
+nyx install NAME…         install software: apps and tools for you, what the system
+                          has to provide (services, drivers) for everyone
+nyx remove NAME…          remove it, wherever it's installed (also: uninstall)
 nyx update [WHAT…]        update everything, or system, apps, tools, firmware, or
                           one thing by name (nyx update --help)
 nyx list                  your installed packages
-nyx search TERM…          search the package collection
+nyx search TERM…          search the NyxOS catalog, then the package collection
 nyx run PKG [ARGS…]       run a program without installing it
 nyx shell PKG… [-c CMD]   open a shell with packages available
 nyx rollback              undo the last install, remove or update
@@ -27,7 +28,9 @@ nyx APP [ACTION] [ARGS…]  an app's action: nyx notes create "Ideas", nyx music
                           (nyx APP --help lists them)
 nyx completion SHELL      completions for bash, zsh or fish
 
-PKG is a package name (firefox), a Nyx app (nyx-pdf) or any flake reference.
+NAME is what the catalog calls it, a command or an alias (claude, firefox, notepad),
+or any package name; the same names work for install, remove, update and search.
+PKG (run, shell) is a package name, a Nyx app (nyx-pdf) or any flake reference.
 Any other command goes to an app that answers to it, else to nix: nyx build,
 nyx flake, nyx develop…
 EOF
@@ -208,13 +211,32 @@ expand() {
   refs+=("$@")
 }
 
+# Whether every argument is a plain name (not a flake reference or an option).
+names_only() {
+  (($#)) || return 1
+  local a
+  for a in "$@"; do
+    case $a in -* | *'#'* | *:*) return 1 ;; esac
+  done
+  command -v nyx-system >/dev/null
+}
+
 case ${1:-} in
   install | add)
     shift
+    # Names resolve through the catalog, the way the Store installs them; names it
+    # doesn't have are packages from the system's channel, for you. Flake references
+    # and options go to nix as they are.
+    if names_only "$@"; then
+      exec nyx-system catalog install --or-profile "$@"
+    fi
     expand "$@"
     exec nix profile add "${refs[@]}" ;;
   remove | uninstall)
     shift
+    if names_only "$@"; then
+      exec nyx-system catalog remove --or-profile "$@"
+    fi
     exec nix profile remove "$@" ;;
   update | upgrade)
     shift
@@ -225,6 +247,13 @@ case ${1:-} in
     exec nix profile list "$@" ;;
   search)
     shift
+    (($#)) || { usage >&2; exit 2; }
+    if names_only "$@"; then
+      echo "In the NyxOS catalog (nyx install NAME):"
+      nyx-system catalog search "$@" 2>/dev/null || echo "  nothing"
+      echo
+      echo "In the package collection:"
+    fi
     exec nix search nixpkgs "$@" ;;
   run)
     shift

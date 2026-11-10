@@ -28,5 +28,6 @@
       description = "Amy Example";
     };
     snapshots.enable = true;
+    standaloneApps = "per-user";
   };
 }

@@ -1,7 +1,9 @@
 # New releases of the tools NyxOS packages from pins (pkgs/tools/sources.json), as pull
 # requests: one per tool, on tool-update/NAME, opened only once the new pin builds and
 # passes its check. A release that fails opens or updates the issue "Tool update failed:
-# NAME", and the last validated pin stays. Nothing is merged automatically.
+# NAME", and the last validated pin stays. Runs every six hours. Nothing is merged
+# automatically unless the pin opts in ("update": {"autoMerge": true}) and the release
+# isn't a new major version; then GitHub merges it once the required checks pass.
 #
 # `propose` runs upstream code (in the Nix sandbox) and gets no secrets and a read-only
 # token; `publish` builds nothing and only turns what `propose` made into pull requests
@@ -13,7 +15,7 @@ name: Tool updates
 
 on:
   schedule:
-    - cron: "23 7 * * *"
+    - cron: "23 */6 * * *"
   workflow_dispatch:
     inputs:
       tool:
@@ -35,7 +37,7 @@ jobs:
     outputs:
       list: ${{ steps.list.outputs.list }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - id: list
         env:
@@ -62,11 +64,11 @@ jobs:
       - name: Free disk space
         run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache
 
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
-      - uses: cachix/install-nix-action@v31
+      - uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b # v31
         with:
           github_access_token: ${{ github.token }}
           extra_nix_config: |
@@ -74,7 +76,7 @@ jobs:
             stalled-download-timeout = 60
 
       # Read-only: no token, so nothing built here reaches the cache.
-      - uses: cachix/cachix-action@v17
+      - uses: cachix/cachix-action@38b082610b782e7e93e209c35fd730d399dee866 # v17
         with:
           name: ${{ vars.CACHIX_NAME }}
 
@@ -110,7 +112,7 @@ jobs:
           fi
           mv out/r out/report.json
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: tool-${{ matrix.tool }}
           path: |
@@ -130,11 +132,11 @@ jobs:
       # Starting CI on the pull request's branch.
       actions: write
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           pattern: tool-*
           path: results

@@ -6,33 +6,45 @@ or `dnf`, and programs don't install into `/usr`. Downloaded installers (`curl |
 
 ## Pick the right way
 
+Apps and tools are each person's own: they go into that person's Nix profile, with no
+password and no rebuild, and other accounts have their own. Only what the system has to
+provide (services, groups, drivers, the Nyx apps built into the desktop) is installed for
+everyone.
+
 | The user wants | Use | Who gets it | Rebuild? |
 | --- | --- | --- | --- |
-| Something NyxOS offers (Welcome and Store items) | `nyx-system catalog install ID` | as the item says | if it has system parts |
-| A program for themselves only | `nyx install PKG` | this user | no |
-| A program for every account | `nyx-system install PKG` | everyone | yes |
+| Any app or tool (catalog name, command, alias or nixpkgs name) | `nyx install NAME` | this user, or everyone for system items | only for system items |
 | A desktop app from Flathub | Nyx Store, or `flatpak install --user flathub APP` | this user | no |
 | To try something once | `nyx run PKG` / `nyx shell PKG` | nobody keeps it | no |
 | Tools for one project | a `flake.nix` dev shell, `nix develop`; or mise (`mise use node@22`) | that project | no |
 | A Python command-line tool | `uv tool install NAME` (lands in `~/.local/bin`) | this user | no |
-| A Nyx app | `nyx-system app NAME on` (or its catalog item) | everyone | yes |
-| A system service (Docker, SSH…) | `nyx-system service NAME on` | the system | yes |
+| A program for every account, deliberately | `nyx-system install PKG` | everyone | yes |
+| A system service (Docker, SSH…) | `nyx-system service NAME on` (or its catalog item) | the system | yes |
+| An app installed for everyone, as their own | `nyx-system catalog move NAME` | this user | yes (it leaves everyone's) |
 
-Package names are nixpkgs attribute names (`firefox`, `gimp`, `python3`, `nodejs_22`).
-Find them with `nyx search TERM`, or at search.nixos.org (channel 26.05).
+`nyx install claude`, `nyx install claude-code` and `nyx install "Claude Code"` are the same:
+names resolve through the catalog (ids, names, aliases, commands, packages), the same way
+for install, remove, update and search. A name the catalog doesn't have is a nixpkgs
+package from the system's channel. Find names with `nyx search TERM`.
 
 ## The NyxOS catalog
 
 The curated list Welcome and the Store offer, with presets. An item can bring nixpkgs
 packages, a Nyx app, a Flatpak, a flake for the user's profile, services and groups at once.
+Each says who it's for: "for you" (the person's profile, from
+`github:nyxos-project/nyxos/<channel>`) or "for everyone" (the System Manager, one
+rebuild).
 
 ```bash
 nyx-system catalog                    # every section; * marks what's installed
 nyx-system catalog agents             # one section (nyx-apps, desktop, cli, toolchains,
                                       #   infrastructure, agents…)
 nyx-system catalog presets
-nyx-system catalog install ID... [--preset P] [--yes]
-nyx-system catalog remove ID...
+nyx-system catalog search TERM...
+nyx-system catalog install NAME... [--preset P] [--yes]
+nyx-system catalog remove NAME...
+nyx-system catalog move NAME...|--all # per-user software installed for everyone (older
+                                      #   NyxOS did that), into this user's profile
 ```
 
 It prints the plan first (packages, Flatpaks, groups the user would join, licenses) and
@@ -45,9 +57,9 @@ bring new items.
 ## Per-user packages: `nyx`
 
 ```bash
-nyx install PKG...            # nix profile add nixpkgs#PKG (nyx-NAME: the Nyx app's flake;
-                              #   anything with # or : is a flake reference as given)
-nyx remove NAME...            # names as `nyx list` shows them
+nyx install NAME...           # through the catalog, else CHANNEL#NAME into the profile
+                              #   (anything with # or : is a flake reference as given)
+nyx remove NAME...            # wherever it's installed (catalog name, or as `nyx list` shows)
 nyx update [NAME...]          # everything, or what's named (system, apps, tools, firmware,
                               #   claude, firefox...): see system.md, Updates
 nyx list

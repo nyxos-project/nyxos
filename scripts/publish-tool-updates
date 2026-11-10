@@ -20,6 +20,24 @@ git config user.name "NyxOS tool updates"
 git config user.email "tool-updates@users.noreply.github.com"
 git fetch -q origin main
 
+# A pull request merged by GitHub's auto-merge (this workflow's token) starts no CI on
+# main, and main's CI is what fills the binary cache: start it when main's head has none.
+main=$(git rev-parse origin/main)
+if [ "$(gh run list --workflow ci.yml --commit "$main" --json databaseId --jq length 2>/dev/null || echo 1)" = 0 ]; then
+  gh api -X POST "repos/{owner}/{repo}/actions/workflows/ci.yml/dispatches" -f ref=main >/dev/null &&
+    echo "main ($main) had no CI run; started one"
+fi
+
+# Whether `new` is a new major version of `old` (1.x to 2.x; 0.x to 0.y counts too).
+major_bump() {
+  local a b
+  a=$(sed -E 's/^[^0-9]*([0-9]+)\.?([0-9]*).*/\1 \2/' <<<"$1")
+  b=$(sed -E 's/^[^0-9]*([0-9]+)\.?([0-9]*).*/\1 \2/' <<<"$2")
+  read -r a1 a2 <<<"$a"
+  read -r b1 b2 <<<"$b"
+  [ "$a1" != "$b1" ] || { [ "$a1" = 0 ] && [ "${a2:-0}" != "${b2:-0}" ]; }
+}
+
 hosts() {
   jq -r --arg t "$1" '.[$t].srcs[].url | capture("^https://(?<h>[^/]+)/").h' | sort -u
 }
@@ -90,6 +108,15 @@ EOF
   issue=$(open_issue "Tool update failed: $tool")
   if [ -n "$issue" ]; then
     gh issue close "$issue" --comment "$name $new builds and passes its check: #$pr." >/dev/null
+  fi
+  # Opted in, and not a new major version: GitHub merges it once the required checks
+  # pass (branch protection decides which). Otherwise it waits for review.
+  if [ "$(jq -r --arg t "$tool" '.[$t].update.autoMerge // false' "$sources")" = true ]; then
+    if major_bump "$old" "$new"; then
+      echo "$tool: $old → $new is a new major version; it waits for review"
+    elif ! gh pr merge "$pr" --auto --squash >/dev/null; then
+      echo "::warning::$tool: auto-merge couldn't be turned on for #$pr (allow auto-merge and require CI on main)"
+    fi
   fi
   echo "$tool: #$pr"
 }
