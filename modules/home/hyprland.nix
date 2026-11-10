@@ -7,10 +7,12 @@
   lib,
   pkgs,
   osConfig,
+  inputs,
   theme,
   ...
 }:
 let
+  nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
   c = theme.colors;
   defaults = builtins.fromTOML (builtins.readFile ../../defaults/hyprland.toml);
   lua = lib.generators.toLua { };
@@ -255,6 +257,21 @@ in
       nyx_shell:close()
       dofile((os.getenv("HOME") or "") .. "/.config/hypr/nyx-shell.lua")
     end
+  ''
+  # Adaptive window controls: NyxOS's decorations (headerbars for apps without
+  # controls, floating geometry kept across tiling), then the per-app rules
+  # `nyx-shellctl window-controls --apply` writes from [window_controls] in shell.toml,
+  # brought up to date at every start (it reloads only when they changed). Before the
+  # theme, which colours the headerbars.
+  + lib.optionalString (enabled "shell") ''
+
+    hl.plugin.load("${nyxPkgs.nyx-decor}/lib/nyx-decor.so")
+    local nyx_window_controls = io.open((os.getenv("HOME") or "") .. "/.config/hypr/nyx-window-controls.lua")
+    if nyx_window_controls then
+      nyx_window_controls:close()
+      dofile((os.getenv("HOME") or "") .. "/.config/hypr/nyx-window-controls.lua")
+    end
+    hl.on("hyprland.start", function() hl.exec_cmd("nyx-shellctl window-controls --apply") end)
   ''
   # The user's Nyx theme (written by nyx-themed), then the values set in Nyx Settings,
   # last so they win; Settings looks for its require line.
