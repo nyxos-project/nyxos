@@ -56,6 +56,8 @@
     passwords.enable = true;
     pulse.enable = true;
     assistant.enable = true;
+    # Nyx Agents and its AI Hub plugin for the bar and Control Center.
+    agents.enable = true;
     # No camera or reader in the VM: both methods stand aside and the password works.
     biometrics = {
       enable = true;
