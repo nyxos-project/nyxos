@@ -49,9 +49,9 @@ let
             "${item.id}: ${attr} is ${
               if unfree then "unfree" else "free"
             } in nixpkgs, but the catalog says otherwise"
-        ++ lib.optional (
-          user && !(builtins.tryEval p.drvPath).success
-        ) "${item.id}: ${attr} can't be installed per user (an unfree license the profile packages don't allow?)"
+        ++
+          lib.optional (user && !(builtins.tryEval p.drvPath).success)
+            "${item.id}: ${attr} can't be installed per user (an unfree license the profile packages don't allow?)"
         ++ lib.optional (
           item.tier == "base" && !(lib.elem (lib.getName p) installed)
         ) "${item.id}: base, but NyxOS doesn't install ${attr}"

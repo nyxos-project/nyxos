@@ -18,35 +18,41 @@ let
 
   # hyprland-nyx's option; set only where Hyprland has it (below).
   swipeWrap = defaults.options.gestures.workspace_swipe_wrap or false;
-  options = lib.recursiveUpdate (defaults.options // {
-    gestures = removeAttrs (defaults.options.gestures or { }) [ "workspace_swipe_wrap" ];
-  }) {
-    general.col = {
-      active_border = "rgb(${c.accent})";
-      inactive_border = "rgb(${c.border})";
-    };
-    group.col = {
-      border_active = "rgb(${c.accent})";
-      border_inactive = "rgb(${c.border})";
-    };
-    group.groupbar = {
-      text_color = "rgb(${c.text})";
-      text_color_inactive = "rgb(${c.dimText})";
-    };
-    input.kb_layout = osConfig.services.xserver.xkb.layout;
-    misc = {
-      disable_hyprland_logo = true;
-      disable_splash_rendering = true;
-      force_default_wallpaper = 0;
-      background_color = "rgb(${c.bg})";
-      # If the lock screen stops, the session stays locked and a new one can take over.
-      allow_session_lock_restore = true;
-    };
-    ecosystem = {
-      no_update_news = true;
-      no_donation_nag = true;
-    };
-  };
+  options =
+    lib.recursiveUpdate
+      (
+        defaults.options
+        // {
+          gestures = removeAttrs (defaults.options.gestures or { }) [ "workspace_swipe_wrap" ];
+        }
+      )
+      {
+        general.col = {
+          active_border = "rgb(${c.accent})";
+          inactive_border = "rgb(${c.border})";
+        };
+        group.col = {
+          border_active = "rgb(${c.accent})";
+          border_inactive = "rgb(${c.border})";
+        };
+        group.groupbar = {
+          text_color = "rgb(${c.text})";
+          text_color_inactive = "rgb(${c.dimText})";
+        };
+        input.kb_layout = osConfig.services.xserver.xkb.layout;
+        misc = {
+          disable_hyprland_logo = true;
+          disable_splash_rendering = true;
+          force_default_wallpaper = 0;
+          background_color = "rgb(${c.bg})";
+          # If the lock screen stops, the session stays locked and a new one can take over.
+          allow_session_lock_restore = true;
+        };
+        ecosystem = {
+          no_update_news = true;
+          no_donation_nag = true;
+        };
+      };
 
   gesture =
     g:
@@ -85,7 +91,9 @@ in
       hl.config({ gestures = { workspace_swipe_wrap = ${lua swipeWrap} } })
     end
 
-    ${lib.concatMapStringsSep "\n" (k: "hl.curve(${lua k.name}, { type = \"bezier\", points = ${lua k.points} })") (defaults.curves or [ ])}
+    ${lib.concatMapStringsSep "\n" (
+      k: "hl.curve(${lua k.name}, { type = \"bezier\", points = ${lua k.points} })"
+    ) (defaults.curves or [ ])}
     ${lib.concatMapStringsSep "\n" (a: "hl.animation(${lua a})") (defaults.animations or [ ])}
 
     for workspace = 1, ${toString (defaults.workspaces.persistent or 0)} do

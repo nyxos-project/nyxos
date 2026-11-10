@@ -47,10 +47,7 @@
       # standalone Nyx apps.
       userOverlays = [
         self.overlays.tools
-        (
-          _: _:
-          lib.filterAttrs (name: _: lib.hasPrefix "nyx-" name) inputs.nyx-packages.packages.${system}
-        )
+        (_: _: lib.filterAttrs (name: _: lib.hasPrefix "nyx-" name) inputs.nyx-packages.packages.${system})
       ];
       userPkgs = import nixpkgs {
         inherit system;
