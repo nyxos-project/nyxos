@@ -1032,11 +1032,11 @@
     "nyx-hyprland": {
       "flake": false,
       "locked": {
-        "lastModified": 1794317769,
-        "narHash": "sha256-1AkglRBZONQbnPopV6WZTskKgfyYBSYTIe3FOaP9fOo=",
+        "lastModified": 1794329945,
+        "narHash": "sha256-KGzIaBTygOHRbkLifyeXobiYOe4uHNF0Xpk+vnr3CaE=",
         "owner": "nyxos-project",
         "repo": "nyx-hyprland",
-        "rev": "1c49fc16b2290e0f3f496ddb0f856282445bcec9",
+        "rev": "cadba6d4d822e98d3cdfe7e2350dacbd8d932e27",
         "type": "github"
       },
       "original": {
@@ -1276,11 +1276,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1794321497,
-        "narHash": "sha256-D+WdJANRN8pxg+wRGR799BkYbUEBdhxbkQxjsRVdHts=",
+        "lastModified": 1794329956,
+        "narHash": "sha256-nW8qPY0IQiDrji5whVXnaLREgnGu2mPbj26MuTZYQfo=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "558453c5039854bbe61db6b108ec09805140053d",
+        "rev": "959ba581d9d7590bae683b198169958ef5bbc683",
         "type": "github"
       },
       "original": {
