@@ -1277,11 +1277,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1794388249,
-        "narHash": "sha256-SMq4Ph4I4XezI7/2axO2+5XO7NBKtBL/7e2dsju/DO0=",
+        "lastModified": 1794388511,
+        "narHash": "sha256-k2CiIiMxJSLxvAbvHA4+xLfFoF0nZjpx5TsojsHIPQQ=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "4807c211c56241d83164e9dbdb0e12d4a08998d0",
+        "rev": "1232b432d136c6c86c1cd6733fd2359a8a9800f8",
         "type": "github"
       },
       "original": {
