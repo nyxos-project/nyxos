@@ -11,15 +11,21 @@ tiles = [
   { widget = "bluetooth", size = "2x1" },
   { widget = "vpn", size = "2x1" },
   { widget = "tailscale", size = "2x1" },
-  { widget = "devices", size = "2x1" },
   { widget = "dnd", size = "1x1" },
   { widget = "mode", size = "1x1" },
-  { widget = "sound", size = "4x1" },
-  { widget = "media", size = "2x1" },
-  { widget = "power", size = "2x1" },
   { widget = "night-light", size = "1x1" },
   { widget = "keep-awake", size = "1x1" },
+  { widget = "sound", size = "4x2" },
+  { widget = "media", size = "4x2" },
+  { widget = "power", size = "2x1" },
+  { widget = "battery", size = "2x1" },
+  { widget = "devices", size = "1x1" },
+  { widget = "microphone", size = "1x1" },
   { widget = "keyboard-light", size = "1x1" },
   { widget = "capture", size = "1x1" },
-  { widget = "upcoming", size = "4x2" },
+]
+
+[[pages]]
+tiles = [
+  { widget = "upcoming", size = "4x3" },
 ]

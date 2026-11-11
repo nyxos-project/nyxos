@@ -1,0 +1,13 @@
+# Nyx Bar's NyxOS defaults (/etc/nyxos/defaults/bar.toml), below each user's
+# ~/.config/nyx/bar.toml. The sections are the bar's built-in layout (launcher and
+# workspaces, window title, clock, media, weather and stats, tray, the status pill and
+# notifications); only what NyxOS sets on top of it is here.
+schema = 1
+size = "default"
+
+[plugins."nyx.clock"]
+layout = "wide"
+next_event = true
+
+[plugins."nyx.workspaces"]
+look = "pills"

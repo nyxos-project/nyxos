@@ -232,6 +232,7 @@ in
     # back to.
     environment.etc."nyxos/defaults/hyprland.toml".source = ../../defaults/hyprland.toml;
     environment.etc."nyxos/defaults/dock.toml".source = ../../defaults/dock.toml;
+    environment.etc."nyxos/defaults/bar.toml".source = ../../defaults/bar.toml;
     environment.etc."nyxos/defaults/control-center.toml".source = ../../defaults/control-center.toml;
     environment.etc."nyxos/defaults/notifications.toml".source = ../../defaults/notifications.toml;
   };
