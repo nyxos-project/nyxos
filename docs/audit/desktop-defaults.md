@@ -169,7 +169,7 @@ native dispatchers; Omarchy-script ones don't.
 | App accents | blue for calendar, chat, home, mail, music, passwords, theater | nyx `theme.toml` | A | — | personal per-app choices | excluded |
 | GTK theme, colour scheme | `adw-gtk3-dark`, prefer-dark | gsettings | N | `nyx-themed` sets them from the theme | already native | validated |
 | Icon theme | Umbra | gsettings (`nyx-icons.path`) | N | `desktop` (Umbra is the NyxOS icon theme) | already native | validated |
-| Cursor | `default`, 24 | gsettings, stock `envs.lua` | N | `desktop` dconf `cursor-size = 24`; `XCURSOR_SIZE` in `hyprland.nix` | value | validated |
+| Cursor | `default`, 24 | gsettings, stock `envs.lua` | N | `desktop` `xdg.icons.fallbackCursorThemes = [ "Adwaita" ]` (the `default` theme, as Arch's `/usr/share/icons/default`), dconf `cursor-size = 24`; `XCURSOR_SIZE` in `hyprland.nix` | value | validated |
 | UI font | Adwaita Sans 11 | gsettings | K | `desktop` dconf `font-name`, `fontconfig.defaultFonts.sansSerif`; `adwaita-fonts` installed | was Inter | validated |
 | Document font | Adwaita Sans 12 | gsettings | K | `desktop` dconf `document-font-name` | value | validated |
 | Monospace font | JetBrainsMono Nerd Font 11 | gsettings, `fontconfig/fonts.conf` | N | `desktop` dconf `monospace-font-name`, `fontconfig.defaultFonts.monospace` | value | validated |

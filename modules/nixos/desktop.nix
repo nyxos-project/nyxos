@@ -11,10 +11,13 @@ let
   nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
   greeter = nyxPkgs.nyx-greeter;
   loginTheme = config.nyxos.theme.login;
-  # The greeter's session with this computer's keyboard, and hyprctl found without PATH.
+  # The greeter's session with this computer's keyboard, hyprctl found without PATH, and
+  # the system's cursors (greetd's environment has no XCURSOR_PATH, and libXcursor's own
+  # path doesn't reach the system profile).
   greeterSession = pkgs.runCommand "nyx-greeter-hyprland.lua" { } ''
     sed -e 's/kb_layout = "us"/kb_layout = "${config.services.xserver.xkb.layout}"/' \
       -e 's|; hyprctl eval|; ${config.programs.hyprland.package}/bin/hyprctl eval|' \
+      -e 's|^hl.env("XCURSOR_SIZE", "24")$|&\nhl.env("XCURSOR_PATH", "/run/current-system/sw/share/icons")|' \
       ${greeter}/share/nyx-greeter/hyprland.lua > $out
   '';
 in
@@ -98,6 +101,10 @@ in
         }
       ];
     };
+    # Adwaita's pointer, as on the reference desktop: Hyprland, Qt and X11 apps load the
+    # `default` cursor theme, which on Arch inherits Adwaita and on NixOS doesn't exist
+    # until this makes it (else Hyprland draws its built-in fallback).
+    xdg.icons.fallbackCursorThemes = [ "Adwaita" ];
     environment.etc."xdg/gtk-3.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\n";
     environment.etc."xdg/gtk-4.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\n";
     # Quickshell reads no GTK setting: nyx-shell-qs (the OSD, the Control Center's
