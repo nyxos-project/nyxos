@@ -309,6 +309,15 @@ in
       dofile((os.getenv("HOME") or "") .. "/.config/hypr/nyx-virtual-monitors.lua")
     end
   ''
+  # Activity's startup items (its Startup page writes them; Hyprland's start hook runs them).
+  + ''
+
+    local nyx_activity = io.open((os.getenv("HOME") or "") .. "/.config/hypr/activity.lua")
+    if nyx_activity then
+      nyx_activity:close()
+      dofile((os.getenv("HOME") or "") .. "/.config/hypr/activity.lua")
+    end
+  ''
   # The user's own Hyprland settings, for hand edits; NyxOS never writes this file.
   + ''
 
