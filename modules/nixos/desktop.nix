@@ -77,6 +77,9 @@ in
     environment.systemPackages = [
       nyxPkgs.umbra-icons
       pkgs.adwaita-icon-theme
+      # GTK 3 windows' theme (and GTK 4's where Nyx's stylesheet doesn't reach), as on
+      # Omarchy; nyx-themed picks adw-gtk3 or adw-gtk3-dark for the theme's appearance.
+      pkgs.adw-gtk3
       # The dock, Control Center, notifications and Home start apps with gtk-launch, as on
       # Omarchy; only that command, not the rest of GTK 3's tools.
       (pkgs.runCommand "gtk-launch" { } ''
@@ -93,6 +96,7 @@ in
         {
           settings."org/gnome/desktop/interface" = {
             icon-theme = "Umbra";
+            gtk-theme = "adw-gtk3-dark";
             font-name = "Adwaita Sans 11";
             document-font-name = "Adwaita Sans 12";
             monospace-font-name = "JetBrainsMono Nerd Font 11";
@@ -105,7 +109,7 @@ in
     # `default` cursor theme, which on Arch inherits Adwaita and on NixOS doesn't exist
     # until this makes it (else Hyprland draws its built-in fallback).
     xdg.icons.fallbackCursorThemes = [ "Adwaita" ];
-    environment.etc."xdg/gtk-3.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\n";
+    environment.etc."xdg/gtk-3.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\ngtk-theme-name=adw-gtk3-dark\n";
     environment.etc."xdg/gtk-4.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\n";
     # Quickshell reads no GTK setting: nyx-shell-qs (the OSD, the Control Center's
     # panel, the window menu) is told the theme, else it has only hicolor.

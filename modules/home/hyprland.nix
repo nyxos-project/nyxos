@@ -102,6 +102,22 @@ in
       hl.workspace_rule({ workspace = tostring(workspace), persistent = true })
     end
 
+    -- A fullscreen app gets a workspace of its own (nyx-hyprland's patch).
+    if hl.get_config("misc.fullscreen_own_workspace") ~= nil then
+      hl.config({ misc = { fullscreen_own_workspace = true } })
+    end
+
+    -- Each workspace's mode from the Control Center's Workspace mode tile and Settings
+    -- (nyx-desktop's omarchy::set_workspace): one Hyprland workspace rule per file.
+    local nyx_modes = (os.getenv("XDG_STATE_HOME") or ((os.getenv("HOME") or "") .. "/.local/state")) .. "/nyx/workspace-modes/"
+    for workspace = 1, 32 do
+      local saved = io.open(nyx_modes .. workspace .. ".lua")
+      if saved then
+        saved:close()
+        pcall(dofile, nyx_modes .. workspace .. ".lua")
+      end
+    end
+
     ${lib.concatMapStringsSep "\n" gesture gestures}
 
     local function launch(command)
