@@ -26,6 +26,16 @@
 
   xdg.enable = true;
 
+  # Without user-dirs.dirs GLib knows only Desktop, so Files' Places would leave out
+  # the rest. Desktop is made too because Places lists it.
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+    publicShare = null;
+    templates = null;
+    extraConfig.GAMES = "${config.home.homeDirectory}/Games";
+  };
+
   # Where `uv tool install`, pipx and others put the commands they install.
   home.sessionPath = [ "$HOME/.local/bin" ];
 
