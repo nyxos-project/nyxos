@@ -66,7 +66,7 @@ in
         noto-fonts-color-emoji
       ];
       fontconfig.defaultFonts = {
-        sansSerif = [ "Adwaita Sans" ];
+        sansSerif = [ "Inter" ];
         monospace = [ "JetBrainsMono Nerd Font" ];
         emoji = [ "Noto Color Emoji" ];
       };
@@ -88,8 +88,8 @@ in
       '')
     ];
     # Every account's default; a choice in Settings (the user's own dconf) wins, and
-    # `gsettings reset` goes back to these. Fonts and cursor size are the reference
-    # desktop's (docs/audit/desktop-defaults.md).
+    # `gsettings reset` goes back to these. Inter is the suite's font (the Nyx themes'
+    # own); cursor size is the reference desktop's (docs/audit/desktop-defaults.md).
     programs.dconf = {
       enable = true;
       profiles.user.databases = [
@@ -97,8 +97,8 @@ in
           settings."org/gnome/desktop/interface" = {
             icon-theme = "Umbra";
             gtk-theme = "adw-gtk3-dark";
-            font-name = "Adwaita Sans 11";
-            document-font-name = "Adwaita Sans 12";
+            font-name = "Inter 11";
+            document-font-name = "Inter 12";
             monospace-font-name = "JetBrainsMono Nerd Font 11";
             cursor-size = lib.gvariant.mkInt32 24;
           };

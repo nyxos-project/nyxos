@@ -170,8 +170,8 @@ native dispatchers; Omarchy-script ones don't.
 | GTK theme, colour scheme | `adw-gtk3-dark`, prefer-dark | gsettings | N | `nyx-themed` sets them from the theme | already native | validated |
 | Icon theme | Umbra | gsettings (`nyx-icons.path`) | N | `desktop` (Umbra is the NyxOS icon theme) | already native | validated |
 | Cursor | `default`, 24 | gsettings, stock `envs.lua` | N | `desktop` `xdg.icons.fallbackCursorThemes = [ "Adwaita" ]` (the `default` theme, as Arch's `/usr/share/icons/default`), dconf `cursor-size = 24`; `XCURSOR_SIZE` in `hyprland.nix` | value | validated |
-| UI font | Adwaita Sans 11 | gsettings | K | `desktop` dconf `font-name`, `fontconfig.defaultFonts.sansSerif`; `adwaita-fonts` installed | was Inter | validated |
-| Document font | Adwaita Sans 12 | gsettings | K | `desktop` dconf `document-font-name` | value | validated |
+| UI font | Adwaita Sans 11 (gsettings); Nyx apps show Inter, from the `nyx-dark` theme's `[font]` | gsettings, nyx `theme.toml` | K | `desktop` dconf `font-name = "Inter 11"`, `fontconfig.defaultFonts.sansSerif = [ "Inter" ]`; `adwaita-fonts` still installed | Inter system-wide: on NyxOS apps follow the system theme (Catppuccin Mocha), which sets no font, so Adwaita Sans here made Nyx apps lose the Inter they show on the laptop | Ken's decision |
+| Document font | Adwaita Sans 12 | gsettings | K | `desktop` dconf `document-font-name = "Inter 12"` | Inter, as the UI font | Ken's decision |
 | Monospace font | JetBrainsMono Nerd Font 11 | gsettings, `fontconfig/fonts.conf` | N | `desktop` dconf `monospace-font-name`, `fontconfig.defaultFonts.monospace` | value | validated |
 | Shell font size | 12 | `~/.config/omarchy/shell.toml` | O | — | Omarchy shell only | excluded |
 | Keyboard RGB | static `#89b4fa`, follows the theme | `nyx-settings/aura.toml` | H | — | ASUS Aura | excluded |
