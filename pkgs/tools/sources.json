@@ -118,13 +118,13 @@
   },
   "crush": {
     "name": "Crush",
-    "version": "0.70.0",
+    "version": "0.101.0",
     "recipe": 1,
     "aliases": [],
     "srcs": {
       "x86_64-linux": {
-        "url": "https://github.com/charmbracelet/crush/releases/download/v0.70.0/crush_0.70.0_Linux_x86_64.tar.gz",
-        "hash": "sha256-dtLn4MFdze9XoYv5JqbOcVrpAKiE7sCoEGIHTJ9Z/0I="
+        "url": "https://github.com/charmbracelet/crush/releases/download/v0.101.0/crush_0.101.0_Linux_x86_64.tar.gz",
+        "hash": "sha256-zyNJSOPXxSNtGKBIo48lp9+cokuguP2qUl1FxfcF+Zo="
       }
     },
     "upstream": {
