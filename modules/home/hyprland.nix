@@ -102,6 +102,12 @@ let
 
   wpctl = "${pkgs.wireplumber}/bin/wpctl";
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
+  # The keys change it, then the Control Center reads it again so the OSD shows it at once
+  # (it isn't polled while the panel is closed).
+  brightness = pkgs.writeShellScript "nyx-brightness-key" ''
+    ${brightnessctl} "$@"
+    nyx-control-center --refresh brightness >/dev/null 2>&1 || true
+  '';
   playerctl = "${pkgs.playerctl}/bin/playerctl";
 in
 {
@@ -228,10 +234,10 @@ in
     hl.bind("ALT + XF86AudioLowerVolume", hl.dsp.exec_cmd("${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 1%-"), { locked = true, repeating = true, description = "Volume down precise" })
     hl.bind("XF86AudioMute", hl.dsp.exec_cmd("${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle"), { locked = true, description = "Mute" })
     hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("${wpctl} set-mute @DEFAULT_AUDIO_SOURCE@ toggle"), { locked = true, description = "Mute microphone" })
-    hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("${brightnessctl} -e4 -n2 set 5%+"), { locked = true, repeating = true, description = "Brightness up" })
-    hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("${brightnessctl} -e4 -n2 set 5%-"), { locked = true, repeating = true, description = "Brightness down" })
-    hl.bind("ALT + XF86MonBrightnessUp", hl.dsp.exec_cmd("${brightnessctl} -n2 set 1%+"), { locked = true, repeating = true, description = "Brightness up precise" })
-    hl.bind("ALT + XF86MonBrightnessDown", hl.dsp.exec_cmd("${brightnessctl} -n2 set 1%-"), { locked = true, repeating = true, description = "Brightness down precise" })
+    hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("${brightness} -e4 -n2 set 5%+"), { locked = true, repeating = true, description = "Brightness up" })
+    hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("${brightness} -e4 -n2 set 5%-"), { locked = true, repeating = true, description = "Brightness down" })
+    hl.bind("ALT + XF86MonBrightnessUp", hl.dsp.exec_cmd("${brightness} -n2 set 1%+"), { locked = true, repeating = true, description = "Brightness up precise" })
+    hl.bind("ALT + XF86MonBrightnessDown", hl.dsp.exec_cmd("${brightness} -n2 set 1%-"), { locked = true, repeating = true, description = "Brightness down precise" })
     hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("${playerctl} play-pause"), { locked = true, description = "Play" })
     hl.bind("XF86AudioPause", hl.dsp.exec_cmd("${playerctl} play-pause"), { locked = true, description = "Pause" })
     hl.bind("XF86AudioNext", hl.dsp.exec_cmd("${playerctl} next"), { locked = true, description = "Next track" })
