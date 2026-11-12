@@ -38,6 +38,7 @@ in
 {
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
+    ./boot-menu.nix
     # For testing in Incus; it waits for Incus's share and does nothing elsewhere.
     "${modulesPath}/virtualisation/incus-agent.nix"
   ];
@@ -90,8 +91,12 @@ in
     user = "root";
     program = lib.getExe nyxPkgs.nyx-installer;
     extraArguments = [ "-d" ];
-    # Cairo draws the same on any graphics, before a machine's own driver is set up.
-    environment.GSK_RENDERER = "cairo";
+    environment = {
+      # Cairo draws the same on any graphics, before a machine's own driver is set up.
+      GSK_RENDERER = "cairo";
+      # It looks like the system it installs.
+      NYX_INSTALLER_THEME = example.nyxos.theme.system;
+    };
   };
   hardware.graphics.enable = true;
   # A quiet boot behind Nyx Plymouth, as on an installed NyxOS (modules/nixos/boot.nix),
