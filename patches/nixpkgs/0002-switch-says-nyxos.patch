@@ -1,0 +1,13 @@
+Switching to a new system on a machine that isn't NyxOS says so in NyxOS's name.
+
+--- a/pkgs/by-name/sw/switch-to-configuration-ng/src/main.rs
++++ b/pkgs/by-name/sw/switch-to-configuration-ng/src/main.rs
+@@ -1801,7 +1801,7 @@
+             .map(|id| distro_id_re.is_match(id))
+             .unwrap_or_default()
+     {
+-        eprintln!("This is not a NixOS installation!");
++        eprintln!("This is not a NyxOS installation!");
+         die();
+     }
+ 

@@ -64,6 +64,31 @@
       unfree = lib.concatMap (item: item.packages or [ ]) (
         lib.filter (item: item.unfree or false) catalog.item
       );
+      # NixOS as NyxOS builds it: nixpkgs with NyxOS's patches (patches/nixpkgs), so what a
+      # system calls itself is NyxOS's, and NixOS's library with NyxOS's codename (CODENAME).
+      # The packages are nixpkgs' own, so the binary caches still have them.
+      nixosSource = pkgs.applyPatches {
+        name = "nyxos-nixpkgs";
+        src = nixpkgs;
+        patches = lib.filesystem.listFilesRecursive ./patches/nixpkgs;
+      };
+      nyxosLib = nixpkgs.lib.extend (
+        _: prev: {
+          trivial = prev.trivial // {
+            codeName = lib.fileContents ./CODENAME;
+          };
+        }
+      );
+      nyxosSystem =
+        args:
+        import "${nixosSource}/nixos/lib/eval-config.nix" (
+          {
+            lib = nyxosLib;
+            system = null;
+            modules = args.modules ++ [ { nixpkgs.flake.source = nixpkgs.outPath; } ];
+          }
+          // removeAttrs args [ "modules" ]
+        );
     in
     {
       packages.${system} = {
@@ -86,7 +111,7 @@
           overrides ? inputs.nyxos-overrides,
           modules,
         }:
-        nixpkgs.lib.nixosSystem {
+        nyxosSystem {
           specialArgs.inputs = inputs // {
             machine = self;
             nyxos-overrides = overrides;
@@ -97,6 +122,10 @@
       # The tool pins (pkgs/tools/sources.json): what `nyx update NAME` takes from the head
       # of a channel.
       lib.tools = nixpkgs.lib.importJSON ./pkgs/tools/sources.json;
+
+      # The patched nixpkgs every system is built from (the live USB carries it, so an
+      # offline install doesn't rebuild it).
+      lib.nixosSource = nixosSource;
 
       overlays.tools = import ./pkgs/tools/overlay.nix {
         pins = import ./pkgs/tools/pins.nix { inherit (nixpkgs) lib; };
@@ -124,12 +153,12 @@
       };
 
       # The live USB: nix build .#iso
-      nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.iso = nyxosSystem {
         specialArgs = { inherit inputs; };
         modules = [ ./iso ];
       };
 
-      nixosConfigurations.incus-dev = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.incus-dev = nyxosSystem {
         specialArgs = { inherit inputs; };
         modules = [ ./hosts/incus-dev ];
       };

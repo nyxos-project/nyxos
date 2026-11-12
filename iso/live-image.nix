@@ -1,7 +1,8 @@
 # The NyxOS live USB as an image: the live system (the USB's store as a squashfs under a
 # tmpfs, found by its label) and the image itself, started by Limine on UEFI and BIOS,
 # from a USB stick or a disc. NyxOS's own, in place of NixOS's installation-cd modules,
-# so nothing of NixOS's boot menu (GRUB, syslinux, rEFInd, Memtest86+) comes along.
+# so nothing of NixOS's boot menu (GRUB, syslinux, rEFInd, Memtest86+) or its installer's
+# "nixos" account comes along.
 {
   config,
   lib,
@@ -28,7 +29,11 @@ in
   imports = [
     "${modulesPath}/profiles/minimal.nix"
     "${modulesPath}/profiles/base.nix"
-    "${modulesPath}/profiles/installation-device.nix"
+    # From NixOS's installation-device profile, what an installer needs and nobody sees:
+    # every storage controller and driver, and the nixpkgs nixos-install expects.
+    "${modulesPath}/installer/scan/detected.nix"
+    "${modulesPath}/installer/scan/not-detected.nix"
+    "${modulesPath}/installer/cd-dvd/channel.nix"
   ];
 
   options.nyxos.liveImage = {
@@ -152,14 +157,57 @@ in
       '';
     };
 
-    # From NixOS's installer profile: every driver, a console font for HiDPI screens.
+    # Every driver, and a console font for HiDPI screens.
     hardware.enableAllHardware = true;
     console.packages = options.console.packages.default ++ [ pkgs.terminus_font ];
-    documentation.man.enable = lib.mkOverride 500 true;
-    documentation.doc.enable = lib.mkOverride 500 true;
     environment.defaultPackages = [ pkgs.rsync ];
     programs.git.enable = lib.mkDefault true;
     system.stateVersion = lib.mkDefault lib.trivial.release;
+    system.nixos.variant_id = lib.mkDefault "installer";
+
+    # The text consoles (Ctrl+Alt+F2…), for troubleshooting: "nyxos", signed in, with
+    # sudo and no password; the installer itself runs on the first screen.
+    users.users.nyxos = {
+      isNormalUser = true;
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "video"
+      ];
+      initialHashedPassword = "";
+    };
+    users.users.root.initialHashedPassword = "";
+    services.getty.autologinUser = "nyxos";
+    services.getty.helpLine = lib.mkForce ''
+      Install NyxOS runs on the first screen (Ctrl+Alt+F1). This console is for
+      troubleshooting: the install's log is /tmp/nyxos-install.log, and `nmtui` sets up
+      a network.
+    '';
+    security.polkit.enable = true;
+    security.sudo = {
+      enable = lib.mkDefault true;
+      wheelNeedsPassword = lib.mkImageMediaOverride false;
+    };
+    networking.networkmanager.enable = true;
+    nix.settings.trusted-users = [ "nyxos" ];
+
+    # An installer in little memory: collect Nix's garbage early, overcommit, keep what
+    # builds need on the image, and don't empty the firmware's crash store.
+    environment.variables.GC_INITIAL_HEAP_SIZE = "1M";
+    boot.kernel.sysctl."vm.overcommit_memory" = "1";
+    system.extraDependencies = [
+      pkgs.stdenvNoCC
+      pkgs.busybox
+      pkgs.makeInitrdNGTool
+    ]
+    ++ pkgs.jq.all;
+    boot.swraid.enable = true;
+    boot.swraid.mdadmConf = "PROGRAM ${pkgs.coreutils}/bin/true";
+    networking.firewall.logRefusedConnections = lib.mkDefault false;
+    environment.etc."systemd/pstore.conf".text = ''
+      [PStore]
+      Unlink=no
+    '';
 
     # The image: Limine's hybrid layout, so the same file starts from a USB stick or a
     # disc, on UEFI or BIOS. The kernel, initrd and store are grafted in, not copied.

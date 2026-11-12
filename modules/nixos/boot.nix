@@ -18,6 +18,9 @@ let
   } config.nyxos.theme.boot;
   c = bootTheme.colors;
   s = bootTheme.swatches;
+  wallpaper =
+    nyxPkgs.nyx-wallpapers.passthru.locks.${config.nyxos.theme.boot}
+      or nyxPkgs.nyx-wallpapers.passthru.locks.nyx-dark;
   palette = lib.concatStringsSep ";";
 in
 {
@@ -85,19 +88,25 @@ in
         enable = true;
         efiSupport = true;
         maxGenerations = lib.mkDefault 20;
+        # As on the live USB (iso/boot-menu.nix): the lock screen's stacked NYX behind the
+        # entries, and nothing else but the countdown.
         style = {
-          wallpapers = [ ];
+          wallpapers = [ wallpaper ];
+          wallpaperStyle = "stretched";
           # The splash's background, so the menu and the splash are one colour.
           backdrop = c.backdrop;
           interface = {
-            branding = "NyxOS";
-            brandingColor = c.text;
+            branding = "";
             helpColor = c.dimText;
             helpColorBright = c.accent;
             helpHidden = true;
           };
           graphicalTerminal = {
-            background = c.backdrop;
+            # TT = ff: the text has no background of its own, so the wallpaper shows.
+            background = "ff${c.backdrop}";
+            margin = 0;
+            marginGradient = 0;
+            font.scale = "2x2";
             foreground = c.text;
             brightBackground = c.card;
             brightForeground = c.text;

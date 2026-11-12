@@ -1,23 +1,33 @@
-# NyxOS's name and version (VERSION) where the system says what it is: /etc/os-release
-# (Settings' About), /etc/lsb-release, generation and boot entry names. NixOS's own
-# release stays in BUILD_ID; the ID stays "nixos" for tools that check it. Installed
-# systems and the live USB both import this.
-{ lib, config, ... }:
+# NyxOS's name, version (VERSION) and codename (CODENAME, NixOS's library carries it:
+# flake.nix) wherever the system says what it is: /etc/os-release (Settings' About),
+# /etc/lsb-release, nixos-version, generation and boot entry names. The ID is nyxos, like
+# NixOS for tools that know NixOS (ID_LIKE). Installed systems and the live USB both
+# import this.
+{ lib, ... }:
 let
   version = lib.fileContents ../../VERSION;
+  codename = lib.fileContents ../../CODENAME;
   home = "https://github.com/nyxos-project/nyxos";
 in
 {
   system.nixos = {
+    distroId = "nyxos";
     distroName = "NyxOS";
+    vendorId = "nyxos";
     vendorName = "NyxOS";
+    inherit version;
     label = version;
     extraOSReleaseArgs = {
-      VERSION = version;
+      ID_LIKE = "nixos";
+      VERSION = "${version} (${codename})";
       VERSION_ID = version;
-      VERSION_CODENAME = "";
+      VERSION_CODENAME = lib.toLower codename;
       PRETTY_NAME = "NyxOS ${version}";
-      BUILD_ID = config.system.nixos.version;
+      CPE_NAME = "cpe:/o:nyxos:nyxos:${version}";
+      BUILD_ID = "";
+      LOGO = "";
+      SUPPORT_END = "";
+      ANSI_COLOR = "0;38;2;137;180;250";
       HOME_URL = home;
       DOCUMENTATION_URL = home;
       SUPPORT_URL = "${home}/issues";
@@ -25,9 +35,13 @@ in
       VENDOR_URL = home;
     };
     extraLSBReleaseArgs = {
+      LSB_VERSION = "${version} (${codename})";
       DISTRIB_RELEASE = version;
-      DISTRIB_CODENAME = "";
-      DISTRIB_DESCRIPTION = "NyxOS ${version}";
+      DISTRIB_CODENAME = lib.toLower codename;
+      DISTRIB_DESCRIPTION = "NyxOS ${version} (${codename})";
     };
   };
+
+  # NixOS's own manual, its launcher entry and nixos-help: NyxOS has its own help.
+  documentation.nixos.enable = false;
 }

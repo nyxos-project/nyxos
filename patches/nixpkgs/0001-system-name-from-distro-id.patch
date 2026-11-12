@@ -1,0 +1,14 @@
+The system's store name starts with the distribution's ID (nyxos-system-HOST-VERSION),
+not always nixos-system.
+
+--- a/nixos/modules/system/activation/top-level.nix
++++ b/nixos/modules/system/activation/top-level.nix
+@@ -57,7 +57,7 @@
+   # makes it bootable. See `activatable-system.nix`.
+   baseSystem = pkgs.stdenvNoCC.mkDerivation (
+     {
+-      name = "nixos-system-${config.system.name}-${config.system.nixos.label}";
++      name = "${config.system.nixos.distroId}-system-${config.system.name}-${config.system.nixos.label}";
+       preferLocalBuild = true;
+       allowSubstitutes = false;
+       buildCommand = systemBuilder;

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# nixpkgs-patches check: whether NyxOS's patches to nixpkgs (patches/nixpkgs) still apply
+# to the nixpkgs flake.lock pins. Run after updating nixpkgs, where Nix is (the dev VM:
+# scripts/dev-vm sync, then scripts/dev-vm exec bash -c 'cd /etc/nyxos/flake &&
+# scripts/nixpkgs-patches check').
+set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+case ${1:-} in
+  check)
+    src=$(nix eval --raw --impure --expr "(builtins.getFlake \"path:$(pwd)\").inputs.nixpkgs.outPath")
+    failed=0
+    for p in patches/nixpkgs/*.patch; do
+      if patch --dry-run --silent -p1 -d "$src" <"$p" >/dev/null; then
+        echo "applies: $p"
+      else
+        echo "doesn't apply: $p" >&2
+        failed=1
+      fi
+    done
+    exit "$failed"
+    ;;
+  *)
+    echo "Usage: scripts/nixpkgs-patches check" >&2
+    exit 1
+    ;;
+esac

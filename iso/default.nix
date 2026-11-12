@@ -53,6 +53,8 @@ in
   nyxos.liveImage = {
     storeContents = [
       example.system.build.toplevel
+      # The patched nixpkgs a machine's system is built from.
+      nyxos.lib.nixosSource
       pkgs.stdenv
       pkgs.stdenvNoCC
       # Outputs the machine's pieces build from that nothing installed keeps
