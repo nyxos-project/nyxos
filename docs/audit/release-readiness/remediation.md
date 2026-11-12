@@ -114,3 +114,31 @@ This scope removes four of the fifteen P1s from the release (ASSISTANT-001 and
 CONTAINERS-001 by moving the apps; MAIL-001 and PASSWORDS-001 by rewording), and keeps
 every remaining blocker inside the base system, installer and packaging, which are needed
 regardless.
+
+## Progress (2026-11-12, after the audit)
+
+Fixed and verified (VM or installed-VM test, as noted), rolled out to the dev VM, and on
+`stable` as `known-good/23` (nyxos `3a680df`, nyx-packages `f14b203`) unless marked
+later:
+
+| Finding | Fix | Verified |
+| --- | --- | --- |
+| NYX-CI-001 | `nix fmt` (nyxos 05eb0bc, nyx-packages 82bbb1a) | CI green again |
+| NYX-INST-001 (P0) | installer makes `/mnt`; live image provides it (nyx-installer 7cca914, nyxos 0dd4cbe) | fresh ISO installs, no workaround |
+| NYX-INST-002 | GC root for the live USB's NyxOS source (nyx-installer 7cca914) | system change builds after nix-gc on an install |
+| NYX-INST-003 | lock names /etc/nyxos/overrides (nyx-installer 0fbc8c3) | unit test |
+| NYX-PKG-008 | per-package `share/nyx/autostart.d` (nyx-packages bc5b6fc, nyx-system 6225952) | Calendar, Mail, Passwords in one profile |
+| NYX-PKG-009 (part) | session bus reloaded after profile changes (nyx-system 6225952) | code; the rest was the stale channel (CI-003) |
+| NYX-A11Y-001 | `services.gnome.at-spi2-core.enable` (nyxos 04752a7) | a11y bus answers, variables gone |
+| NYX-APP-BACKUP-001 | schedules use profile paths; daemon repairs old ones (nyx-backup ab1f13b) | VM: new and repaired units |
+| NYX-APP-SHARE-001 | 53317/tcp+udp open with Share (nyx-packages bc5b6fc) | firewall rules present |
+| NYX-APP-INSTALLER-001 | installer restarts in the chosen layout; keymap in initrd (nyx-installer 3307990, nyxos 198488b) | live ISO: German layout after choosing it |
+| Installer time zone search | DropDown expression (nyx-installer 83a74c3) | VM: "berlin" filters |
+| NYX-APP-OFFICE-001 | measured fidelity check: warn on open, no autosave, ask before saving over (nyx-office dae3e1a, 00ef3fe) | VM: dialog, file unchanged; samples report nothing |
+| NYX-APP-ASSISTANT-001 (part) | browser, Files, About and desktop-entry launches without Omarchy (nyx-assistant eb67650) | unit tests; desktop toggles still unmapped |
+| NYX-APP-CONTAINERS-001, PASSWORDS-001, MAIL-001 (wording) | catalog text matches reality (nyx-system f8a75e7) | — |
+| NYX-CI-002 | `scripts/promote-stable` (CI-gated), `ci` summary job, `stable` protected (requires `ci`, admins included), no force-push on `main` (nyxos ee40718, nyx-packages b902551) | dry runs; protection set via the API |
+| NYX-CI-003 | `stable` promoted to 3a680df / f14b203 (`known-good/23`) | — |
+| NYX-DOC-001 | user guide in docs/guide (nyxos af19863) | links checked |
+
+Still open from §1: NYX-HW-001 (hardware pass). Everything in §2–5 is unchanged.
