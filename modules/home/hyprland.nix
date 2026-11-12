@@ -72,9 +72,14 @@ let
   ++ lib.optional (enabled "switcher") nyxPkgs.nyx-switcher
   ++ lib.optional (enabled "dock") nyxPkgs.nyx-dock
   ++ osConfig.nyxos.desktop.screenCapture or [ ];
-  permissions = lib.concatMapStringsSep "\n" (
-    p: "hl.permission(${lua "${lib.escapeRegex "${p}"}/.*"}, \"screencopy\", \"allow\")"
-  ) screenCapture;
+  permissions =
+    lib.concatMapStringsSep "\n" (
+      p: "hl.permission(${lua "${lib.escapeRegex "${p}"}/.*"}, \"screencopy\", \"allow\")"
+    ) screenCapture
+    # With permissions enforced, Hyprland also asks before loading a plugin.
+    + lib.optionalString (enabled "shell") ''
+
+      hl.permission(${lua (lib.escapeRegex "${nyxPkgs.nyx-decor}/lib/nyx-decor.so")}, "plugin", "allow")'';
 
   gesture =
     g:
