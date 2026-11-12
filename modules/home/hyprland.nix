@@ -245,6 +245,12 @@ in
   + lib.optionalString (enabled "control-center") ''
     hl.bind("SUPER + D", hl.dsp.exec_cmd("nyx-control-center --toggle"), { description = "Control Center" })
   ''
+  + lib.optionalString (enabled "dock") ''
+    hl.bind("SUPER + CTRL + ALT + D", hl.dsp.exec_cmd("nyx-dock --focus"), { description = "Move to the dock" })
+  ''
+  + lib.optionalString (enabled "bar") ''
+    hl.bind("SUPER + CTRL + ALT + B", hl.dsp.exec_cmd("nyx-bar --focus"), { description = "Move to the bar" })
+  ''
   + lib.optionalString (enabled "notification-center") ''
     hl.bind("SUPER + N", hl.dsp.exec_cmd("nyx-notification-center --toggle"), { description = "Notification Center" })
   ''
