@@ -109,7 +109,8 @@ in
     # `default` cursor theme, which on Arch inherits Adwaita and on NixOS doesn't exist
     # until this makes it (else Hyprland draws its built-in fallback).
     xdg.icons.fallbackCursorThemes = [ "Adwaita" ];
-    environment.etc."xdg/gtk-3.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\ngtk-theme-name=adw-gtk3-dark\n";
+    environment.etc."xdg/gtk-3.0/settings.ini".text =
+      "[Settings]\ngtk-icon-theme-name=Umbra\ngtk-theme-name=adw-gtk3-dark\n";
     environment.etc."xdg/gtk-4.0/settings.ini".text = "[Settings]\ngtk-icon-theme-name=Umbra\n";
     # Quickshell reads no GTK setting: nyx-shell-qs (the OSD, the Control Center's
     # panel, the window menu) is told the theme, else it has only hicolor.

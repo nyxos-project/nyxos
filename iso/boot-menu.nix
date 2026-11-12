@@ -19,7 +19,9 @@ let
   c = theme.colors;
   s = theme.swatches;
   nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
-  wallpaper = nyxPkgs.nyx-wallpapers.passthru.locks.${bootTheme} or nyxPkgs.nyx-wallpapers.passthru.locks.nyx-dark;
+  wallpaper =
+    nyxPkgs.nyx-wallpapers.passthru.locks.${bootTheme}
+      or nyxPkgs.nyx-wallpapers.passthru.locks.nyx-dark;
   init = "init=${config.system.build.toplevel}/init";
   params = config.boot.kernelParams;
   # What hides the start: without these the kernel and systemd say what they do.
