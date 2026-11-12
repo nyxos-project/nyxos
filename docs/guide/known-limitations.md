@@ -32,22 +32,19 @@ tracked as in the [release-readiness audit](../audit/release-readiness/issues.md
   everything in Word, Excel and PowerPoint files; it says what it can't keep and asks
   before saving over the original. (NYX-APP-OFFICE-001)
 - **Assistant:** some voice commands (night light, gaps, transparency and other desktop
-  toggles) still expect Omarchy and answer that this system doesn't have them; once
-  enabled, it listens for its wake word all the time. (NYX-APP-ASSISTANT-001,
-  NYX-PRIV-002)
+  toggles) still expect Omarchy and answer that this system doesn't have them.
+  (NYX-APP-ASSISTANT-001)
 - **Lyra** plays YouTube Music through YouTube Music's own web player and can break when
   YouTube changes it. (NYX-APP-LYRA-001)
 - **Containers** works with Incus and Docker, not Podman.
 
 ## Security and privacy
 
-- **The local AI endpoint** (127.0.0.1:8080, for coding tools) answers any program on the
-  computer without a key. (NYX-SEC-001)
-- **Screen capture** isn't gated: any app can capture the screen without asking.
-  (NYX-PRIV-001)
-- **Nyx Connect** listens on port 12100 on every network, for pairing phones.
-  (NYX-SEC-003)
-- **The Recovery boot entry** gives a root console without a password; the disk's
-  encryption is what protects the computer. (NYX-SEC-005)
-- **Your account is in the `input` group**, which lets your programs read keyboard input
-  directly. (NYX-SEC-004)
+- **Programs you run can act as you.** Screen capture is limited to the screen-sharing
+  portal and Nyx's own tools, and Nyx services check which program calls them, but a
+  program running as you can still start one of those tools, read your files, or change
+  your Hyprland settings. Install software you trust. (NYX-PRIV-001, NYX-SEC-002)
+- **Disk unlock** uses the encryption passphrase; unlocking with the TPM isn't there yet.
+  (NYX-SEC-013)
+- **The testing channel isn't signed.** `nyx update` checks the stable channel's
+  release signature; testing installs whatever is on its branch. (NYX-SEC-008)

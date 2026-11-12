@@ -1,5 +1,10 @@
 # Local development VM on Incus (QEMU/KVM, virtio-gpu, no GPU passthrough).
-{ lib, modulesPath, ... }:
+{
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
 {
   imports = [
     "${modulesPath}/virtualisation/incus-virtual-machine.nix"
@@ -20,6 +25,8 @@
 
     # Temporary until Nyx Greeter exists.
     desktop.autoLogin = true;
+    # scripts/dev-vm shot screenshots the session with the system's grim.
+    desktop.screenCapture = [ pkgs.grim ];
   };
 
   # Welcome-tier apps, enabled here to test their packages.

@@ -83,17 +83,6 @@ in
       connect.enable = lib.mkDefault true;
     };
 
-    # Flux's own defaults let a paired phone browse the whole home folder and update fluxd
-    # from GitHub. On NyxOS, Browse PC starts off (Settings › Devices turns it on) and
-    # fluxd comes from the system, so a new user's config.toml says so; fluxd fills in the
-    # rest.
-    system.userActivationScripts.nyx-connect-defaults = lib.mkIf config.nyx.connect.enable ''
-      if [ ! -e "$HOME/.config/flux/config.toml" ]; then
-        mkdir -p "$HOME/.config/flux"
-        printf 'share_home = false\ncheck_updates = false\n' > "$HOME/.config/flux/config.toml"
-      fi
-    '';
-
     # Nyx apps take the system theme from the appearance layers (/etc/nyxos/defaults, under
     # the administrator's overrides) until the user chooses one, so a new default reaches
     # everyone who didn't. A new user's file only says to use an installed theme rather

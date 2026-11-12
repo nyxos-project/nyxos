@@ -27,6 +27,10 @@ nyx update history         # what was updated, newest first
 A system update builds the new system first and switches to it only if the build works.
 If the build or the switch fails, the change is undone and the computer stays as it was.
 
+On the stable channel, an update installs only a release NyxOS signed (a `known-good`
+tag checked against the keys in `/etc/nyxos/release-signers`); anything else on the
+channel is refused, and so are your own apps from it. The testing channel isn't signed.
+
 ## Going back
 
 Every system change (an update, the computer's name, time zone or keyboard, software installed for everyone)

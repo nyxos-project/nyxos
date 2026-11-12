@@ -23,6 +23,15 @@ let
 in
 {
   options.nyxos.desktop.autoLogin = lib.mkEnableOption "logging the primary user straight into Hyprland at boot";
+  options.nyxos.desktop.screenCapture = lib.mkOption {
+    type = lib.types.listOf lib.types.package;
+    default = [ ];
+    description = ''
+      Programs besides the portal and Nyx's own capture tools that may read the screen
+      directly (Hyprland's screencopy permission, by store path). Everything else is
+      refused and goes through the portal.
+    '';
+  };
 
   config = {
     # The lock screen (its PAM service); the user's config is in modules/home/lock.nix.

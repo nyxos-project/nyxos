@@ -53,8 +53,25 @@ let
         ecosystem = {
           no_update_news = true;
           no_donation_nag = true;
+          # Screen capture only for the programs below (screenCapture).
+          enforce_permissions = true;
         };
       };
+
+  # Who may read the screen directly: the portal (apps that share the screen ask
+  # through it), and the grim and wf-recorder that Capture, Chat and the Assistant run.
+  # Everything else is refused (without hyprland-dialog, Hyprland's "ask" would allow
+  # it). Rules match the program's store path, so nixpkgs' grim run by another program
+  # is refused.
+  screenCapture = [
+    osConfig.programs.hyprland.portalPackage
+    nyxPkgs.nyx-screen-grim
+    nyxPkgs.nyx-screen-wf-recorder
+  ]
+  ++ osConfig.nyxos.desktop.screenCapture or [ ];
+  permissions = lib.concatMapStringsSep "\n" (
+    p: "hl.permission(${lua "${lib.escapeRegex "${p}"}/.*"}, \"screencopy\", \"allow\")"
+  ) screenCapture;
 
   gesture =
     g:
@@ -89,6 +106,8 @@ in
     hl.env("HYPRCURSOR_SIZE", "24")
 
     hl.config(${lua options})
+    ${permissions}
+    hl.permission(".*", "screencopy", "deny")
     if hl.get_config("gestures.workspace_swipe_wrap") ~= nil then
       hl.config({ gestures = { workspace_swipe_wrap = ${lua swipeWrap} } })
     end

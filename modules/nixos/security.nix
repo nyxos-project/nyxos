@@ -1,5 +1,6 @@
-# Security defaults for every NyxOS machine. Full-disk encryption, TPM2 unlock and
-# Secure Boot come with the installer; the firewall is on in network.nix.
+# Security defaults for every NyxOS machine. Full-disk encryption comes with the
+# installer (unlocked with its passphrase; TPM2 unlock is planned) and Secure Boot with
+# nyxos.boot.secureBoot; the firewall is on in network.nix.
 { config, lib, ... }:
 let
   cfg = config.nyxos.hardening;
