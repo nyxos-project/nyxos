@@ -47,6 +47,7 @@ in
       archive.enable = lib.mkDefault forEveryone;
       files.enable = lib.mkDefault true;
       capture.enable = lib.mkDefault true;
+      browser.enable = lib.mkDefault true;
       photos.enable = lib.mkDefault forEveryone;
       activity.enable = lib.mkDefault true;
       backup.enable = lib.mkDefault true;
