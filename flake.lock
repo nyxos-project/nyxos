@@ -1000,11 +1000,11 @@
     "nyx-greeter": {
       "flake": false,
       "locked": {
-        "lastModified": 1794452907,
-        "narHash": "sha256-bpUe43wW5oB1SZkfqtAhLwXu/Lw5QxjnZL9elw5hvws=",
+        "lastModified": 1794460663,
+        "narHash": "sha256-yKxJ2mp3uaYB2N9KTnkRJXA9IcQ4SjFSWSgVTzrk3Sc=",
         "owner": "nyxos-project",
         "repo": "nyx-greeter",
-        "rev": "dc9659463d088e8ae423bae45888bf3bce8b65a8",
+        "rev": "6c4cce169207cbeb05a550b48485167983865cd8",
         "type": "github"
       },
       "original": {
@@ -1048,11 +1048,11 @@
     "nyx-installer": {
       "flake": false,
       "locked": {
-        "lastModified": 1794454356,
-        "narHash": "sha256-ile2KN7YGOVJcrccndEDmiZGN40sYKAKyeM+FFiWQx4=",
+        "lastModified": 1794460307,
+        "narHash": "sha256-NnnWGZjQSUYBnwjypckFSOm04tUvI/+PxewOeVHA6y8=",
         "owner": "nyxos-project",
         "repo": "nyx-installer",
-        "rev": "227eb97835b0d1a886deea4e63b6bbad258e14fe",
+        "rev": "1ea97f219d1e256d7bd015eea35cff84a30a4020",
         "type": "github"
       },
       "original": {
@@ -1294,11 +1294,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1794460511,
-        "narHash": "sha256-/+M2Hdn6m3eLsY6xoCkb9PhSLX/VMz8PXII7N9lKrTo=",
+        "lastModified": 1794461077,
+        "narHash": "sha256-N4sjYAG5JJbBwRmacXCqirhTD2hJcUoZkxiG8u8KiWs=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "52692031a54e8715ebb7f9a155097c5b13e12af8",
+        "rev": "5079a7bfcd3088f3efe39921fdb78cc196d6de4e",
         "type": "github"
       },
       "original": {
@@ -1406,11 +1406,11 @@
     "nyx-settings": {
       "flake": false,
       "locked": {
-        "lastModified": 1794440675,
-        "narHash": "sha256-AjZ5y4VLBr9DWos8ubBPoMUTDD9La7LsIGb0FpSenZs=",
+        "lastModified": 1794460354,
+        "narHash": "sha256-pkvg3O+iFN7cBXBGFzjQmkfyBTa3YMyLm/Cs4LaRc8I=",
         "owner": "design-nexus",
         "repo": "nyx-settings",
-        "rev": "08b6dfb6026303082b312158ceeceddb73fd8625",
+        "rev": "7e76622f353abe26745d14854c5f4c553a98cceb",
         "type": "github"
       },
       "original": {
@@ -1486,11 +1486,11 @@
     "nyx-system": {
       "flake": false,
       "locked": {
-        "lastModified": 1794456393,
-        "narHash": "sha256-mgdzMY2GkU4CL6RgLXTmBaw4BJBLCPYcxUA4vxvej9A=",
+        "lastModified": 1794460343,
+        "narHash": "sha256-Vljb+Xy/mqkkxO1jAbSHnJQoIPDSvRqVQgjcbbNpmJA=",
         "owner": "nyxos-project",
         "repo": "nyx-system",
-        "rev": "38d765b7c9531973c101d8280c169d5c2e726a62",
+        "rev": "6f0c47c4748043821baa4963dc3f9a17f96b6894",
         "type": "github"
       },
       "original": {
