@@ -728,11 +728,11 @@
     "nyx-calculator": {
       "flake": false,
       "locked": {
-        "lastModified": 1794509093,
-        "narHash": "sha256-390C2NwWcyaVRcl4RMPG/o5L+pqd62Bc4Rd+HaWKYss=",
+        "lastModified": 1794511122,
+        "narHash": "sha256-WM7tgTB6uV6qifVg7Yrg6UmeUU1azr86ysmQhVpJ/Lc=",
         "owner": "design-nexus",
         "repo": "nyx-calculator",
-        "rev": "1953836eb7328ff08e9eb5e5ce27a3e6b4518a92",
+        "rev": "db7027b5d1cef006499c601150c24008baf868a2",
         "type": "github"
       },
       "original": {
@@ -1294,11 +1294,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1794510762,
-        "narHash": "sha256-3wXgPSQwrPuVYI7tZTr59DfBGCiPzCDGoA5oM34yIuU=",
+        "lastModified": 1794511311,
+        "narHash": "sha256-YLzFg77rEJviLJYOPG41hbZ0m3n1IFukFpSVGV2rwVo=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "bd58d6a75e70bce84b11627f050d39b19a18783e",
+        "rev": "450a18513db6c3f4f07f9a97192c68a5ce3cd016",
         "type": "github"
       },
       "original": {
