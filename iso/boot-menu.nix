@@ -53,6 +53,11 @@ in
     backdrop: ${c.backdrop}
     interface_branding:
     interface_help_hidden: yes
+    interface_help_colour: ${c.dimText}
+    interface_help_colour_bright: ${c.accent}
+    term_font_scale: 2x2
+    term_margin: 0
+    term_margin_gradient: 0
     term_palette: ${
       lib.concatStringsSep ";" [
         c.backdrop
@@ -66,7 +71,8 @@ in
       ]
     }
     term_foreground: ${c.text}
-    term_background: ${c.backdrop}
+    # TT = ff: the text has no background of its own, so the wallpaper shows.
+    term_background: ff${c.backdrop}
 
     /Install NyxOS
     ${entry params}
