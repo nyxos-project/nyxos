@@ -9,6 +9,10 @@ Version: **NyxOS 0.1.0** ([VERSION](VERSION)), on NixOS 26.05. The version is wh
 `/etc/os-release`, Settings, Recovery, the boot menus and the live USB
 (`nyxos-0.1.0-installer.iso`, `nix build .#iso`) show; NixOS's own stays in `BUILD_ID`.
 
+The live USB isn't signed for Secure Boot: turn Secure Boot off in the computer's
+firmware settings to start it. An installed NyxOS can sign its own boot with the
+computer's own keys (`nyxos.boot.secureBoot`), keeping Microsoft's so Windows still starts.
+
 Status: phase 1, a development VM that boots into the Nyx desktop. See [docs/dev-vm.md](docs/dev-vm.md) to run it and
 [docs/audit/repository-audit.md](docs/audit/repository-audit.md) for the state of the
 Nyx repositories.
