@@ -119,6 +119,10 @@ in
       # /run/current-system, the same path every generation, with the store's fixed
       # mtime, so an update kept running the last generation's QML.
       environment.QML_DISABLE_DISK_CACHE = "1";
+      # The components (the bar, dock, Control Center…) are files in the system profile,
+      # not part of this unit: restart when they change, else a switch leaves the old QML
+      # running.
+      restartTriggers = [ config.system.path ];
     };
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
