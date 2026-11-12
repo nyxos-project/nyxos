@@ -115,6 +115,10 @@ in
     # panel, the window menu) is told the theme, else it has only hicolor.
     systemd.user.services.nyx-shell-qs = lib.mkIf config.nyx.shell.enable {
       environment.QS_ICON_THEME = "Umbra";
+      # Qt keeps compiled QML by path and modification time; the components load from
+      # /run/current-system, the same path every generation, with the store's fixed
+      # mtime, so an update kept running the last generation's QML.
+      environment.QML_DISABLE_DISK_CACHE = "1";
     };
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
