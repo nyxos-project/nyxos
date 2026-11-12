@@ -59,15 +59,18 @@ let
       };
 
   # Who may read the screen directly: the portal (apps that share the screen ask
-  # through it), and the grim and wf-recorder that Capture, Chat and the Assistant run.
-  # Everything else is refused (without hyprland-dialog, Hyprland's "ask" would allow
-  # it). Rules match the program's store path, so nixpkgs' grim run by another program
-  # is refused.
+  # through it), the grim and wf-recorder that Capture, Chat and the Assistant run, and
+  # the Switcher and Dock, which show window thumbnails. Everything else is refused
+  # without asking. Rules match the program's store path, so nixpkgs' grim run by
+  # another program is refused. Hyprland reads these rules only when it starts; a
+  # session that reloads into them asks about every capture until the next sign-in.
   screenCapture = [
     osConfig.programs.hyprland.portalPackage
     nyxPkgs.nyx-screen-grim
     nyxPkgs.nyx-screen-wf-recorder
   ]
+  ++ lib.optional (enabled "switcher") nyxPkgs.nyx-switcher
+  ++ lib.optional (enabled "dock") nyxPkgs.nyx-dock
   ++ osConfig.nyxos.desktop.screenCapture or [ ];
   permissions = lib.concatMapStringsSep "\n" (
     p: "hl.permission(${lua "${lib.escapeRegex "${p}"}/.*"}, \"screencopy\", \"allow\")"
