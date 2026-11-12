@@ -664,11 +664,11 @@
     "nyx-assistant": {
       "flake": false,
       "locked": {
-        "lastModified": 1794442860,
-        "narHash": "sha256-FmemhGYOL+UaQVCRF1RxtpasXQhj9m8w9Hts7obp1Ig=",
+        "lastModified": 1794496662,
+        "narHash": "sha256-nGo248koT7+BO8jbWXv3jW/Lf+sWL+/sM4FAl61UZYQ=",
         "owner": "design-nexus",
         "repo": "nyx-assistant",
-        "rev": "58ed80e2ddf66e0c30aba653a2be02d0d33f8dcd",
+        "rev": "eb676504f6852c58495dbb6b209cc4a7734287ff",
         "type": "github"
       },
       "original": {
@@ -1048,11 +1048,11 @@
     "nyx-installer": {
       "flake": false,
       "locked": {
-        "lastModified": 1794494165,
-        "narHash": "sha256-CHeqCiVjHWSv3Vt9C5Jc69z8up7pziJk3I7y73+wR1Y=",
+        "lastModified": 1794496981,
+        "narHash": "sha256-/tTWWkHZupprzLHJMxy++gngVy02/2kgzcFD1drPwpI=",
         "owner": "nyxos-project",
         "repo": "nyx-installer",
-        "rev": "0fbc8c39c9a05ba27cd373ed9e25b2831cf80266",
+        "rev": "3307990179ef14fe7dcc5f9ca1211534d58e326e",
         "type": "github"
       },
       "original": {
@@ -1294,11 +1294,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1794496303,
-        "narHash": "sha256-k4E2yF3+VSPSPqDG08kZ+DXWLnIfk6Fe4mCfxTfN6+s=",
+        "lastModified": 1794497421,
+        "narHash": "sha256-TQuzFSSlN5OFDtAJfZJOysa8rsroOHb3n5VzRDRw4jg=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "bc5b6fc05dbe3663f0fc72013982eaffbe8140bd",
+        "rev": "afcbd8bcb9acf5a430b45008a13ccadb535d7964",
         "type": "github"
       },
       "original": {
@@ -1486,11 +1486,11 @@
     "nyx-system": {
       "flake": false,
       "locked": {
-        "lastModified": 1794493990,
-        "narHash": "sha256-KArSe4XfvRPtTaLP+sW9o2Rpd4oXCBo5ogQXsfJT5gY=",
+        "lastModified": 1794496804,
+        "narHash": "sha256-sf9kMyK3ahkfztJU9OXKtBK8rigj+Cu5HCCgNEVVF8E=",
         "owner": "nyxos-project",
         "repo": "nyx-system",
-        "rev": "622595253fb3ac3b8987f09ee907f9df446b4995",
+        "rev": "f8a75e711320f5acc95def23f4d850ad47ce6b5c",
         "type": "github"
       },
       "original": {

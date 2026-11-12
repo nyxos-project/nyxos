@@ -123,6 +123,8 @@ in
     i18n.defaultLocale = set "locale";
     services.xserver.xkb.layout = set "keyboardLayout";
     console.useXkbConfig = lib.mkIf (o ? keyboardLayout) (over true);
+    # The keymap in the initrd too, so the disk's passphrase is typed in this layout.
+    console.earlySetup = lib.mkIf (o ? keyboardLayout) (over true);
 
     environment.systemPackages = map package (o.packages or [ ]);
 

@@ -92,7 +92,15 @@ in
       GSK_RENDERER = "cairo";
       # It looks like the system it installs.
       NYX_INSTALLER_THEME = example.nyxos.theme.system;
+      # Choosing a keyboard starts the installer again in that layout (cage reads it only
+      # when it starts), with the first page's choices kept in /run/nyx-installer.
+      NYX_INSTALLER_RESTART = "1";
     };
+  };
+  systemd.services.cage-tty1.serviceConfig = {
+    EnvironmentFile = "-/run/nyx-installer/keyboard.env";
+    # nyx-installer's choices::RESTART_FOR_KEYBOARD.
+    RestartForceExitStatus = "75";
   };
   hardware.graphics.enable = true;
   # A quiet boot behind Nyx Plymouth, as on an installed NyxOS (modules/nixos/boot.nix),
