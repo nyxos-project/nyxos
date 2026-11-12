@@ -12,20 +12,32 @@ them. Effort: S hours, M days, L weeks. Full findings: [issues.md](issues.md).
 
 Already done: see the progress table in [remediation.md](remediation.md#progress-2026-11-12-after-the-audit).
 
+## Decisions (2026-11-12)
+
+- **G1 (Ken's own answer):** Lyra, Assistant and Containers ship in 0.1 and are made ready
+  for it (their W5 items are required, not optional). **Pulse is out of 0.1**: removed
+  from Welcome and the catalog (the package stays in nyx-packages); its findings
+  (PULSE-001/002/004, SEC-014) wait until it's back.
+- **G2: C**, NyxOS only. Omarchy code paths are removed over time. Until the laptop moves
+  to NyxOS, removals keep apps runnable on plain Hyprland/Arch (they lose Omarchy-only
+  features, not the ability to start).
+- **G3–G10: A.**
+- **Items: A everywhere** unless noted.
+
 ## Global decisions
 
 | # | Decision | A (recommended) | B | C | Choice |
 | --- | --- | --- | --- | --- | --- |
-| G1 | First-release scope | Ship base + most Welcome apps; Lyra, Pulse, Assistant and Containers as a labelled **Preview** (Store only, "preview" badge) | Ship everything as is, document caveats | Cut Preview apps from 0.1 entirely | |
-| G2 | Omarchy as a platform | **NyxOS first**: NyxOS paths, docs and wording by default; Omarchy code kept behind platform checks | Equal dual-platform (keep both, fix only what breaks NyxOS) | NyxOS only: remove Omarchy code paths over time | |
-| G3 | Google/Microsoft accounts | **IMAP/CalDAV/app passwords** as the supported path for 0.1; "your own OAuth client" kept as advanced | Register project OAuth clients (Google verification, weeks; Microsoft app registration) | Keep bring-your-own-client only | |
-| G4 | Local AI endpoint (127.0.0.1:8080) | **Off by default**, Settings › AI turns it on for coding tools, with a token file and Host check | Always on with token + Host/Origin check | Keep as is (document) | |
-| G5 | Nyx Connect's network exposure | **Port closed until pairing starts or a device is paired**, then only on trusted networks | Open on every network after the first pairing | Keep as is | |
-| G6 | Screen capture | **Hyprland permissions on**: only the portal, Capture and the Assistant capture directly; others go through the portal's prompt | Bar indicator for capture, no gating | Keep as is | |
-| G7 | Recovery console | **Ask for an administrator's password** (open only if no admin has one) | Keep open, warn in the boot menu | Keep as is | |
-| G8 | Shell failure domain | **OnFailure unit**: after the start limit, notify and offer "Restart the shell"; raise the limit to 10/min | Split Bar into its own Quickshell process (two runtimes) | Both | |
-| G9 | Release signing | **Signed tags** (SSH/minisign) verified by `nyx update` before moving the channel pin; ISO + SHA256SUMS + signature on releases | GitHub artifact attestations only | Defer | |
-| G10 | Pace and rollout | **One workstream at a time**, NyxOS VM rebuilt once per workstream, `stable` promoted after W1–W3 | Smaller batches by repository | Everything, then one rollout | |
+| G1 | First-release scope | Ship base + most Welcome apps; Lyra, Pulse, Assistant and Containers as a labelled **Preview** (Store only, "preview" badge) | Ship everything as is, document caveats | Cut Preview apps from 0.1 entirely | | own (see above) |
+| G2 | Omarchy as a platform | **NyxOS first**: NyxOS paths, docs and wording by default; Omarchy code kept behind platform checks | Equal dual-platform (keep both, fix only what breaks NyxOS) | NyxOS only: remove Omarchy code paths over time | | C |
+| G3 | Google/Microsoft accounts | **IMAP/CalDAV/app passwords** as the supported path for 0.1; "your own OAuth client" kept as advanced | Register project OAuth clients (Google verification, weeks; Microsoft app registration) | Keep bring-your-own-client only | | A |
+| G4 | Local AI endpoint (127.0.0.1:8080) | **Off by default**, Settings › AI turns it on for coding tools, with a token file and Host check | Always on with token + Host/Origin check | Keep as is (document) | | A |
+| G5 | Nyx Connect's network exposure | **Port closed until pairing starts or a device is paired**, then only on trusted networks | Open on every network after the first pairing | Keep as is | | A |
+| G6 | Screen capture | **Hyprland permissions on**: only the portal, Capture and the Assistant capture directly; others go through the portal's prompt | Bar indicator for capture, no gating | Keep as is | | A |
+| G7 | Recovery console | **Ask for an administrator's password** (open only if no admin has one) | Keep open, warn in the boot menu | Keep as is | | A |
+| G8 | Shell failure domain | **OnFailure unit**: after the start limit, notify and offer "Restart the shell"; raise the limit to 10/min | Split Bar into its own Quickshell process (two runtimes) | Both | | A |
+| G9 | Release signing | **Signed tags** (SSH/minisign) verified by `nyx update` before moving the channel pin; ISO + SHA256SUMS + signature on releases | GitHub artifact attestations only | Defer | | A |
+| G10 | Pace and rollout | **One workstream at a time**, NyxOS VM rebuilt once per workstream, `stable` promoted after W1–W3 | Smaller batches by repository | Everything, then one rollout | | A |
 
 ## W1 Security and privacy
 
