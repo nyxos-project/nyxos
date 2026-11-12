@@ -1048,11 +1048,11 @@
     "nyx-installer": {
       "flake": false,
       "locked": {
-        "lastModified": 1794460307,
-        "narHash": "sha256-NnnWGZjQSUYBnwjypckFSOm04tUvI/+PxewOeVHA6y8=",
+        "lastModified": 1794492580,
+        "narHash": "sha256-VRCricFE9JjQ7VKCuXv5ornWZ5VBTKAvT0KNZWwA7MI=",
         "owner": "nyxos-project",
         "repo": "nyx-installer",
-        "rev": "1ea97f219d1e256d7bd015eea35cff84a30a4020",
+        "rev": "7cca914fd6fd834aa9ce64c749f6e7ab5cc907f3",
         "type": "github"
       },
       "original": {
@@ -1294,11 +1294,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1794466470,
-        "narHash": "sha256-OyUASKqDTgSjbUvpZSVgmqZ5+xjt0OPvtZcCdlcxLmM=",
+        "lastModified": 1794492732,
+        "narHash": "sha256-n0a+mucO+z7IE2LvGyl7XMOuX8BYr7Ky+jaPOUkqSWg=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "9557afd3fbdafd5033a0aaaf9307f2f697ff3e12",
+        "rev": "4a6a4448daa3487fb3f5c8b2795c8f4fcbc1fc51",
         "type": "github"
       },
       "original": {

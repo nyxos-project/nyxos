@@ -131,6 +131,9 @@ in
     # The live system has no boot loader of its own to install.
     boot.loader.grub.enable = lib.mkImageMediaOverride false;
 
+    # Where the installer mounts the new system (NixOS's installation-cd modules made it).
+    systemd.tmpfiles.rules = [ "d /mnt 0755 root root -" ];
+
     # The store on the image, registered in the Nix database in memory.
     systemd.services.register-nix-paths = {
       description = "Register Nix Store Paths";
