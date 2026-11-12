@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Promote a NyxOS revision to the stable channel. Run from the host:
+#
+#   scripts/promote-stable [COMMIT] [--snapshot] [--yes]
+#
+# COMMIT is a nyxos commit on main (default: origin/main). Its flake.lock names the
+# nyx-packages commit it builds. Both must have a successful CI run (the CI workflow on
+# push), and both must fast-forward their repository's stable branch; otherwise nothing
+# happens. Then: tag the nyxos commit known-good/<n> (the next number), with --snapshot
+# take the dev VM's Incus snapshot known-good-<n> (the VM should be running COMMIT), and
+# push both stable branches. Without --yes it shows the plan and asks.
+set -euo pipefail
+
+repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+packages=${NYX_PACKAGES:-$repo/../nyx-packages}
+commit=origin/main snapshot=false yes=false
+for a in "$@"; do
+  case $a in
+    --snapshot) snapshot=true ;;
+    --yes) yes=true ;;
+    -h | --help) sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    -*) echo "unknown option $a" >&2; exit 2 ;;
+    *) commit=$a ;;
+  esac
+done
+die() { echo "promote-stable: $*" >&2; exit 1; }
+
+git -C "$repo" fetch -q origin --tags
+git -C "$packages" fetch -q origin
+nyxos=$(git -C "$repo" rev-parse --verify "$commit^{commit}") || die "no commit $commit"
+git -C "$repo" merge-base --is-ancestor "$nyxos" origin/main || die "${nyxos:0:7} isn't on nyxos main"
+pkgs=$(git -C "$repo" show "$nyxos:flake.lock" | jq -er '.nodes["nyx-packages"].locked.rev') ||
+  die "${nyxos:0:7}'s flake.lock names no nyx-packages commit"
+git -C "$packages" cat-file -e "$pkgs^{commit}" 2>/dev/null || die "nyx-packages has no commit ${pkgs:0:7} (fetch it)"
+git -C "$packages" merge-base --is-ancestor "$pkgs" origin/main || die "nyx-packages ${pkgs:0:7} isn't on its main"
+
+# A successful push run of the CI workflow for that commit.
+green() {
+  local conclusion
+  conclusion=$(gh api "repos/$1/actions/runs?head_sha=$2&event=push&per_page=20" \
+    --jq '[.workflow_runs[] | select(.name == "CI")] | (map(select(.conclusion == "success")) | length > 0) as $ok
+          | if $ok then "success" else (.[0].conclusion // .[0].status // "none") end')
+  [[ $conclusion == success ]] || die "$1 ${2:0:7} has no successful CI run (latest: $conclusion)"
+}
+green nyxos-project/nyxos "$nyxos"
+green nyxos-project/nyx-packages "$pkgs"
+
+for r in "$repo:$nyxos" "$packages:$pkgs"; do
+  dir=${r%%:*} rev=${r#*:}
+  git -C "$dir" merge-base --is-ancestor origin/stable "$rev" ||
+    die "$(basename "$dir") stable isn't an ancestor of ${rev:0:7}: stable would move backwards or sideways"
+done
+
+last=$(git -C "$repo" tag -l 'known-good/*' | sed 's#known-good/##' | sort -n | tail -1)
+n=$((${last:-0} + 1))
+echo "Promote to stable:"
+echo "  nyxos         $(git -C "$repo" log -1 --format='%h %s' "$nyxos" | cut -c1-90)"
+echo "  nyx-packages  $(git -C "$packages" log -1 --format='%h %s' "$pkgs" | cut -c1-90)"
+echo "  stable moves  nyxos $(git -C "$repo" rev-list --count "origin/stable..$nyxos") commits," \
+  "nyx-packages $(git -C "$packages" rev-list --count "origin/stable..$pkgs") commits"
+echo "  tag           known-good/$n$($snapshot && echo ", Incus snapshot known-good-$n")"
+if ! $yes; then
+  read -rp "Go ahead? [y/N] " ok
+  [[ $ok == [yY]* ]] || die "nothing changed"
+fi
+
+git -C "$repo" tag -a "known-good/$n" -m "known-good $n: NyxOS ${nyxos:0:7}, nyx-packages ${pkgs:0:7}" "$nyxos"
+git -C "$repo" push -q origin "known-good/$n"
+if $snapshot; then
+  "$repo/scripts/dev-vm" snapshot "known-good-$n"
+fi
+git -C "$packages" push -q origin "$pkgs:refs/heads/stable"
+git -C "$repo" push -q origin "$nyxos:refs/heads/stable"
+echo "stable is NyxOS ${nyxos:0:7} with nyx-packages ${pkgs:0:7} (known-good/$n)"

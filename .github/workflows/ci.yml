@@ -93,3 +93,13 @@ jobs:
         run: |
           mapfile -t checks < <(jq -r '.[] | ".#checks.x86_64-linux.\(.)"' <<<"$SHARD")
           nix build -L --no-link --keep-going "${checks[@]}"
+
+  # The one check branch protection asks for (the build jobs are named by their shards):
+  # every check evaluated and built.
+  ci:
+    needs: [evaluate, build]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Evaluated and built
+        run: test "${{ needs.evaluate.result }}" = success && test "${{ needs.build.result }}" = success

@@ -142,6 +142,12 @@ Incus snapshot with the same number. Restoring the snapshot returns the whole VM
 checking out the tag and running `scripts/dev-vm rebuild` reproduces the system
 from source.
 
+`scripts/promote-stable [COMMIT] --snapshot` makes one and moves the stable channel to it:
+it refuses unless the nyxos commit and the nyx-packages commit it pins both have a
+successful CI run and fast-forward their `stable` branches, then tags, snapshots the VM
+(which should be running that commit) and pushes both `stable` branches. `stable` is
+protected: it only takes commits whose `ci` check passed.
+
 ## Checks
 
 ```sh
