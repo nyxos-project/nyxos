@@ -79,7 +79,10 @@ let
     # With permissions enforced, Hyprland also asks before loading a plugin.
     + lib.optionalString (enabled "shell") ''
 
-      hl.permission(${lua (lib.escapeRegex "${nyxPkgs.nyx-decor}/lib/nyx-decor.so")}, "plugin", "allow")'';
+      hl.permission(${lua (lib.escapeRegex "${nyxPkgs.nyx-decor}/lib/nyx-decor.so")}, "plugin", "allow")''
+    + lib.optionalString (enabled "dock") ''
+
+      hl.permission(${lua (lib.escapeRegex "${nyxPkgs.nyx-dock-swipe}/lib/nyx-dock-swipe.so")}, "plugin", "allow")'';
 
   gesture =
     g:
