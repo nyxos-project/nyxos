@@ -98,6 +98,8 @@ in
         mkdir -p $out/bin
         ln -s ${pkgs.gtk3}/bin/gtk-launch $out/bin/gtk-launch
       '')
+      # The screen reader: Super+Alt+S at the login screen, Super+Ctrl+Alt+S in a session.
+      pkgs.orca
     ];
     # Every account's default; a choice in Settings (the user's own dconf) wins, and
     # `gsettings reset` goes back to these. Inter is the suite's font (the Nyx themes'
