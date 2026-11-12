@@ -712,11 +712,11 @@
     "nyx-biometrics": {
       "flake": false,
       "locked": {
-        "lastModified": 1794504635,
-        "narHash": "sha256-z5zR/OUKU+UTfiGQUp2Oo+S9H1rZSXYRgi1qo0EDkFA=",
+        "lastModified": 1794515899,
+        "narHash": "sha256-FvMOyZvg6/yzY4XXwAWY18r3ixjMipwD/wxWcuzQOxQ=",
         "owner": "design-nexus",
         "repo": "nyx-biometrics",
-        "rev": "b9152ae464ffa4b0bf744b2da1ce8bdf96675a24",
+        "rev": "e80e74da936a77c0ddedc2e25d7020f7ab2f1636",
         "type": "github"
       },
       "original": {
@@ -1294,11 +1294,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1794515526,
-        "narHash": "sha256-gzYaLaVMYhojkqMbi06r/g+6fcRqdMqkM6YYJ4B2fhg=",
+        "lastModified": 1794515931,
+        "narHash": "sha256-1913FUsp5Sh69tajP3E0MLzApIN0ZAGdJBdVL5hLZEY=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "fa549cb86381843a086f91f946ee03c05e00f93a",
+        "rev": "6a026dd365c5250cf1fc2c3203657d06cd6626a0",
         "type": "github"
       },
       "original": {
@@ -1310,11 +1310,11 @@
     "nyx-passwords": {
       "flake": false,
       "locked": {
-        "lastModified": 1794515303,
-        "narHash": "sha256-ezoId0DxJ7VNhn3a48Z9uq6V16nywlV9x3Ti8GyGrTU=",
+        "lastModified": 1794515907,
+        "narHash": "sha256-ZmKV79/9DABeXKCFPCkiFbL13k7NcVqmlmAozTFg//c=",
         "owner": "design-nexus",
         "repo": "nyx-passwords",
-        "rev": "2df6988c10b6d31f190a0e89f1b73d09d250fd02",
+        "rev": "6ee005b93fcc91036d9d48d5cce2d66f939a2aaf",
         "type": "github"
       },
       "original": {
