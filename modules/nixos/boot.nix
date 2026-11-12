@@ -87,7 +87,8 @@ in
         maxGenerations = lib.mkDefault 20;
         style = {
           wallpapers = [ ];
-          backdrop = c.bg;
+          # The splash's background, so the menu and the splash are one colour.
+          backdrop = c.backdrop;
           interface = {
             branding = "NyxOS";
             brandingColor = c.text;
@@ -96,7 +97,7 @@ in
             helpHidden = true;
           };
           graphicalTerminal = {
-            background = c.bg;
+            background = c.backdrop;
             foreground = c.text;
             brightBackground = c.card;
             brightForeground = c.text;

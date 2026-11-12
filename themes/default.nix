@@ -17,6 +17,9 @@ in
   light = t.appearance == "light";
   colors = {
     bg = token "surface.primary";
+    # Behind the NyxOS wordmark on the wallpapers and the boot splash (nyx-wallpapers,
+    # nyx-plymouth): the theme's background, but Mocha's mantle for Mocha.
+    backdrop = if id == "catppuccin-mocha" then "181825" else token "surface.primary";
     panel = token "surface.secondary";
     card = token "surface.tertiary";
     surface = token "surface.alternate";

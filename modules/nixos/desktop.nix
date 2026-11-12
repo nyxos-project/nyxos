@@ -127,11 +127,14 @@ in
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
+    # The login screen has the lock screen's wallpaper (N, Y and X stacked on the right),
+    # undarkened, as the lock screen shows it.
     environment.etc."nyx-greeter/config.toml".text = ''
       theme = "${loginTheme}"
-      ${lib.optionalString (nyxPkgs.nyx-wallpapers.passthru.defaults ? ${loginTheme})
-        ''wallpaper = "${nyxPkgs.nyx-wallpapers.passthru.defaults.${loginTheme}}"''
-      }
+      ${lib.optionalString (nyxPkgs.nyx-wallpapers.passthru.locks ? ${loginTheme}) ''
+        wallpaper = "${nyxPkgs.nyx-wallpapers.passthru.locks.${loginTheme}}"
+        dim = 0.0
+      ''}
       default_session = "hyprland-uwsm"
       style = "${config.nyxos.signinStyle}"
     '';

@@ -62,7 +62,11 @@ in
       # Desktop Widgets and the window menu; window controls need it too.
       shell.enable = lib.mkDefault true;
       settings.enable = lib.mkDefault true;
-      wallpapers.enable = lib.mkDefault true;
+      wallpapers = {
+        enable = lib.mkDefault true;
+        # Shown until the theme service picks each person's.
+        theme = lib.mkDefault config.nyxos.theme.system;
+      };
       store.enable = lib.mkDefault true;
       welcome.enable = lib.mkDefault true;
       # System services: the System Manager and the theme service.

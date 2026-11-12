@@ -94,6 +94,22 @@ in
     environment.GSK_RENDERER = "cairo";
   };
   hardware.graphics.enable = true;
+  # A quiet boot behind Nyx Plymouth, as on an installed NyxOS (modules/nixos/boot.nix),
+  # in the boot theme NyxOS installs. The text consoles still show what's wrong.
+  boot.plymouth = {
+    enable = true;
+    themePackages = [ nyxPkgs.nyx-plymouth ];
+    theme = example.nyxos.theme.boot;
+  };
+  boot.consoleLogLevel = 3;
+  boot.initrd.verbose = false;
+  boot.kernelParams = [
+    "quiet"
+    "splash"
+    "rd.udev.log_level=3"
+    "udev.log_priority=3"
+    "rd.systemd.show_status=auto"
+  ];
   fonts = {
     packages = [
       pkgs.inter
