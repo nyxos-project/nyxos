@@ -13,9 +13,12 @@ The live USB isn't signed for Secure Boot: turn Secure Boot off in the computer'
 firmware settings to start it. An installed NyxOS can sign its own boot with the
 computer's own keys (`nyxos.boot.secureBoot`), keeping Microsoft's so Windows still starts.
 
-Status: phase 1, a development VM that boots into the Nyx desktop. See [docs/dev-vm.md](docs/dev-vm.md) to run it and
-[docs/audit/repository-audit.md](docs/audit/repository-audit.md) for the state of the
-Nyx repositories.
+Installing and using NyxOS: the [guide](docs/guide/README.md) (requirements, installing,
+updates and recovery, troubleshooting, known limitations).
+
+Developing: [docs/dev-vm.md](docs/dev-vm.md) runs the development VM;
+[docs/audit/release-readiness/](docs/audit/release-readiness/README.md) is the 0.1
+release-readiness audit.
 
 ## Layout
 
