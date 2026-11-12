@@ -30,7 +30,7 @@ release-readiness audit.
 | `hosts/incus-dev` | The Incus development VM |
 | `modules/nixos` | System defaults: Nix, users, network, audio, desktop, shell, packages, base Nyx apps |
 | `modules/home` | User defaults: Foot, Zsh and the Nyx prompt, Helix, Herdr, Hyprland |
-| `themes` | Theme tokens (Nyx Dark), mirrored from nyx-design |
+| `themes` | Theme tokens (the boot and login themes), mirrored from nyx-design |
 | `pkgs/nyx-cli` | The `nyx` command on NyxOS |
 | `pkgs/antigravity-cli` | Catalog packages nixpkgs lacks, added to `pkgs` by an overlay |
 | `agents/skills` | Skills that teach coding agents NyxOS, shared by every agent ([docs/agent-skills.md](docs/agent-skills.md)) |

@@ -20,7 +20,7 @@ let
   s = bootTheme.swatches;
   wallpaper =
     nyxPkgs.nyx-wallpapers.passthru.locks.${config.nyxos.theme.boot}
-      or nyxPkgs.nyx-wallpapers.passthru.locks.nyx-dark;
+      or nyxPkgs.nyx-wallpapers.passthru.locks.catppuccin-mocha;
   palette = lib.concatStringsSep ";";
 in
 {
