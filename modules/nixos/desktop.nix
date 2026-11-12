@@ -38,6 +38,9 @@ in
     xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
     security.polkit.enable = true;
+    # The accessibility bus. Without it NixOS switches accessibility off in every session
+    # (NO_AT_BRIDGE=1, GTK_A11Y=none) and no screen reader can work.
+    services.gnome.at-spi2-core.enable = true;
     # Screen readers speak through speech-dispatcher; espeak's mbrola voices are another
     # 645 MB.
     services.speechd.package = pkgs.speechd.override {
