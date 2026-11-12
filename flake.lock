@@ -1061,6 +1061,22 @@
         "type": "github"
       }
     },
+    "nyx-lyra": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794453641,
+        "narHash": "sha256-RZyz3VjeS5KNXBLo7Flz1gTJxv+3s3IS5uuSUM3QP+0=",
+        "owner": "design-nexus",
+        "repo": "nyx-lyra",
+        "rev": "c786ddc55d8e0d47849958d70e76b6688b812ce6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "design-nexus",
+        "repo": "nyx-lyra",
+        "type": "github"
+      }
+    },
     "nyx-mail": {
       "flake": false,
       "locked": {
@@ -1245,6 +1261,7 @@
         "nyx-home": "nyx-home",
         "nyx-hyprland": "nyx-hyprland",
         "nyx-installer": "nyx-installer",
+        "nyx-lyra": "nyx-lyra",
         "nyx-mail": "nyx-mail",
         "nyx-maps": "nyx-maps",
         "nyx-media-player": "nyx-media-player",
@@ -1277,11 +1294,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1794453565,
-        "narHash": "sha256-nbaKNd5eNXNqgbrHa+kayXFGVicOsBdY01Ih0lUgXzo=",
+        "lastModified": 1794453891,
+        "narHash": "sha256-ZSnKzHYm01Yyiv4mOWSZqWoac9a7KvvGo1CqOkUiVDM=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "ceb9284f20c05fcd84682bf85ea3c9fe6d02f58b",
+        "rev": "27f0c4764aa634ec1706e34064c82a429a896aac",
         "type": "github"
       },
       "original": {

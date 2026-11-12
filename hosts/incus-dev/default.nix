@@ -31,6 +31,7 @@
     office.enable = true;
     git.enable = true;
     music.enable = true;
+    lyra.enable = true;
     media-player.enable = true;
     theater.enable = true;
     photos.enable = true;
