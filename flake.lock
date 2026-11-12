@@ -936,11 +936,11 @@
     "nyx-files": {
       "flake": false,
       "locked": {
-        "lastModified": 1794378860,
-        "narHash": "sha256-sIXqqiOf302B6z7g8DkulpX6LXs84uqON6NPJOni96E=",
+        "lastModified": 1794450832,
+        "narHash": "sha256-jyvWPFe93uSSY5yEebBqgZabs6xOIfEo4yDAEsfgBMU=",
         "owner": "design-nexus",
         "repo": "nyx-files",
-        "rev": "0e65e51b738037a3279be10d3d9a1edeb6e1a97c",
+        "rev": "4a2d8bfd4e85da000c4f88b3263ef956181f8865",
         "type": "github"
       },
       "original": {
@@ -1112,11 +1112,11 @@
     "nyx-music": {
       "flake": false,
       "locked": {
-        "lastModified": 1794378876,
-        "narHash": "sha256-pnFH+zTCP46sypHYt0gm/FeDXIJfNz48ytUvIlwtAOk=",
+        "lastModified": 1794448871,
+        "narHash": "sha256-eeVkr95+J+VXg2TyKFugYmgmQYhksUfpB7nM6ZnZqao=",
         "owner": "design-nexus",
         "repo": "nyx-music",
-        "rev": "672f3519b203f537288c5b678a2d04a7dfb2cbf7",
+        "rev": "c1d13d2229b17c9deddfd87318ffaf3657e06706",
         "type": "github"
       },
       "original": {
@@ -1277,11 +1277,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1794446688,
-        "narHash": "sha256-AZ77JegmMxw+QsiPEeAMG60U2peb1wKdLYMml+Q4jVQ=",
+        "lastModified": 1794451611,
+        "narHash": "sha256-TGz+YeJN4u1v75C3ageFb1s7OjQX53Bf/BRjqxoEtvE=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "fd95802ce5ac667aa125439e7970d9b5d6bb315d",
+        "rev": "45830f0f9b31136f20d0b2e9d4764dab873012b4",
         "type": "github"
       },
       "original": {
