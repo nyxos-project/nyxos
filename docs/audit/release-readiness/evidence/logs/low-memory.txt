@@ -1,0 +1,14 @@
+hog exit=137 after 41 s
+lowest MemAvailable: 30020 kB
+user services gone: 
+layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+systemd invoked oom-killer: gfp_mask=0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), order=0, oom_score_adj=0
+user@1000.service: The kernel OOM killer killed some processes in this unit.
+run-p3055989-i3055990.scope: The kernel OOM killer killed some processes in this unit.
+ oom_kill_process.cold+0x8/0x90
+[  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+[    626]   997   626     4146     1113      160      953         0    73728       96          -900 systemd-oomd
+run-p3055989-i3055990.scope: The kernel OOM killer killed some processes in this unit.
+run-p3055989-i3055990.scope: Failed with result 'oom-kill'.
+Mem:           15986        1977       13277          53        1079       14009
+Swap:           7992        1091        6901

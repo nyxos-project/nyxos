@@ -1,0 +1,33 @@
+$ nyx update --dry-run
+Checking what's new…
+Nothing to update.
+• Firmware: fwupd isn't installed (nyx-system service fwupd on turns it on)
+
+$ nyx update system --dry-run --json
+{
+  "request": "nyx update system",
+  "steps": [],
+  "items": [],
+  "notes": [],
+  "suggestSystem": false,
+  "admin": false,
+  "mayRestart": false,
+  "firmwareImplied": false,
+  "checkSeconds": 0
+}
+
+$ nyx update status
+System (notifies; you install)
+  NyxOS (stable)  with the system  (the system channel)
+Applications (installed automatically)
+  21 apps built into the system, updated with it
+Tools (installed automatically)
+  nothing with updates here
+Firmware (notifies; you install)
+  fwupd isn't installed (nyx-system service fwupd on turns it on)
+Checked 2026-11-12.
+• Firmware: fwupd isn't installed (nyx-system service fwupd on turns it on)
+
+$ nyx system generations
+*    1  1794467511  0.1.0
+

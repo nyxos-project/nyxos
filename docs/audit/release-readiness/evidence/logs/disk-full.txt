@@ -1,0 +1,9 @@
+nyx-calculator with a full disk: process alive, windows 1; log: 
+nyx-notepad with a full disk: process alive, windows 1; log: 
+nyx-files with a full disk: process alive, windows 1; log: Unable to prepare bundled assets: No space left on device (os error 28) [2m2026-11-12T10:28:19.974428Z[0m [33m WARN[0m [2mnyx_files::storage::writer[0m[2m:[0m unable to save open tabs [3merro
+nyx-notes with a full disk: process alive, windows 2; log: 
+
+$ nyx-system config set dock icon_size 40 (full config dir)
+nyx-system: No space left on device (os error 28)
+$ nyx-theme app set nyx-calculator nord
+nyx-theme: could not write /tmp/full/c/nyx/theme.toml

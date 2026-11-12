@@ -1,0 +1,8 @@
+2026-11-12T00:29:17-06:00 nyxos flake check
+2026-11-12T00:32:48-06:00 nyxos flake check exit=0 seconds=211
+2026-11-12T00:56:42-06:00 nyx-packages flake check exit=0 seconds=1434
+2026-11-12T01:02:36-06:00 iso build exit=0 seconds=354
+2026-11-12T01:02:37-06:00 done
+7b5c27e4e924b61178823f673b4aa5544052e7a4db838baa6539c82b0643c4bf  /nix/store/1ppy3qn4g1xipzdswk819y1mjm8c0460-nyxos-0.1.0-installer.iso
+3.1G	/nix/store/1ppy3qn4g1xipzdswk819y1mjm8c0460-nyxos-0.1.0-installer.iso
+2026-11-12T01:07:07-06:00 iso copied to host (ISO is the derivation output itself)

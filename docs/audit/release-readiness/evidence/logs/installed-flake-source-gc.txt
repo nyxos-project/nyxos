@@ -1,0 +1,15 @@
+$ roots of the ISO nyxos source
+/proc/2217/environ -> /nix/store/wn5hsykbd2gbaw05qk9w7jxi8j4swsa5-source
+
+$ is it in the current system closure?
+0
+
+$ dry-run GC: would it be deleted?
+1
+
+$ nix.gc
+Thu 2026-11-12 02:00:00 CST    35min -                                      - snapper-timeline.timer       snapper-timeline.service
+Fri 2026-11-13 01:22:28 CST      23h Thu 2026-11-12 01:22:28 CST 1min 58s ago snapper-cleanup.timer        snapper-cleanup.service
+Mon 2026-11-16 00:00:00 CST   3 days -                                      - nix-gc.timer                 nix-gc.service
+Mon 2026-11-16 00:36:15 CST   3 days -                                      - fstrim.timer                 fstrim.service
+

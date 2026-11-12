@@ -1,0 +1,17 @@
+7-Zip: /nix/store/c3xsl9wjrkkbgfkw5drwb0vk8ayhs16k-7zz-26.04/bin/7zz (7-Zip (z) 26.04 (x64) : Copyright (c) 1999-2026 Igor Pavlov )
+-rw-r--r-- 1 ken users 573 Nov 12 04:10 evil.zip
+  0M Scan           0%    ERROR: Cannot open output file : errno=20 : Not a directory : /tmp/zs/dest/link/zs-via-symlink.txt
+ 86% 3      7z exit=2
+inside dest:
+  /tmp/zs/dest d
+  /tmp/zs/dest/tmp d
+  /tmp/zs/dest/tmp/zs-abs-escape.txt f
+  /tmp/zs/dest/zs-rel-escape.txt f
+  /tmp/zs/dest/link l
+  /tmp/zs/dest/ok.txt f
+escapes:
+  ls: cannot access '/tmp/zs-rel-escape.txt': No such file or directory
+  ls: cannot access '/tmp/zs-abs-escape.txt': No such file or directory
+  ls: cannot access '/tmp/zs-via-symlink.txt': No such file or directory
+  ls: cannot access '/zs-rel-escape.txt': No such file or directory
+  ls: cannot access '/tmp/zs/../zs-rel-escape.txt': No such file or directory

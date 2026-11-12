@@ -1,0 +1,70 @@
+$ overrides before
+{
+  "version": 1,
+  "hardware": {
+    "gpus": [
+      {
+        "vendor": "virtio",
+        "bus": "PCI:4:0:0"
+      }
+    ],
+    "cpu": "intel",
+    "virtualMachine": "kvm"
+  }
+}
+total 16
+drwxr-xr-x  2 root root 4096 Nov  8 07:06 .
+drwxr-xr-x 20 root root 4096 Nov 12 04:04 ..
+-rw-r--r--  1 root root    0 Nov  4 00:36 appearance.toml
+-rw-r--r--  1 root root  180 Nov  8 07:06 system.json
+-rw-r--r--  1 root root   19 Nov  4 15:21 system.json.before-recovery
+
+$ nyx-system service fwupd on (root), killed after 6 s
+● nyx-system-manager.service - Nyx System Manager
+     Loaded: loaded (/etc/systemd/system/nyx-system-manager.service; linked; preset: ignored)
+     Active: active (running) since Thu 2026-11-12 04:28:43 CST; 6s ago
+--- client output:
+warning: not writing modified lock file of flake 'path:/etc/nyxos/flake':
+• Updated input 'nyxos-overrides':
+    'path:./overrides'
+  → 'path:/etc/nyxos/overrides?lastModified=1794479324&narHash=sha256-YStDcGhxvHoA79WuZZQB%2BVJxWInaf8uf8zGU/pSAsq4%3D' (2026-11-12)
+nyx-system: org.freedesktop.DBus.Error.NoReply: Remote peer disconnected
+
+$ overrides after the kill
+{
+  "version": 1,
+  "services": {
+    "fwupd": true
+  },
+  "hardware": {
+    "gpus": [
+      {
+        "vendor": "virtio",
+        "bus": "PCI:4:0:0"
+      }
+    ],
+    "cpu": "intel",
+    "virtualMachine": "kvm"
+  }
+}
+total 16
+drwxr-xr-x  2 root root 4096 Nov 12 04:28 .
+drwxr-xr-x 20 root root 4096 Nov 12 04:04 ..
+-rw-r--r--  1 root root    0 Nov  4 00:36 appearance.toml
+-rw-r--r--  1 root root  219 Nov 12 04:28 system.json
+-rw-r--r--  1 root root   19 Nov  4 15:21 system.json.before-recovery
+/var/lib/nyx-system/:
+generations
+history.jsonl
+result
+trusted-profile-bin
+
+$ last history
+{"time":1794143192,"scope":"system","request":"rollback","targets":["system"],"changes":[],"generationBefore":167,"generationAfter":166,"result":"rolled-back","reboot":true,"restart":[],"error":null,"seconds":{"total":2}}
+{"time":1794477841,"scope":"system","request":"rollback","targets":["system"],"changes":[],"generationBefore":245,"generationAfter":244,"result":"rolled-back","reboot":true,"restart":[],"error":null,"seconds":{"total":3}}
+
+$ a following change: nyx-system service fwupd default (no-op)
+/nix/store/6kwa4yaj643jfgjkyl2hx04nljhjsbv3-nyxos-system-nyxos-dev-0.1.0
+Done. The new configuration is 
+Applied
+current system: /nix/store/6kwa4yaj643jfgjkyl2hx04nljhjsbv3-nyxos-system-nyxos-dev-0.1.0

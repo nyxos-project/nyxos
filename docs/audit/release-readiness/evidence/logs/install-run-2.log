@@ -1,0 +1,45 @@
+[1/43] Clearing the disk
+[2/43] Making a new partition table
+[3/43] Making NyxOS's partitions
+[4/43] Waiting for the new partitions
+[5/43] Waiting for the new partitions
+[6/43] Waiting for the new partitions
+[7/43] Formatting the EFI partition
+[8/43] Encrypting the disk
+[9/43] Opening the encrypted disk
+[10/43] Making the Btrfs filesystem
+[11/43] Making subvolumes
+[12/43] Making subvolumes
+[13/43] Making subvolumes
+[14/43] Making subvolumes
+[15/43] Making subvolumes
+[16/43] Making subvolumes
+[17/43] Making subvolumes
+[18/43] Mounting
+[19/43] Mounting
+[20/43] Mounting
+[21/43] Mounting
+[22/43] Mounting
+[23/43] Mounting
+[24/43] Mounting
+[25/43] Mounting
+[26/43] Mounting
+[27/43] Mounting
+[28/43] Mounting
+[29/43] Making the swap file
+[30/43] Writing this computer's configuration
+[31/43] Describing this computer's hardware
+[32/43] Making the swap file
+[33/43] Writing flake.nix
+[34/43] Writing host.nix
+[35/43] Writing system.json
+[36/43] Pinning NyxOS's version
+[37/43] Building NyxOS for this computer
+[38/43] Installing NyxOS (this takes a while)
+[39/43] Keeping NyxOS's sources for recovery
+[40/43] Setting your password
+[41/43] Keeping the install's log
+[42/43] Finishing
+[43/43] Finishing
+NyxOS is installed. Restart to use it.
+exit=0 seconds=112

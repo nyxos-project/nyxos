@@ -1,0 +1,15 @@
+NAME
+fi.w1.wpa_supplicant1
+net.hadess.PowerProfiles
+org.freedesktop.Avahi
+org.freedesktop.DBus
+org.freedesktop.NetworkManager
+org.freedesktop.PolicyKit1
+org.freedesktop.RealtimeKit1
+org.freedesktop.UDisks2
+org.freedesktop.UPower
+org.freedesktop.UPower.PowerProfiles
+org.freedesktop.login1
+org.freedesktop.oom1
+org.freedesktop.systemd1
+org.freedesktop.timesync1

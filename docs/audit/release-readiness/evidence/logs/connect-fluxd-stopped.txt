@@ -1,0 +1,9 @@
+$ nyx devices list (fluxd running)
+Nothing found.
+fluxd: inactive
+$ nyx devices list (fluxd stopped)
+nyx: Flux isn't running
+$ nyx settings capabilities connect
+capabilities: [{"id":"daemon:flux","reason":"Flux isn't running","state":"inactive"}]
+fluxd restarted: active
+Nothing found.

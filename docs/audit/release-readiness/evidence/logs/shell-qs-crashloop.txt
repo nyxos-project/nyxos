@@ -1,0 +1,29 @@
+NRestarts before: 0
+[70511.159709] nyxos-dev qs[2467813]:   WARN qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.quickshell'")
+[71646.513368] nyxos-dev qs[2520964]:   WARN qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.quickshell'")
+[72242.472645] nyxos-dev qs[2628046]:   WARN qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.quickshell'")
+[73597.092825] nyxos-dev qs[2684025]:   WARN qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.quickshell'")
+[77615.638087] nyxos-dev qs[2887895]:   WARN qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.quickshell'")
+layers before: nyx-bar nyx-dock nyx-dock-edge wallpaper
+kill 1: pid 2887895 -> state active layers: wallpaper
+kill 2: pid 2944371 -> state active layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+kill 3: pid 2944468 -> state active layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+kill 4: pid 2944566 -> state active layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+kill 5: pid 2944664 -> state active layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+kill 6: pid 2944762 -> state failed layers: wallpaper
+
+× nyx-shell-qs.service - Nyx Shell surfaces (Quickshell)
+     Loaded: loaded (/etc/systemd/user/nyx-shell-qs.service; enabled; preset: ignored)
+    Drop-In: /nix/store/33zwxahq1s0hczgvi1hgrkggd2ywwg6q-user-units/nyx-shell-qs.service.d
+             └─overrides.conf
+     Active: failed (Result: start-limit-hit) since Thu 2026-11-12 01:41:27 CST; 5s ago
+   Duration: 970ms
+layers after: wallpaper
+
+Recovery: what brings it back? (start-limit hit: systemctl start refuses until reset-failed)
+Job for nyx-shell-qs.service failed because start of the service was attempted too often.
+See "systemctl --user status nyx-shell-qs.service" and "journalctl --user -xeu nyx-shell-qs.service" for details.
+To force a start use "systemctl --user reset-failed nyx-shell-qs.service"
+followed by "systemctl --user start nyx-shell-qs.service" again.
+after plain start: failed
+after reset-failed+start: active layers: nyx-bar nyx-dock nyx-dock-edge wallpaper

@@ -1,0 +1,10 @@
+## listening sockets
+udp UNCONN 0      0                                 0.0.0.0:12100 0.0.0.0:* users:((".fluxd-wrapped",pid=1591,fd=10))
+udp UNCONN 0      0                                 0.0.0.0:5353  0.0.0.0:* users:(("avahi-daemon",pid=771,fd=11))
+udp UNCONN 0      0                                    [::]:5353     [::]:* users:(("avahi-daemon",pid=771,fd=12))
+udp UNCONN 0      0      [fe80::5804:7aa1:abad:f64a]%enp5s0:546      [::]:* users:(("NetworkManager",pid=899,fd=28))
+tcp LISTEN 0      4096                            127.0.0.1:8080  0.0.0.0:* users:(("llama-server",pid=2220,fd=4),(".nyx-aid-wrappe",pid=2143,fd=4),("systemd",pid=904,fd=287))
+tcp LISTEN 0      128                               0.0.0.0:22    0.0.0.0:* users:(("sshd",pid=968,fd=6))
+tcp LISTEN 0      128                             127.0.0.1:35951 0.0.0.0:* users:((".nyx-cloudd-wra",pid=1264,fd=12))
+tcp LISTEN 0      128                                  [::]:22       [::]:* users:(("sshd",pid=968,fd=7))
+tcp LISTEN 0      4096                                    *:12100       *:* users:((".fluxd-wrapped",pid=1591,fd=9))

@@ -1,0 +1,48 @@
+uptime: 89414.65 s; load: 0.78 0.78 0.50
+idle 60 s, whole VM (6 vCPU): CPU busy 1.7%
+               total        used        free      shared  buff/cache   available
+Mem:           15986        2279        3032          92       11119       13706
+Swap:           7992         947        7045
+
+user ken: total RSS 1585 MB, processes 128
+top 20 by RSS (ken):
+     297 MB   1.9% .quickshell-wra
+     140 MB   0.0% .nyx-clipboard-
+      75 MB   0.0% llama-server
+      50 MB   0.0% .nyx-glimpse-ba
+      49 MB   3.8% .Hyprland-wrapp
+      43 MB   0.0% .nyx-switcher-w
+      41 MB   0.0% .nyx-notificati
+      36 MB   0.0% .nyx-prompt-wra
+      27 MB   0.9% .nyx-assistant-
+      26 MB   0.3% .nyx-bar-backen
+      23 MB   0.0% .quickshell-wra
+      20 MB   0.0% wireplumber
+      19 MB   0.0% python3.13
+      19 MB   0.0% pipewire-pulse
+      18 MB   0.0% .xdg-desktop-po
+      18 MB   0.0% .fluxd-wrapped
+      17 MB   0.0% .xdg-desktop-po
+      16 MB   0.0% systemd
+      15 MB   0.1% pipewire
+      14 MB   0.0% .rclone-wrapped
+
+system (root) services top 10 RSS:
+      35 MB systemd-journal
+      20 MB greetd
+      17 MB NetworkManager
+      15 MB systemd
+      15 MB ModemManager
+      14 MB incus-agent
+      13 MB irlumed
+      12 MB udisksd
+      11 MB systemd-udevd
+      11 MB nix-daemon
+
+running user services: 52; system services: 25
+
+system closure: 11.4 GiB
+store on disk: 35G
+systemd-analyze (dev VM, last boot):
+Startup finished in 1.684s (firmware) + 3.497s (loader) + 854ms (kernel) + 3.890s (initrd) + 3.955s (userspace) = 13.883s 
+graphical.target reached after 3.926s in userspace.

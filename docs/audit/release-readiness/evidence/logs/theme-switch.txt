@@ -1,0 +1,13 @@
+before (nyx-dark): bar ? app ?
+set rc=0
+bar changed after 375 ms: bar ?
+mocha: bar ? app ? foot? n/a
+{
+  "id": "catppuccin-mocha",
+  "name": "Catppuccin Mocha",
+  "overridden": false,
+  "requested": null,
+  "scope": "system"
+}
+
+restored: bar ? app ?

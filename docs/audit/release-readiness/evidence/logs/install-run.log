@@ -1,0 +1,15 @@
+[1/43] Clearing the disk
+[2/43] Making a new partition table
+[3/43] Making NyxOS's partitions
+[4/43] Waiting for the new partitions
+[5/43] Waiting for the new partitions
+[6/43] Waiting for the new partitions
+[7/43] Formatting the EFI partition
+[8/43] Encrypting the disk
+[9/43] Opening the encrypted disk
+[10/43] Making the Btrfs filesystem
+[11/43] Making subvolumes
+Making subvolumes didn't work: mount failed: dmesg(1) may have more information after failed mount system call.
+Everything it did is in /tmp/nyxos-install.log.
+Error: mount failed: dmesg(1) may have more information after failed mount system call.
+exit=1 seconds=12

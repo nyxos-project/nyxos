@@ -1,0 +1,7 @@
+# DNS-rebinding style: foreign Host header
+http=200
+# Browser simple request: text/plain body with Origin (no preflight needed)
+http=200
+{"choices":[{"finish_reason":"length","index":0,"message":{"role":"assistant","content":"Hello! How can"}}],"created":1794465336,"model":"bartowski/SmolLM2-135M-Instruct-GGUF:Q2_K","system_fingerprint
+# CORS header on response?
+no Access-Control-* headers

@@ -1,0 +1,15 @@
+$ sudo nyx-system set time-zone America/Denver (root, after the GC)
+             |           ^
+           97|           result
+
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+
+       error: path '//nix/store/wn5hsykbd2gbaw05qk9w7jxi8j4swsa5-source' does not exist
+Command 'nix --extra-experimental-features 'nix-command flakes' build --print-out-paths 'path:/etc/nyxos/flake#nixosConfigurations."nyxos-audit".config.system.build.toplevel' --override-input nyxos-overrides path:/etc/nyxos/overrides' returned non-zero exit status 1.
+nyx-system: org.freedesktop.DBus.Error.Failed: The new system couldn't be built: path '//nix/store/wn5hsykbd2gbaw05qk9w7jxi8j4swsa5-source' does not exist; the change was undone, so nothing on the system changed
+
+$ time zone now
+Timezone=America/Chicago
+
+$ last history entries
+

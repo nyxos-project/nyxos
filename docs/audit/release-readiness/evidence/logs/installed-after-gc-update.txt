@@ -1,0 +1,13 @@
+$ nyx update --dry-run (after the GC)
+Checking what's new…
+Nothing to update.
+• Firmware: fwupd isn't installed (nyx-system service fwupd on turns it on)
+
+$ nyx update check
+Everything is up to date.
+• Firmware: fwupd isn't installed (nyx-system service fwupd on turns it on)
+
+$ nyx-system set time-zone America/Denver (needs polkit; no agent on the serial console)
+nyx-system: org.freedesktop.DBus.Error.AccessDenied: not authorized
+exit=0
+

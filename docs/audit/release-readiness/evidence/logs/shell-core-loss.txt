@@ -1,0 +1,28 @@
+1. Open Glimpse (Super+Space runs nyx-glimpse --toggle; wtype key binds are ignored by Hyprland here)
+layers: nyx-bar nyx-dock nyx-dock-edge nyx-shell-glimpse wallpaper
+2. Kill Shell Core while Glimpse is open
+shell-core: activating layers: nyx-bar nyx-dock nyx-dock-edge nyx-shell-glimpse wallpaper
+3. Escape
+layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+after 4 s: shell-core active; layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+Escape again: layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+4. Stop Shell Core, run the Super+Space command
+layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+restored: shell-core active
+Super+Space after restore: nyx-bar nyx-dock nyx-dock-edge wallpaper
+after Escape: nyx-bar nyx-dock nyx-dock-edge wallpaper
+toggle 1: nyx-bar nyx-dock nyx-dock-edge nyx-shell-glimpse wallpaper
+toggle 2: nyx-bar nyx-dock nyx-dock-edge wallpaper
+toggle 3: nyx-bar nyx-dock nyx-dock-edge nyx-shell-glimpse wallpaper
+Escape: nyx-bar nyx-dock nyx-dock-edge wallpaper
+nyx-shell-core.service: Sent signal SIGKILL to main process 130052 (.nyx-shell-core) on client request.
+nyx-shell-core.service: Killed unit cgroup '/user.slice/user-1000.slice/user@1000.service/app.slice/nyx-shell-core.service' with SIGKILL on client request.
+nyx-shell-core.service: Main process exited, code=killed, status=9/KILL
+nyx-shell-core.service: Failed with result 'signal'.
+nyx-shell-core.service: Consumed 3min 53.340s CPU time over 21h 2min 51.810s wall clock time, 10.3M memory peak, 284K memory swap peak.
+nyx-shell-core.service: Scheduled restart job, restart counter is at 1.
+nyx-shell-core.service: Sent signal SIGKILL to main process 2945473 (.nyx-shell-core) on client request.
+nyx-shell-core.service: Killed unit cgroup '/user.slice/user-1000.slice/user@1000.service/app.slice/nyx-shell-core.service' with SIGKILL on client request.
+nyx-shell-core.service: Main process exited, code=killed, status=9/KILL
+nyx-shell-core.service: Failed with result 'signal'.
+nyx-shell-core.service: Scheduled restart job, restart counter is at 1.

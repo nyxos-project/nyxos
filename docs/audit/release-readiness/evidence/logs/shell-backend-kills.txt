@@ -1,0 +1,17 @@
+nyx-bar-backend: pid 1859582 -> 2946394, active; layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+nyx-dock-backend: pid 1665465 -> 2946630, active; layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+nyx-control-center-backend: pid 1665471 -> 2946677, active; layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+nyx-glimpse-backend: pid 2684024 -> 2946751, active; layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+nyx-notification-center: pid 1665546 -> 2946814, active; layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+nyx-notifyd: pid 1665468 -> 2946873, active; layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+nyx-switcher: pid 1665720 -> 2946927, active; layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+nyx-themed: pid 2628045 -> 2946963, active; layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+kill rc=0
+nyx-aid: pid 2143 -> 3026029, active
+kill rc=0
+nyx-clipboardd: pid 1761777 -> 3026086, active
+AI endpoint after kill: {"status":"ok"}
+Worker: Stopped (prism-b12128-d7b2896)
+Memory: 0.0 GB GPU, 16.8 GB RAM (14.4 GB free), budget 10.1 GB; backends vulkan, cpu
+Up to 1 loaded; unload never; 0 waiting
+ssss "Nyx Notification Center" "design-nexus" "0.1.0" "1.2"

@@ -1,0 +1,10 @@
+start: active {"id":1,"name":"1","windows":1}; calc {"ws":"1","fs":0,"floating":false}
+ok
+dispatch: ok
+fullscreen: active {"id":null,"name":"fullscreen-1-1","windows":1}; calc {"ws":"fullscreen-1-1","fs":2,"floating":false}; workspaces [{"id":null,"name":"fullscreen-1-1","windows":1}]
+leave fullscreen: active {"id":1,"name":"1","windows":1}; calc {"ws":"1","fs":0,"floating":false}; workspaces [{"id":1,"name":"1","windows":1}]
+fullscreen again: {"id":null,"name":"fullscreen-1-2","windows":1}
+closed while fullscreen: active {"id":1,"name":"1","windows":0}; workspaces []
+on 5: {"id":5,"name":"5","windows":0}
+m+1 from 5: {"id":1,"name":"1","windows":0}
+m-1 from 1: {"id":5,"name":"5","windows":0}

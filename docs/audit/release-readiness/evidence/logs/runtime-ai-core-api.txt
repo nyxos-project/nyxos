@@ -1,0 +1,21 @@
+# Unauthenticated OpenAI-compatible request to 127.0.0.1:8080 from an ordinary process (no API key), cold model
+http=200 total=41.362505s ttfb=41.362349s
+{"choices":[{"finish_reason":"stop","index":0,"message":{"role":"assistant","content":"Hello, I'm Ahuraa and I'm a friendly friendly person."}}],"created":1794465307,"model":"bartowski/SmolLM2-135M-Instruct-GGUF:Q2_K","system_fingerprint":"b12128-unknown","object":"chat.completion","usage":{"completion_tokens":16,"prompt_tokens":36,"total_tokens":52,"prompt_tokens_details":{"cached_tokens":0}},"id":"chatcmpl-Rxsx6kUF7SGMjvqRr31hUwOnSFZvEB4U","timings":{"cache_n":0,"prompt_n":36,"prompt_ms":2295.969,"prompt_per_token_ms":63.776916666666665,"prompt_per_second":15.679654211359125,"predicted_n":16
+# warm, same request
+http=200 total=6.881598s
+Error: Command not found
+
+# from another local user (nobody)
+http=200
+# Browser-style CORS preflight
+HTTP/1.1 400 Bad Request
+content-type: application/json
+content-length: 112
+date: Thu, 12 Nov 2026 06:35:14 GMT
+
+{"error":{"code":400,"message":"OPTIONS /v1/chat/completions isn't served here","type":"invalid_request_error"}}# status after
+Worker: Ready (prism-b12128-d7b2896)
+Memory: 0.0 GB GPU, 16.8 GB RAM (11.5 GB free), budget 10.1 GB; backends vulkan, cpu
+Up to 1 loaded; unload never; 0 waiting
+  loaded bartowski/SmolLM2-135M-Instruct-GGUF:Q2_K (~0.8 GB, 0/4 busy)
+Requests 2 (0 failed, 0 cancelled); loads 1 (avg 5349 ms); evictions 0; first token avg 0 ms; 0 tokens/s avg

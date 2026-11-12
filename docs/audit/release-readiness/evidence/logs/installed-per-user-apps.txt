@@ -1,0 +1,32 @@
+$ time nyx install calendar mail (per user, as Welcome does)
+         nix profile add github:nyxos-project/nyxos/stable#legacyPackages.x86_64-linux.nyx-mail --priority 4
+
+       To prioritise the existing package:
+
+         nix profile add github:nyxos-project/nyxos/stable#legacyPackages.x86_64-linux.nyx-mail --priority 6
+nyx-system: nix profile add failed: error: An existing package already provides the following file:
+seconds=16
+
+$ nix profile list (names)
+Name:               nyx-calendar
+
+$ D-Bus activatable names (nyx)
+io.github.design_nexus.nyx.Accounts.Preview io.github.design_nexus.nyx.Backup1 io.github.design_nexus.nyx.Files io.github.design_nexus.nyx.Notifications io.github.design_nexus.nyx.Settings io.github.design_nexus.nyx.Share1 io.github.design_nexus.nyx.Theme 
+
+$ service files in the profile
+ls: cannot access '/home/amy/.nix-profile/share/dbus-1/services/': No such file or directory
+
+$ Glimpse plugins in the profile
+ls: cannot access '/home/amy/.nix-profile/share/nyx-glimpse*': No such file or directory
+/home/amy/.nix-profile/share/nyx-calendar/glimpse:
+nyx-calendar-glimpse
+plugin.toml
+
+$ actions manifests seen by nyx
+  files              Files             8 actions  installed
+  settings, devices  Settings         11 actions  installed
+
+nyx APP --help lists an app's actions.
+
+$ profile share dirs
+applications icons nyx nyx-calendar systemd 

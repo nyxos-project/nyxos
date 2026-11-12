@@ -1,0 +1,43 @@
+dbus-:1.5-io.github.design_nexus.nyx.Accounts.Preview@0.service active running
+fluxd.service active running
+nyx-agentd.service active running
+nyx-aid.service active running
+nyx-assistant-hud.service active running
+nyx-assistant-visual.service active running
+nyx-backup.service active running
+nyx-bar-backend.service active running
+nyx-calendard.service active running
+nyx-clipboard.service active running
+nyx-clipboardd.service active running
+nyx-cloud.service active running
+nyx-control-center-backend.service active running
+nyx-dock-backend.service active running
+nyx-glimpse-backend.service active running
+nyx-homed.service active running
+nyx-hyprsunset.service active running
+nyx-maild.service active running
+nyx-notification-center.service active running
+nyx-notifyd.service active running
+nyx-passwords.service active running
+nyx-power-profiles.service active running
+nyx-prompt.service active running
+nyx-remindersd.service active running
+nyx-shell-core.service active running
+nyx-shell-qs.service active running
+nyx-switcher.service active running
+nyx-themed.service active running
+nyx-transfer.service active running
+nyx-wallpaper.service active running
+
+nyx-shell-core               5 on-failure 130052 
+nyx-shell-qs                 5 on-failure 2887895 
+nyx-bar-backend              5 on-failure 1859582 
+nyx-dock-backend             5 on-failure 1665465 
+nyx-control-center-backend   5 on-failure 1665471 
+nyx-glimpse-backend          5 on-failure 2684024 
+nyx-notification-center      5 on-failure 1665546 
+nyx-notifyd                  5 on-failure 1665468 
+nyx-switcher                 5 on-failure 1665720 
+nyx-themed                   5 on-failure 2628045 
+fluxd                        5 on-failure 1591 
+nyx-lock                     5 on-failure 0 

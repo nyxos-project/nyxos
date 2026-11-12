@@ -1,0 +1,166 @@
+# Static evidence for hyprland-patches.md, 2026-11-12T00:36:52-06:00. Read-only git commands.
+
+## nyx-hyprland HEAD
+71afdcbe40fe0c0ca94f98549a6fd7edb268c2fa 2026-11-11 18:56:08 -0600 Bars slide out with the workspace when swiping to a f
+
+## Fork branches and worktrees
+/home/ken/Projects/Hyprland           4e6b10ed2 [nyx/0.57.2]
+/home/ken/Projects/hyprland-fs-0.56.2 169c25d41 [nyx/0.56.2-fullscreen-spaces]
+/home/ken/Projects/hyprland-fs-0.57.2 0a31fa622 [nyx/0.57.2-fullscreen-spaces]
+nyx/0.56.2-fullscreen-spaces 169c25d41 upstream=
+nyx/0.57.1 0543f1612 upstream=
+nyx/0.57.2 4e6b10ed2 upstream=
+nyx/0.57.2-fullscreen-spaces 0a31fa622 upstream=
+origin	https://github.com/hyprwm/Hyprland.git (fetch)
+origin	https://github.com/hyprwm/Hyprland.git (push)
+
+## Patch numstat per series (git apply --numstat)
+== 0.55.4
+0001-gestures-add-workspace_swipe_wrap.patch: 2 files +8 -4
+== 0.56.2
+0001-gestures-add-workspace_swipe_wrap.patch: 3 files +44 -4
+0002-layers-top-layers-stay-below-fullscreen-windows-back.patch: 4 files +22 -10
+0003-fullscreen-misc-fullscreen_own_workspace.patch: 8 files +503 -13
+0004-layers-top-layers-slide-with-the-workspace-when-it-m.patch: 2 files +35 -12
+== 0.57.1
+0001-gestures-add-workspace_swipe_wrap.patch: 3 files +44 -5
+0002-output-add-virtual-region-partitioning.patch: 3 files +219 -0
+0003-output-add-virtual-monitors.patch: 13 files +1260 -11
+0004-render-composite-virtual-regions-on-their-host.patch: 5 files +33 -5
+0005-workspaces-per-region-workspace-selector-and-pointer.patch: 3 files +16 -1
+0006-virtual-monitors-add-merge-restore-physical-fullscre.patch: 1 files +97 -0
+0007-ipc-expose-virtual-monitors.patch: 2 files +89 -2
+0008-hyprtester-add-virtual-monitor-tests.patch: 1 files +226 -0
+== 0.57.2
+0001-gestures-add-workspace_swipe_wrap.patch: 3 files +44 -5
+0002-output-add-virtual-region-partitioning.patch: 3 files +219 -0
+0003-output-add-virtual-monitors.patch: 13 files +1260 -11
+0004-render-composite-virtual-regions-on-their-host.patch: 5 files +33 -5
+0005-workspaces-per-region-workspace-selector-and-pointer.patch: 3 files +16 -1
+0006-virtual-monitors-add-merge-restore-physical-fullscre.patch: 1 files +97 -0
+0007-ipc-expose-virtual-monitors.patch: 2 files +89 -2
+0008-hyprtester-add-virtual-monitor-tests.patch: 1 files +226 -0
+0009-virtual-monitors-workspaces-0-leaves-numbering-to-th.patch: 2 files +19 -3
+0010-virtual-monitors-fixes-from-the-first-run-on-a-NyxOS.patch: 5 files +157 -15
+0011-hyprtester-workspace_swipe_wrap-checks-the-0.57-acti.patch: 1 files +4 -4
+0012-fullscreen-misc-fullscreen_own_workspace.patch: 8 files +633 -16
+0013-layers-top-layers-slide-with-the-workspace-when-it-m.patch: 2 files +37 -13
+
+## patch-id: series 0.57.2 vs branch nyx/0.57.2-fullscreen-spaces
+6617484c3a16 0001-gestures-add-workspace_swipe_wrap.patch
+b53e024bcf4f 0002-output-add-virtual-region-partitioning.patch
+3198ef939e70 0003-output-add-virtual-monitors.patch
+a4357b44e099 0004-render-composite-virtual-regions-on-their-host.patch
+3e881da74ec3 0005-workspaces-per-region-workspace-selector-and-pointer.patch
+8658ebdade7c 0006-virtual-monitors-add-merge-restore-physical-fullscre.patch
+b8f37f69a8f6 0007-ipc-expose-virtual-monitors.patch
+efe98b891b27 0008-hyprtester-add-virtual-monitor-tests.patch
+1779cfcfa99b 0009-virtual-monitors-workspaces-0-leaves-numbering-to-th.patch
+a72dd67d36d7 0010-virtual-monitors-fixes-from-the-first-run-on-a-NyxOS.patch
+5fb79feca464 0011-hyprtester-workspace_swipe_wrap-checks-the-0.57-acti.patch
+eb14f8dd410c 0012-fullscreen-misc-fullscreen_own_workspace.patch
+9ac9df568e96 0013-layers-top-layers-slide-with-the-workspace-when-it-m.patch
+6617484c3a16 25734b643 gestures: add workspace_swipe_wrap
+b53e024bcf4f 54c290162 output: add virtual region partitioning
+3198ef939e70 0b0496461 output: add virtual monitors
+a4357b44e099 f8a6e4eec render: composite virtual regions on their host
+3e881da74ec3 ff32758d7 workspaces: per-region workspace selector and pointer targeting
+8658ebdade7c 65971c1b8 virtual monitors: add merge, restore, physical fullscreen and recovery dispatchers
+b8f37f69a8f6 3869d1a42 ipc: expose virtual monitors
+efe98b891b27 377efa235 hyprtester: add virtual monitor tests
+1779cfcfa99b 9258e4582 virtual monitors: workspaces = 0 leaves numbering to the config, and merging remembers each workspace's region
+a72dd67d36d7 4e6b10ed2 virtual monitors: fixes from the first run on a NyxOS VM
+5fb79feca464 080f03330 hyprtester: workspace_swipe_wrap checks the 0.57 activeworkspace text
+eb14f8dd410c 5b186f05f fullscreen: misc:fullscreen_own_workspace
+9ac9df568e96 0a31fa622 layers: top layers slide with the workspace when it meets a fullscreen one
+
+## branch nyx/0.57.2 (10 commits) vs nyx/0.57.2-fullscreen-spaces (13)
+10
+13
+
+## patch-id: series 0.56.2 vs nyx/0.56.2-fullscreen-spaces
+dad55a270889 0001-gestures-add-workspace_swipe_wrap.patch
+77aaf8088051 0002-layers-top-layers-stay-below-fullscreen-windows-back.patch
+c12ca175403c 0003-fullscreen-misc-fullscreen_own_workspace.patch
+ac2240ddff0b 0004-layers-top-layers-slide-with-the-workspace-when-it-m.patch
+dad55a270889 27aa4c70c gestures: add workspace_swipe_wrap
+77aaf8088051 0074ecf69 layers: top layers stay below fullscreen windows (backport of 815e3a822)
+c12ca175403c 3a3427f6a fullscreen: misc:fullscreen_own_workspace
+ac2240ddff0b 169c25d41 layers: top layers slide with the workspace when it meets a fullscreen one
+
+## Upstream files modified by the whole 0.57.2 series
+36	0	hyprtester/src/tests/main/gestures.cpp
+8	0	src/Compositor.cpp
+2	0	src/config/lua/ConfigManager.cpp
+76	0	src/config/lua/bindings/LuaBindingsConfigRules.cpp
+101	0	src/config/lua/bindings/LuaBindingsDispatchers.cpp
+22	1	src/config/lua/objects/LuaMonitor.cpp
+5	1	src/config/shared/actions/ConfigActions.cpp
+4	0	src/config/shared/monitor/MonitorRuleManager.cpp
+4	0	src/config/shared/workspace/WorkspaceRuleManager.cpp
+1	0	src/config/shared/workspace/WorkspaceRuleManager.hpp
+14	0	src/config/values/ConfigValues.cpp
+2	2	src/desktop/view/LayerSurface.cpp
+67	1	src/ipc/s1/Commands.cpp
+2	2	src/managers/ProtocolManager.cpp
+16	20	src/managers/input/UnifiedWorkspaceSwipeGesture.cpp
+34	6	src/output/Monitor.cpp
+13	0	src/output/Monitor.hpp
+1	1	src/output/MonitorResources.cpp
+1	1	src/output/OutputCommitCoordinator.cpp
+59	4	src/render/Renderer.cpp
+1	0	src/render/Renderer.hpp
+5	2	src/render/scene/MonitorScene.cpp
+11	2	src/state/MonitorLayoutController.cpp
+1	1	src/state/MonitorState.cpp
+26	3	src/state/workspace/Resolver.cpp
+## New files
+149	0	hyprtester/src/tests/main/fullscreenSpaces.cpp
+226	0	hyprtester/src/tests/main/virtual_monitors.cpp
+369	0	src/managers/fullscreen/FullscreenSpaces.cpp
+74	0	src/managers/fullscreen/FullscreenSpaces.hpp
+1116	0	src/output/VirtualMonitorManager.cpp
+141	0	src/output/VirtualMonitorManager.hpp
+84	0	src/output/VirtualRegions.cpp
+29	0	src/output/VirtualRegions.hpp
+106	0	tests/helpers/VirtualRegions.cpp
+
+## Upstream main drift: 70ec30e71 2026-11-11, 67 commits not in v0.57.2; merge-base 0aa6745f7
+1 upstream commits since merge-base: src/Compositor.cpp
+1 upstream commits since merge-base: src/config/lua/bindings/LuaBindingsDispatchers.cpp
+3 upstream commits since merge-base: src/config/shared/actions/ConfigActions.cpp
+5 upstream commits since merge-base: src/config/values/ConfigValues.cpp
+2 upstream commits since merge-base: src/desktop/view/LayerSurface.cpp
+2 upstream commits since merge-base: src/ipc/s1/Commands.cpp
+3 upstream commits since merge-base: src/output/Monitor.cpp
+1 upstream commits since merge-base: src/output/Monitor.hpp
+5 upstream commits since merge-base: src/render/Renderer.cpp
+1 upstream commits since merge-base: src/state/workspace/Resolver.cpp
+
+## Series 0.57.2 replayed onto origin/HEAD (merge-tree --merge-base=v0.57.2)
+82de5604170d7e73598deb87b4f9e92973ee0ad7
+
+exit=0
+
+## For comparison: 0.56.2 series replayed onto v0.57.2
+CONFLICT (content): Merge conflict in src/Compositor.cpp
+CONFLICT (content): Merge conflict in src/config/values/ConfigValues.cpp
+CONFLICT (content): Merge conflict in src/desktop/view/LayerSurface.cpp
+CONFLICT (content): Merge conflict in src/helpers/MiscFunctions.cpp
+CONFLICT (content): Merge conflict in src/layout/algorithm/tiled/scrolling/ScrollingFullscreenHandler.cpp
+CONFLICT (content): Merge conflict in src/managers/fullscreen/handler/FullscreenHandler.cpp
+CONFLICT (content): Merge conflict in src/managers/input/UnifiedWorkspaceSwipeGesture.cpp
+CONFLICT (content): Merge conflict in src/output/Monitor.cpp
+CONFLICT (content): Merge conflict in src/render/Renderer.cpp
+
+## Laptop compositor (read-only)
+hyprland-nyx 0.56.2-1
+Build Date      : Wed 11 Nov 2026 06:49:33 PM CST
+
+## Lock pins
+/home/ken/Projects/nyx-packages/flake.lock
+  hyprland 11cbc6c577b84ffb1edf4df3fc5b6128c3ae6947 {'ref': 'refs/tags/v0.57.2', 'submodules': True, 'type': 'git', 'url': 'https://github.com/hyprwm/Hyprland'}
+  nyx-hyprland 71afdcbe40fe0c0ca94f98549a6fd7edb268c2fa
+  nixpkgs ac588ef1c914865dad517b337ea0eb9694a4021c nixos-26.05
+/home/ken/Projects/nyxos/flake.lock
+  nixpkgs ac588ef1c914865dad517b337ea0eb9694a4021c nixos-26.05

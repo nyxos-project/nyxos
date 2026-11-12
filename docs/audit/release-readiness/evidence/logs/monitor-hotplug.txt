@@ -1,0 +1,20 @@
+monitors: [{"name":"Virtual-1","width":1680,"height":1050,"x":0,"y":0}]
+layers: [{"mon":"Virtual-1","ns":["nyx-bar","nyx-dock","nyx-dock-edge","wallpaper"]}]
+added HEADLESS-1: monitors [{"name":"Virtual-1","width":1680,"height":1050,"x":0,"y":0,"ws":1},{"name":"HEADLESS-1","width":1280,"height":800,"x":1680,"y":0,"ws":6}]
+layers: [{"mon":"Virtual-1","ns":["nyx-bar","nyx-dock","nyx-dock-edge","wallpaper"]},{"mon":"HEADLESS-1","ns":["wallpaper"]}]
+Glimpse on the new monitor? focus it and toggle:
+layers: [{"mon":"Virtual-1","ns":["nyx-bar","nyx-dock","nyx-dock-edge","wallpaper"]},{"mon":"HEADLESS-1","ns":["nyx-shell-glimpse","wallpaper"]}]
+removed: monitors ["Virtual-1"]; layers: [{"mon":"Virtual-1","ns":["nyx-bar","nyx-dock","nyx-dock-edge","wallpaper"]}]
+nyx-shell-qs=active nyx-shell-core=active nyx-dock-backend=active nyx-bar-backend=active 
++2s: [{"mon":"Virtual-1","ns":["nyx-bar","nyx-dock","nyx-dock-edge","wallpaper"]},{"mon":"HEADLESS-2","ns":["wallpaper"]}]
++5s: [{"mon":"Virtual-1","ns":["nyx-bar","nyx-dock","nyx-dock-edge","wallpaper"]},{"mon":"HEADLESS-2","ns":["wallpaper"]}]
++10s: [{"mon":"Virtual-1","ns":["nyx-bar","nyx-dock","nyx-dock-edge","wallpaper"]},{"mon":"HEADLESS-2","ns":["wallpaper"]}]
++20s: [{"mon":"Virtual-1","ns":["nyx-bar","nyx-dock","nyx-dock-edge","wallpaper"]},{"mon":"HEADLESS-2","ns":["wallpaper"]}]
+default: null
+source: the program's own
+value: null
+yours: null
+default: null
+source: the program's own
+value: null
+yours: null

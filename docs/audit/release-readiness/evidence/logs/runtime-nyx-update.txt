@@ -1,0 +1,47 @@
+$ nyx system generations | head
+*  244  1794462566  0.1.0
+   243  1794461212  0.1.0
+   242  1794460616  0.1.0
+   241  1794459480  0.1.0
+
+$ time nyx update --dry-run
+Checking what's new…
+Nothing to update.
+• The system channel couldn't be checked: this system's flake has no nyxos input
+• Firmware: fwupd isn't installed (nyx-system service fwupd on turns it on)
+timeout 600 nyx update --dry-run  0.03s user 0.05s system 59% cpu 0.131 total
+
+$ nyx update history 10
+2026-11-08  system   rolled-back rollback  generation 167 → 166  (2s)
+    needed a restart
+2026-11-08  user     updated     nyx update tools node
+2026-11-08  system   failed      vm test
+    this system's flake has no nyxos input
+
+$ nyx update report
+The last 3 updates (since 2026-11-08):
+  System      0 updated, 1 failed (100% failed), 0 already current
+  Going back  1 time, 0 failed
+  Your own    1 updated, 0 failed (Nix profile, Flatpaks, mise, uv, firmware)
+  Restarts    1 needed
+
+$ nyx-system hardware
+graphics    virtio at PCI:4:0:0
+processor   intel
+battery     no
+bluetooth   no
+virtual     kvm
+
+$ nyx-system services
+bluetooth  default  Bluetooth
+printing   default  Printing (CUPS)
+ssh        default  Remote login (OpenSSH)
+flatpak    default  Flatpak apps
+docker     default  Docker containers
+tailscale  default  Tailscale
+fwupd      default  Firmware updates (fwupd)
+avahi      default  Local network discovery (Avahi)
+podman     default  Podman containers
+incus      default  Incus containers and virtual machines
+libvirtd   default  Virtual machines (libvirt)
+ollama     default  Ollama, local AI models

@@ -1,0 +1,18 @@
+$ nmcli networking off
+state: network off
+
+$ nyx update --dry-run (offline)
+nyx-system: there's no network connection, so nothing can be checked or downloaded
+
+$ nyx-ai pull (offline)
+Looking up the model…
+Failed…
+nyx-ai: Hugging Face model: error sending request for url (https://huggingface.co/api/models/bartowski/SmolLM2-135M-Instruct-GGUF)
+
+$ nyx install hello (offline)
+
+       error: unable to download 'https://api.github.com/repos/nyxos-project/nyxos/commits/stable': Could not resolve hostname (6) Could not resolve host: api.github.com
+nyx-system: nix profile add failed: error: unable to download 'https://api.github.com/repos/nyxos-project/nyxos/commits/stable': Could not resolve hostname (6) Could not resolve host: api.github.com
+
+bar network item / notifications: a{sv} 0
+back on: connected 200

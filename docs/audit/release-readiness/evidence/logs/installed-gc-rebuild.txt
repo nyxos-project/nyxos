@@ -1,0 +1,21 @@
+$ build before GC (what the System Manager does: nixos-rebuild build from the machine flake)
+copying path '/nix/store/vmld25ds1iw5xv8n9s6gzji22zhmyq5y-update-autotools-gnu-config-scripts-hook' from 'https://cache.nixos.org'...
+copying path '/nix/store/zifs9cd56bk4v9gqnpj63ylq4s137vjr-stdenv-linux' from 'https://cache.nixos.org'...
+building '/nix/store/ms6v5klvp8g0vagdghkjgq2mfhgfpxb6-nyxos-nixpkgs.drv'...
+Done. The new configuration is /nix/store/lhzps5mkc1w8rxbla4gbyy3jrfb70p6z-nyxos-system-nyxos-audit-0.1.0
+exit=0
+
+$ the weekly GC (nix-gc.service: nix-collect-garbage --delete-older-than 30d)
+Result=success
+ExecMainStatus=0
+ls: cannot access '/nix/store/wn5hsykbd2gbaw05qk9w7jxi8j4swsa5-source': No such file or directory
+
+$ build after GC
+building the system configuration...
+warning: not writing modified lock file of flake 'path:/etc/nyxos/flake':
+• Updated input 'nyxos-overrides':
+    'path:/mnt/etc/nyxos/overrides?lastModified=1794467428&narHash=sha256-3vMthfBbmc2aK5Ouyec2WPOBHiuX7wuoUzSQtl2r9LE%3D' (2026-11-12)
+  → 'path:/etc/nyxos/overrides?lastModified=1794467428&narHash=sha256-3vMthfBbmc2aK5Ouyec2WPOBHiuX7wuoUzSQtl2r9LE%3D' (2026-11-12)
+Done. The new configuration is /nix/store/lhzps5mkc1w8rxbla4gbyy3jrfb70p6z-nyxos-system-nyxos-audit-0.1.0
+exit=0
+

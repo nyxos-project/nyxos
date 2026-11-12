@@ -1,0 +1,105 @@
+## system services running
+  avahi-daemon.service                  loaded active running Avahi mDNS/DNS-SD Stack
+  dbus-broker.service                   loaded active running D-Bus System Message Bus
+  greetd.service                        loaded active running greetd.service
+  incus-agent.service                   loaded active running Incus - agent
+  irlumed.service                       loaded active running irlume face authentication daemon
+  NetworkManager.service                loaded active running Network Manager
+  nix-daemon.service                    loaded active running Nix Daemon
+  nscd.service                          loaded active running Name Service Cache Daemon (nsncd)
+  polkit.service                        loaded active running Authorization Manager
+  power-profiles-daemon.service         loaded active running Power Profiles daemon
+  rtkit-daemon.service                  loaded active running RealtimeKit Scheduling Policy Service
+  serial-getty@ttyS0.service            loaded active running Serial Getty on ttyS0
+  sshd.service                          loaded active running SSH Daemon
+  systemd-ask-password-plymouth.service loaded active running Forward Password Requests to Plymouth
+  systemd-journald.service              loaded active running Journal Service
+  systemd-logind.service                loaded active running User Login Management
+  systemd-oomd.service                  loaded active running Userspace Out-Of-Memory (OOM) Killer
+  systemd-timesyncd.service             loaded active running Network Time Synchronization
+  systemd-udevd.service                 loaded active running Rule-based Manager for Device Events and Files
+  udisks2.service                       loaded active running Disk Manager
+  upower.service                        loaded active running Daemon for power management
+  user@1000.service                     loaded active running User Manager for UID 1000
+  wpa_supplicant.service                loaded active running WPA Supplicant instance
+
+## user services
+  app-geoclue\x2ddemo\x2dagent@autostart.service                  loaded    inactive dead    Geoclue Demo agent
+  app-gnome\x2dkeyring\x2dpkcs11@autostart.service                loaded    inactive dead    Certificate and Key Storage
+  app-gnome\x2dkeyring\x2dsecrets@autostart.service               loaded    inactive dead    Secret Storage Service
+  app-xdg\x2duser\x2ddirs@autostart.service                       loaded    inactive dead    User folders update
+  dbus-:1.5-io.github.design_nexus.nyx.Accounts.Preview@0.service loaded    active   running dbus-:1.5-io.github.design_nexus.nyx.Accounts.Preview@0.service
+  dbus-:1.5-io.github.design_nexus.nyx.Settings@0.service         loaded    inactive dead    dbus-:1.5-io.github.design_nexus.nyx.Settings@0.service
+  dbus-:1.5-io.github.design_nexus.nyx.Settings@2.service         loaded    inactive dead    dbus-:1.5-io.github.design_nexus.nyx.Settings@2.service
+  dbus-:1.5-io.github.design_nexus.nyx.Settings@4.service         loaded    inactive dead    dbus-:1.5-io.github.design_nexus.nyx.Settings@4.service
+  dbus-:1.5-io.github.design_nexus.nyx.Settings@5.service         loaded    inactive dead    dbus-:1.5-io.github.design_nexus.nyx.Settings@5.service
+  dbus-broker.service                                             loaded    active   running D-Bus User Message Bus
+  dconf.service                                                   loaded    active   running User preferences database
+  fluxd.service                                                   loaded    active   running Flux daemon that connects this computer to your phone
+  gcr-ssh-agent.service                                           loaded    active   running GCR ssh-agent wrapper
+  geoclue-agent.service                                           loaded    active   running Geoclue agent
+  gvfs-afc-volume-monitor.service                                 loaded    active   running Virtual filesystem service - Apple File Conduit monitor
+  gvfs-daemon.service                                             loaded    active   running Virtual filesystem service
+  gvfs-goa-volume-monitor.service                                 loaded    active   running Virtual filesystem service - GNOME Online Accounts monitor
+  gvfs-gphoto2-volume-monitor.service                             loaded    active   running Virtual filesystem service - digital camera monitor
+  gvfs-mtp-volume-monitor.service                                 loaded    active   running Virtual filesystem service - Media Transfer Protocol monitor
+  gvfs-udisks2-volume-monitor.service                             loaded    active   running Virtual filesystem service - disk device monitor
+  hypridle.service                                                loaded    active   running Locks the screen and turns it off when you're away
+  nixos-activation.service                                        loaded    active   exited  Run user-specific NixOS activation
+  nyx-agentd.service                                              loaded    active   running Nyx Agent Manager (coding-agent sessions)
+  nyx-aid.service                                                 loaded    active   running Nyx AI Core (shared local models)
+  nyx-assistant-failed.service                                    loaded    inactive dead    Record a failed Assistant service event
+  nyx-assistant-hud.service                                       loaded    active   running Assistant approval overlay
+  nyx-assistant-setup.service                                     loaded    inactive dead    Set up Nyx Assistant's settings and abilities
+  nyx-assistant-visual.service                                    loaded    active   running Assistant Aura and Canvas
+  nyx-assistantd.service                                          loaded    inactive dead    Nyx Assistant voice daemon
+  nyx-backup.service                                              loaded    active   running Nyx Backup background service
+  nyx-bar-backend.service                                         loaded    active   running Nyx Bar services (for its Quickshell interface)
+  nyx-calendard.service                                           loaded    active   running Nyx Calendar reminders
+  nyx-clipboard.service                                           loaded    active   running Nyx Clipboard popup
+  nyx-clipboardd.service                                          loaded    active   running Nyx Clipboard service (clipboard history and verification codes)
+  nyx-cloud.service                                               loaded    active   running Cloud storage for Nyx applications
+  nyx-control-center-backend.service                              loaded    active   running Nyx Control Center services (for its Quickshell interface)
+  nyx-dock-backend.service                                        loaded    active   running Nyx Dock services (for its Quickshell interface)
+  nyx-glimpse-backend.service                                     loaded    active   running Glimpse search for its Quickshell interface
+  nyx-homed.service                                               loaded    active   running Home desktop automations
+  nyx-hyprsunset.service                                          loaded    active   running [systemd-run] /nix/store/834yf5p7nx307sizyragl3h5d5wqd36c-hyprsunset-0.3.3/bin/hyprsunset
+  nyx-icons.service                                               loaded    inactive dead    Recolour Nyx icons for the current theme
+  nyx-maild.service                                               loaded    active   running Nyx Mail engine
+  nyx-notification-center.service                                 loaded    active   running Nyx Notification Center
+  nyx-notifyd.service                                             loaded    active   running Nyx notification service (keeps every notification in Nyx's history)
+  nyx-passwords.service                                           loaded    active   running Nyx Passwords vault
+  nyx-power-profiles.service                                      loaded    active   running The power profile for being plugged in or on battery
+  nyx-prompt.service                                              loaded    active   running Nyx Administrator Prompt (polkit agent)
+  nyx-remindersd.service                                          loaded    active   running Nyx Reminders alerts
+  nyx-shell-core.service                                          loaded    active   running Nyx Shell Core
+  nyx-shell-qs.service                                            loaded    active   running Nyx Shell surfaces (Quickshell)
+  nyx-switcher.service                                            loaded    active   running Nyx Switcher
+  nyx-themed.service                                              loaded    active   running Nyx theme service (io.github.design_nexus.nyx.Theme)
+  nyx-transfer.service                                            loaded    active   running Background transfers for Transfer
+  nyx-trust-apps.service                                          loaded    inactive dead    Trust the Nyx apps in your Nix profile
+  nyx-update-check.service                                        loaded    inactive dead    Check for NyxOS updates and install your own
+  nyx-voiced.service                                              loaded    inactive dead    Nyx Voice (dictation, listening and speaking)
+  nyx-wallpaper.service                                           loaded    active   running Nyx wallpaper
+  nyx-welcome.service                                             loaded    inactive dead    Nyx Welcome at the first sign-in
+● pipewire-media-session.service                                  not-found inactive dead    pipewire-media-session.service
+  pipewire-pulse.service                                          loaded    active   running PipeWire PulseAudio
+● pipewire-session-manager.service                                not-found inactive dead    pipewire-session-manager.service
+  pipewire.service                                                loaded    active   running PipeWire Multimedia Service
+● pulseaudio.service                                              not-found inactive dead    pulseaudio.service
+  speech-dispatcher.service                                       loaded    inactive dead    Common interface to speech synthesizers
+  systemd-tmpfiles-clean.service                                  loaded    inactive dead    Cleanup of User's Temporary Files and Directories
+  systemd-tmpfiles-setup.service                                  loaded    active   exited  Create User Files and Directories
+  wayland-session-bindpid@1335.service                            loaded    active   running Bind graphical session to PID 1335
+  wayland-session-waitenv.service                                 loaded    inactive dead    Wait for WAYLAND_DISPLAY and other variables
+  wayland-wm-app-daemon.service                                   loaded    active   running Fast application argument generator
+  wayland-wm-env@hyprland\x2duwsm.desktop.service                 loaded    active   exited  Environment preloader for Hyprland, An intelligent dynamic tiling Wayland compositor
+  wayland-wm@hyprland\x2duwsm.desktop.service                     loaded    active   running Main service for Hyprland, An intelligent dynamic tiling Wayland compositor
+  wireplumber.service                                             loaded    active   running Multimedia Service Session Manager
+  xdg-desktop-portal-gtk.service                                  loaded    active   running Portal service (GTK/GNOME implementation)
+  xdg-desktop-portal-hyprland.service                             loaded    active   running Portal service (Hyprland implementation)
+  xdg-desktop-portal.service                                      loaded    active   running Portal service
+  xdg-document-portal.service                                     loaded    active   running flatpak document portal service
+  xdg-permission-store.service                                    loaded    active   running sandboxed app permission store
+
+## failed user units

@@ -1,0 +1,12 @@
+dock.toml existed: yes
+themed: active; dock-backend: active; layers: nyx-bar nyx-dock nyx-dock-edge wallpaper
+theme.toml now:
+theme = "nyx-dark"
+[app_themes
+nyx-calculator = "nord"
+dock.toml.broken-1794479407 dock.toml.v0.bak themes theme.toml 
+dock.toml now:
+head: cannot open '/home/ken/.config/nyx/dock.toml' for reading: No such file or directory
+nyx-dock: /home/ken/.config/nyx/dock.toml isn't valid TOML (TOML parse error at line 3, column 10
+); kept as /home/ken/.config/nyx/dock.toml.broken-1794479407
+catppuccin-mocha (Catppuccin Mocha)

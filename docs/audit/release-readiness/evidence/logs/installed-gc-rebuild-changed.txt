@@ -1,0 +1,23 @@
+$ overrides system.json
+{
+  "version": 1,
+  "timeZone": "America/Chicago",
+  "locale": "en_US.UTF-8",
+  "keyboardLayout": "us",
+  "hardware": {
+    "cpu": "intel",
+    "virtualMachine": "kvm"
+  }
+}
+
+$ build with a changed setting, after the GC
+           96|           assert builtins.isFunction flake.outputs;
+             |           ^
+           97|           result
+
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+
+       error: path '//nix/store/wn5hsykbd2gbaw05qk9w7jxi8j4swsa5-source' does not exist
+Command 'nix --extra-experimental-features 'nix-command flakes' build --print-out-paths '/etc/nyxos/flake#nixosConfigurations."nyxos-audit".config.system.build.toplevel' --override-input nyxos-overrides path:/tmp/ov' returned non-zero exit status 1.
+exit=1
+

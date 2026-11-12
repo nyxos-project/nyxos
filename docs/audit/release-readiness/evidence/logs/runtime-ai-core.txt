@@ -1,0 +1,46 @@
+$ nyx-ai --help
+Usage: nyx-ai COMMAND [--json]
+
+  status                       the worker, memory and loaded models
+  models                       installed models
+  info MODEL                   one model in detail
+  pull ORG/REPO:QUANT          download from Hugging Face (or update to its newest revision)
+  updates                      check Hugging Face for newer revisions now
+  downloads                    downloads queued, running and finished
+  cancel-pull MODEL            stop a download
+  rm MODEL                     delete a model from the shared cache
+  load MODEL [--keep]          load now (--keep: until unload)
+  unload MODEL                 unload unless something else uses it
+  settings MODEL|* [KEY=VALUE…] show or change load-time settings (empty value removes)
+  service [max_loaded=N] [idle=SECONDS] [updates=auto|notify|off] [battery_saver=on|off] [add_dir=FOLDER]
+                               show or change how many models stay loaded, for how long,
+                               whether models update themselves, and whether they run on
+                               the CPU on battery
+  default ROLE [MODEL]         show or set the default model for a role (chat, assistant,
+                               embedding, coding); "" clears it
+  chat MODEL PROMPT…           ask a model (--think to show its reasoning)
+  embed MODEL INPUT…           embed texts, image:FILE and audio:FILE (with a projector)
+  capabilities                 what this Nyx AI Core supports
+  actions                      actions apps offer (running apps and registered providers)
+  act ACTION [JSON] [--yes]    run an action with JSON arguments (--yes: you agree to it,
+                               for actions that ask first)
+
+$ nyx-ai status
+Worker: Ready (prism-b12128-d7b2896)
+Memory: 0.0 GB GPU, 16.8 GB RAM (12.0 GB free), budget 10.1 GB; backends vulkan, cpu
+Up to 1 loaded; unload never; 0 waiting
+Requests 0 (0 failed, 0 cancelled); loads 0 (avg 0 ms); evictions 0; first token avg 0 ms; 0 tokens/s avg
+
+$ nyx-ai models
+installed  bartowski/SmolLM2-135M-Instruct-GGUF:Q2_K                      0.1 GB  chat
+
+$ curl /v1/models
+{"data":[{"created":0,"id":"bartowski/SmolLM2-135M-Instruct-GGUF:Q2_K","meta":{"capabilities":["chat"],"context_length":8192,"size":88202080},"object":"model","owned_by":"nyx-ai"}],"object":"list"}
+$ curl /health
+{"status":"ok"}
+$ ps llama
+    PID   RSS     ELAPSED COMMAND
+   2220  5800    21:11:08 /nix/store/9z0j21jjawciafdrql887pddxwg9ypfg-llama-prism-b12128/lib/nyx-ai/llama.cpp/llama-server --host /run/user/1000/nyx-ai/worker.sock --api-key-file /run/user/1000/nyx-ai/worker.key --models-preset /home/ken/.local/state/nyx-ai/router.ini --models-max 16 --no-models-aut
+
+$ du models
+zsh:1: no matches found: /home/ken/.local/share/nyx/ai*

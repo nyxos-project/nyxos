@@ -1,0 +1,108 @@
+$ nyx-system update --help
+  nyx update [TARGET...] [--dry-run] [--yes] [--json]
+                                          Update everything, or: system (NyxOS and the
+                                          Nyx apps built into it), apps (your apps,
+                                          Flatpaks), tools (coding agents, your mise
+                                          and uv tools), firmware, or one thing by
+                                          name (claude, codex, firefox...). Plans
+                                          first and asks; --dry-run only plans
+  nyx update check [--json]        What has updates (the last check's, offline)
+  nyx update status [--notify] [--json]
+                                          Everything installed: its version, what's
+                                          newer, how it updates and its update setting
+  nyx update auto [--now]          The daily run: installs what the update
+                                          settings say to, notifies about the rest
+  nyx update history [N] [--json]  What was updated, newest first
+  nyx update report [N] [--json]   How the last N (200) updates went: failures,
+                                          rollbacks, restarts, typical times
+
+$ nyx-system --help
+nyx-system: NyxOS's system settings, packages, services and generations
+
+  nyx-system settings                     The system layer's settings
+  nyx-system set NAME VALUE               hostname, time-zone, locale, keyboard,
+                                          theme, boot-theme, login-theme
+  nyx-system unset NAME                   Back to the distribution's value
+  nyx-system install [--accept-unfree] PACKAGE...
+                                          nixpkgs packages for everyone (accepting
+                                          the licenses of unfree ones)
+  nyx-system remove PACKAGE...
+  nyx-system services                     The services NyxOS manages here
+  nyx-system service NAME on|off|default
+  nyx-system app NAME on|off|default      A Nyx app (mail, media-player, ...)
+  nyx-system firewall on|off|default
+  nyx-system port open|close PORT tcp|udp In the firewall
+  nyx-system power KEY ACTION|default     HandleLidSwitch suspend, HandlePowerKey ...
+  nyx-system person add NAME 'FULL NAME' [--admin] [--password-stdin]
+  nyx-system person remove NAME           An account NyxOS made (its home stays)
+  nyx-system person admin NAME on|off
+  nyx-system full-name USER 'FULL NAME'
+  nyx-system password USER                Reads the new password from stdin
+  nyx-system mount add ID JSON [--login-stdin]
+                                          A drive or share at startup (JSON: what,
+                                          dir, fsType, options), its login from stdin
+  nyx-system mount remove ID
+  nyx-system hardware                     What this computer has (graphics, processor,
+                                          battery, Bluetooth, virtual machine)
+  nyx-system hardware apply               Set NyxOS up for it (drivers, power, firmware)
+  nyx-system nvidia-driver on|off         NVIDIA's own driver (unfree) or nouveau
+  nyx-system groups                       The groups NyxOS manages here
+  nyx-system group add|remove GROUP USER
+  nyx-system apply JSON|-                 Typed changes (nyx-system-proto's Change
+                                          list), from the argument or stdin
+  nyx-system update [TARGET...] [--dry-run] [--yes] [--json]
+                                          Update everything, or: system (NyxOS and the
+                                          Nyx apps built into it), apps (your apps,
+                                          Flatpaks), tools (coding agents, your mise
+                                          and uv tools), firmware, or one thing by
+                                          name (claude, codex, firefox...). Plans
+                                          first and asks; --dry-run only plans
+  nyx-system update check [--json]        What has updates (the last check's, offline)
+  nyx-system update status [--notify] [--json]
+                                          Everything installed: its version, what's
+                                          newer, how it updates and its update setting
+  nyx-system update auto [--now]          The daily run: installs what the update
+                                          settings say to, notifies about the rest
+  nyx-system update history [N] [--json]  What was updated, newest first
+  nyx-system update report [N] [--json]   How the last N (200) updates went: failures,
+                                          rollbacks, restarts, typical times
+  nyx-system generations
+  nyx-system rollback                     Back to the previous generation
+  nyx-system clean [DAYS]                 Remove generations older than DAYS (14) and
+                                          packages nothing needs
+  nyx-system clean-logs [MB]              Shrink the system log to MB (200)
+
+  nyx-system catalog [SECTION]            The software catalog (* installed)
+  nyx-system catalog presets
+  nyx-system catalog search TERM...       Items by name, alias or summary
+  nyx-system catalog installed --json     Yours (your profile), and what's installed
+                                          for everyone that could be yours
+  nyx-system catalog install [--preset P]... [NAME]... [--yes] [--or-profile]
+                                          By id, name or alias: per-user items into
+                                          your Nix profile, system ones for everyone;
+                                          --or-profile: other names are packages from
+                                          the channel, for you
+  nyx-system catalog remove NAME... [--yes] [--or-profile]
+                                          Wherever it's installed (--or-profile: or a
+                                          package in your profile)
+  nyx-system catalog move NAME...|--all [--yes]
+                                          Per-user software installed for everyone,
+                                          into your own profile
+  nyx-system trust-apps                   Trust the Nyx apps in your profile (done
+                                          after each change and at sign-in)
+
+  nyx-system default set DOMAIN KEY VALUE Every user's default (VALUE is TOML)
+  nyx-system default reset DOMAIN KEY
+  nyx-system config show DOMAIN           The merged settings, with layers
+  nyx-system config get DOMAIN KEY [--below-user]
+  nyx-system config set DOMAIN KEY VALUE  Your own setting (VALUE is TOML)
+  nyx-system config reset DOMAIN KEY
+
+Changes to the system are built first and only switched to when the build works.
+
+$ nyx system generations
+   175  1794302926  26.05
+   174  1794283663  26.05
+   173  1794283482  26.05
+   172  1794283089  26.05
+   171  1794201464  26.05

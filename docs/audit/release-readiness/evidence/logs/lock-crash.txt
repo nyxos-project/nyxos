@@ -1,0 +1,36 @@
+session 2, LockedHint no
+after lock-session: LockedHint yes; nyx-lock active; locker pid 
+SIGSEGV the locker
+LockedHint yes; nyx-lock active; locker ; hyprlock 
+SIGKILL whatever is locking
+LockedHint yes; nyx-lock active NRestarts 0; locker ; hyprlock 
+Can a new window appear over the locked session? (launch Calculator)
+radv/amdgpu: failed to initialize device.
+Vulkan: ../src/amd/vulkan/radv_physical_device.c:2451: failed to initialize winsys (VK_ERROR_INITIALIZATION_FAILED)
+Vulkan: Loader Message: setup_loader_term_phys_devs: Call to 'vkEnumeratePhysicalDevices' in ICD /nix/store/ipyckizrd9sxcj2k50pm2v5shdaqinna-mesa-26.1.8/lib/libvulkan_radeon.so failed with error code -3
+MESA: error: vdrm_device_connect failed
+radv/amdgpu: failed to initialize device.
+Vulkan: ../src/amd/vulkan/radv_physical_device.c:2451: failed to initialize winsys (VK_ERROR_INITIALIZATION_FAILED)
+Vulkan: Loader Message: setup_loader_term_phys_devs: Call to 'vkEnumeratePhysicalDevices' in ICD /nix/store/ipyckizrd9sxcj2k50pm2v5shdaqinna-mesa-26.1.8/lib/libvulkan_radeon.so failed with error code -3
+pam_exec(nyx-lock-fingerprint:auth): /nix/store/mca253ipxirnrnxazdra5kv0pqd8qvsi-nyx-biometrics-0.1.0-unstable-2026-11-11/lib/nyx-biometrics/nyx-auth-gate failed: exit code 1
+locker=3026462, hyprlock= nyx-lock=active NRestarts=0 LockedHint=yes
+SIGSEGV nyx-locker
+locker=3026462, hyprlock= nyx-lock=active NRestarts=0 LockedHint=yes
+SIGKILL hyprlock (the fallback)
+locker=3026462, hyprlock= nyx-lock=active NRestarts=0 LockedHint=yes
+launch Calculator while nothing draws the lock
+Started Nyx lock screen.
+pam_exec(nyx-lock-fingerprint:auth): /nix/store/mca253ipxirnrnxazdra5kv0pqd8qvsi-nyx-biometrics-0.1.0-unstable-2026-11-11/lib/nyx-biometrics/nyx-auth-gate failed: exit code 1
+kill -SEGV 3026462: rc=0
+locker= hyprlock=3027173, nyx-lock=active NRestarts=0 LockedHint=yes
+kill -9 hyprlock 3027173
+locker=3027231, hyprlock= nyx-lock=active NRestarts=1 LockedHint=yes
+[1;32mDEBUG [0m]: Updating placeholder text: Password
+[1;32mDEBUG [0m]: onLockLocked called
+/nix/store/0ah02cycpai3f7p9imf3dm1nfgqrz5cw-nyx-lock: line 6: 3027173 Killed                     /nix/store/i8bqhnr0gm4apmvaazyjrzcpmg9s1fp6-hyprlock-0.9.5/bin/hyprlock
+nyx-lock.service: Main process exited, code=exited, status=137/n/a
+nyx-lock.service: Failed with result 'exit-code'.
+nyx-lock.service: Consumed 1.589s CPU time over 56.483s wall clock time, 146.3M memory peak.
+nyx-lock.service: Scheduled restart job, restart counter is at 1.
+Started Nyx lock screen.
+LockedHint no; nyx-lock inactive; locker 

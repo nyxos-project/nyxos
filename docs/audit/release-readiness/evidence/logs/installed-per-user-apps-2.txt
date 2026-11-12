@@ -1,0 +1,31 @@
+$ nyx-system catalog install mail --yes
+  nix profile github:nyxos-project/nyxos/stable#nyx-mail (for you)
+error: An existing package already provides the following file:
+         "/nix/store/4y6s34qkla62xf823iixak4gnwqzzvyy-nyx-calendar-0.1.0-unstable-2026-11-09/share/nyx/autostart"
+       This is the conflicting file from the new package:
+         "/nix/store/hbcjzslysf6n21av53ah4pkn3p77hlii-nyx-mail-0.1.0-unstable-2026-11-09/share/nyx/autostart"
+       To remove the existing package:
+         nix profile remove nyx-calendar
+       The new package can also be added next to the existing one by assigning a different priority.
+       The conflicting packages have a priority of 5.
+       To prioritise the new package:
+         nix profile add github:nyxos-project/nyxos/stable#legacyPackages.x86_64-linux.nyx-mail --priority 4
+       To prioritise the existing package:
+
+$ ls profile share/nyx, systemd
+/home/amy/.nix-profile/share/nyx
+/home/amy/.nix-profile/share/nyx/autostart
+/home/amy/.nix-profile/share/systemd
+/home/amy/.nix-profile/share/systemd/user
+/home/amy/.nix-profile/share/systemd/user/nyx-calendard.service
+
+$ nyx calendar --help
+error: 'calendar' is not a recognised command
+Try 'nix --help' for more information.
+
+$ nyx-calendard reachable?
+Failed to get credentials: No such device or address
+○ nyx-calendard.service - Nyx Calendar reminders
+     Loaded: loaded (/home/amy/.nix-profile/share/systemd/user/nyx-calendard.service; disabled; preset: ignored)
+     Active: inactive (dead)
+

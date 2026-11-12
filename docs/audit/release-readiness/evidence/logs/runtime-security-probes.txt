@@ -1,0 +1,39 @@
+$ id ken
+uid=1000(ken) gid=100(users) groups=100(users),1(wheel),17(audio),26(video),57(networkmanager),174(input)
+
+$ nft ruleset (12100, 22)
+
+$ ~/.config/flux/config.toml (keys only)
+share_home = false
+check_updates = false
+
+$ hyprctl getoption ecosystem:enforce_permissions
+bool: false
+set: false
+
+$ grim (as an ordinary program)
+-rw-r--r-- 1 ken users 195037 Nov 12 00:46 /tmp/silent.png
+
+$ key service spoof via ~/.local/bin/nyx-passwordsd (copy of socat)
+total 0
+drwxr-xr-x  2 root root  60 Nov 11 03:22 .
+drwxr-xr-x 34 root root 860 Nov 11 23:49 ..
+srw-rw-rw-  1 root root   0 Nov 11 03:22 keyd.sock
+{"ok":true,"exists":false}
+exit=0
+
+$ same request from an unlisted program name
+{"ok":false,"error":"refused","message":"this program isn't installed where the suite installs it"}
+2026/11/12 00:47:48 socat[2840484] E read(5, 0x58b00fad6000, 8192): Connection reset by peer
+exit=1
+
+$ iptables -S nixos-fw (firewall backend is iptables)
+-N nixos-fw
+-A nixos-fw -i lo -j nixos-fw-accept
+-A nixos-fw -m conntrack --ctstate RELATED,ESTABLISHED -j nixos-fw-accept
+-A nixos-fw -p tcp -m tcp --dport 22 -j nixos-fw-accept
+-A nixos-fw -p tcp -m tcp --dport 12100 -j nixos-fw-accept
+-A nixos-fw -p udp -m udp --dport 5353 -j nixos-fw-accept
+-A nixos-fw -p udp -m udp --dport 12100 -j nixos-fw-accept
+-A nixos-fw -p icmp -m icmp --icmp-type 8 -j nixos-fw-accept
+-A nixos-fw -j nixos-fw-log-refuse

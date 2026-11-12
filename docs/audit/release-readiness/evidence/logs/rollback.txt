@@ -1,0 +1,39 @@
+$ generations before
+Generation  Build-date           NixOS version                        Kernel   Configuration Revision  Specialisation  Current
+245         2026-11-12 00:56:24  0.1.0                                6.18.62  Unknown                 ['recovery']    True
+244         2026-11-11 23:49:26  0.1.0                                6.18.62  Unknown                 ['recovery']    False
+current: /nix/store/669rs6cqwcg0yv4ky8lsv7kclnz9599x-nyxos-system-nyxos-dev-0.1.0
+
+$ nyx-system rollback (as root, the System Manager path)
+restarting sysinit-reactivation.target
+reloading the following units: dbus-broker.service
+restarting the following units: polkit.service
+the following new units were started: NetworkManager-dispatcher.service
+Back on generation 244
+seconds=4
+current: /nix/store/66kk0n24593wsh3ac3cg8vpj7nmcl5vv-nyxos-system-nyxos-dev-0.1.0
+booted default: system-244-link
+tr: extra operand ‘"’
+Try 'tr --help' for more information.
+shell after rollback: 
+
+$ forward again: switch to generation 244
+switching profile from version 244 to 244
+reloading user units for ken...
+restarting the following user units: nixos-activation.service
+restarting sysinit-reactivation.target
+seconds=2
+current: /nix/store/66kk0n24593wsh3ac3cg8vpj7nmcl5vv-nyxos-system-nyxos-dev-0.1.0
+{"time":1794143192,"scope":"system","request":"rollback","targets":["system"],"changes":[],"generationBefore":167,"generationAfter":166,"result":"rolled-back","reboot":true,"restart":[],"error":null,"seconds":{"total":2}}
+{"time":1794477841,"scope":"system","request":"rollback","targets":["system"],"changes":[],"generationBefore":245,"generationAfter":244,"result":"rolled-back","reboot":true,"restart":[],"error":null,"seconds":{"total":3}}
+
+$ forward again (correct): generation 245
+switching profile from version 244 to 245
+reloading the following units: dbus-broker.service
+restarting the following units: polkit.service
+the following new units were started: NetworkManager-dispatcher.service
+seconds=2
+current: /nix/store/669rs6cqwcg0yv4ky8lsv7kclnz9599x-nyxos-system-nyxos-dev-0.1.0
+profile: system-245-link
+active active active 
+nyx-bar nyx-dock nyx-dock-edge wallpaper

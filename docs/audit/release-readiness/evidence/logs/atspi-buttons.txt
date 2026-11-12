@@ -1,0 +1,8 @@
+at-spi2-registryd at-spi-bus-launcher 
+apps on the a11y bus: 6 ['nyx-notepad', 'nyx-store', 'io.github.design_nexus.nyx.Files', 'nyx-calculator', 'io.github.design_nexus.nyx.Mail', 'io.github.design_nexus.nyx.Settings']
+nyx-notepad: 8 visible buttons, 0 without an accessible name; e.g. []
+nyx-store: 60 visible buttons, 4 without an accessible name; e.g. ['Browse graphics', 'Browse productivity', 'Browse games', 'Browse development']
+io.github.design_nexus.nyx.Files: 26 visible buttons, 0 without an accessible name; e.g. []
+nyx-calculator: 32 visible buttons, 0 without an accessible name; e.g. []
+io.github.design_nexus.nyx.Mail: 29 visible buttons, 0 without an accessible name; e.g. []
+io.github.design_nexus.nyx.Settings: 55 visible buttons, 0 without an accessible name; e.g. []

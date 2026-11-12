@@ -1,0 +1,144 @@
+$ systemd-analyze
+Startup finished in 1.619s (firmware) + 3.491s (loader) + 833ms (kernel) + 6.444s (initrd) + 3.079s (userspace) = 15.467s 
+graphical.target reached after 3.078s in userspace.
+
+$ systemd-analyze blame (top 12)
+6.810s dev-virtio\x2dports-com.redhat.spice.0.device
+6.810s dev-vport5p3.device
+6.810s sys-devices-pci0000:00-0000:00:01.0-0000:01:00.5-virtio5-virtio\x2dports-vport5p3.device
+6.802s dev-vport5p2.device
+6.802s dev-virtio\x2dports-org.linuxcontainers.lxd.device
+6.802s sys-devices-pci0000:00-0000:00:01.0-0000:01:00.5-virtio5-virtio\x2dports-vport5p2.device
+6.801s sys-devices-pci0000:00-0000:00:01.0-0000:01:00.5-virtio5-virtio\x2dports-vport5p4.device
+6.801s dev-vport5p4.device
+6.801s dev-virtio\x2dports-org.spice\x2dspace.webdav.0.device
+6.800s dev-vport5p1.device
+6.800s sys-devices-pci0000:00-0000:00:01.0-0000:01:00.5-virtio5-virtio\x2dports-vport5p1.device
+6.800s dev-virtio\x2dports-org.linuxcontainers.incus.device
+
+$ systemctl --failed
+
+$ id
+uid=1000(amy) gid=100(users) groups=100(users),1(wheel),17(audio),26(video),57(networkmanager),174(input)
+
+$ firewall
+
+We trust you have received the usual lecture from the local System
+Administrator. It usually boils down to these three things:
+
+    #1) Respect the privacy of others.
+    #2) Think before you type.
+    #3) With great power comes great responsibility.
+
+For security reasons, the password you type will not be visible.
+
+-A nixos-fw -p tcp -m tcp --dport 12100 -j nixos-fw-accept
+-A nixos-fw -p udp -m udp --dport 5353 -j nixos-fw-accept
+-A nixos-fw -p udp -m udp --dport 12100 -j nixos-fw-accept
+-A nixos-fw -p icmp -m icmp --icmp-type 8 -j nixos-fw-accept
+
+$ findmnt
+
+$ swap
+]8;;device file or partition path\NAME]8;;\           ]8;;type of the device\TYPE]8;;\      ]8;;size of the swap area\SIZE]8;;\ ]8;;bytes in use\USED]8;;\ ]8;;swap priority\PRIO]8;;\
+/dev/zram0     partition 2.9G   0B    5
+/swap/swapfile file        4G   0B   -2
+
+$ flake.nix
+{
+  description = "This computer's NyxOS";
+
+  inputs = {
+    # The release channel: stable, or testing for what's next.
+    nyxos.url = "github:nyxos-project/nyxos/stable";
+
+    # The system settings Settings, Welcome and the Store change (the Nyx System Manager
+    # and NyxOS Recovery pass it to each rebuild).
+    nyxos-overrides = {
+      url = "path:/etc/nyxos/overrides";
+      flake = false;
+    };
+    nyxos.inputs.nyxos-overrides.follows = "nyxos-overrides";
+  };
+
+  outputs =
+    {
+      self,
+      nyxos,
+      nyxos-overrides,
+      ...
+    }:
+    {
+      nixosConfigurations.nyxos-audit = nyxos.lib.mkSystem {
+        inherit self;
+        overrides = nyxos-overrides;
+        modules = [
+          ./hardware-configuration.nix
+          ./host.nix
+        ];
+      };
+    };
+}
+
+$ nyxos in flake.lock
+{"lastModified":0,"narHash":"sha256-dwZuRrU4bzvtaMIGj8moC9SFzr0IJpenAoKUnrNHS1w=","path":"/nix/store/wn5hsykbd2gbaw05qk9w7jxi8j4swsa5-source","type":"path"}
+{"owner":"nyxos-project","ref":"stable","repo":"nyxos","type":"github"}
+
+$ host.nix
+# This computer's own NyxOS settings, written by the installer. Settings, Welcome and the
+# Store keep their changes in /etc/nyxos/overrides instead.
+{ config, lib, ... }:
+{
+  system.stateVersion = "26.05";
+  networking.hostName = "nyxos-audit";
+  nyx.system.host = "nyxos-audit";
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  # The encrypted disk, opened before the system starts; TRIM reaches the SSD.
+  boot.initrd.systemd.enable = true;
+  boot.initrd.luks.devices.cryptroot.allowDiscards = true;
+
+  # Btrfs with compression; hibernating to the swap file.
+  fileSystems = lib.genAttrs [ "/" "/home" "/nix" "/var/log" ] (_: {
+    options = [ "compress=zstd" "noatime" ];
+  });
+  swapDevices = [ { device = "/swap/swapfile"; } ];
+  boot.resumeDevice = config.fileSystems."/".device;
+  boot.kernelParams = [ "resume_offset=${lib.trim (builtins.readFile ./resume-offset)}" "console=tty1" "console=ttyS0,115200" ];
+
+  nyxos = {
+    user = {
+      name = "amy";
+      description = "Amy Audit";
+    };
+    snapshots.enable = true;
+    # Standalone Nyx apps are each person's own (Welcome offers them).
+    standaloneApps = "per-user";
+  };
+}
+
+$ os-release
+PRETTY_NAME="NyxOS 0.1.0"
+VERSION="0.1.0 (Nightfall)"
+
+$ greetd
+active
+amy      .nyx-backupd-wr
+greeter  dbus-broker
+greeter  dbus-broker-lau
+greeter  gcr-ssh-agent
+greeter  .gvfsd-fuse-wra
+greeter  .gvfsd-wrapped
+greeter  .Hyprland-wrapp
+greeter  .nyx-greeter-wr
+greeter  .nyx-prompt-wra
+greeter  pipewire
+
+$ nix-store closure size
+8.2G	/nix/store
+/dev/mapper/cryptroot   63G  8.7G   53G  15% /
+
+$ free
+               total        used        free      shared  buff/cache   available
+Mem:            5918        1072        3560         120        1719        4846
+

@@ -1,0 +1,16 @@
+{
+  "target": {"kind": "erase", "disk": "/dev/sda"},
+  "passphrase": "<redacted>",
+  "hostname": "nyxos-audit",
+  "person": {"login": "amy", "full_name": "Amy Audit", "password": "<redacted>"},
+  "time_zone": "America/Chicago",
+  "keyboard": "us",
+  "locale": "en_US.UTF-8",
+  "swap_gib": 4,
+  "channel": "stable",
+  "nyxos_source": "/nix/store/wn5hsykbd2gbaw05qk9w7jxi8j4swsa5-source",
+  "hardware": {"cpu": "intel", "virtualMachine": "kvm"},
+  "extra_kernel_params": ["console=tty1", "console=ttyS0,115200"],
+  "efi_guid": "2caad22b-cbc0-47ff-bfed-5bd0dc51d659",
+  "root_guid": "df811350-88e4-4b8a-8d7c-d5367607a5ec"
+}

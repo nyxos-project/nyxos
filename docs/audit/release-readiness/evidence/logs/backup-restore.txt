@@ -1,0 +1,204 @@
+$ nyx-backupctl config import /tmp/audit-backup.toml
+{
+  "ok": true,
+  "version": 1
+}
+
+  rc=0 ms=15
+$ nyx-backupctl password audit --generate
+{
+  "ok": true,
+  "version": 1
+}
+
+  rc=0 ms=31
+$ nyx-backupctl destination audit test
+{
+  "connected": true,
+  "message": "Connection only; use Validate repository separately",
+  "repository_validated": false,
+  "version": 1
+}
+
+  rc=0 ms=3
+$ nyx-backupctl destination audit init audit --confirm
+{
+  "finished": 1794478253,
+  "id": "2730cbfc-3e85-4aa2-b26f-1b3a538d271b",
+  "message": "Completed",
+  "operation": "init",
+  "profile": "audit",
+  "progress": {
+    "stage": "running"
+  },
+  "result": {
+    "id": "59fbb3a2deba17737f730455e58049b936570758adc9217b2529d8976ca30cc9",
+    "message_type": "initialized",
+    "repository": "/home/ken/audit-repo"
+  },
+  "started": 1794478251,
+  "state": "success",
+  "version": 1
+}
+
+  rc=0 ms=2448
+$ nyx-backupctl preview audit
+{
+  "blocked": [],
+  "exclusions": [],
+  "files": 4,
+  "logical_bytes": 5000024,
+  "profile": "audit",
+  "sources": [
+    "/home/ken/audit-src"
+  ],
+  "unreadable": 0,
+  "version": 1,
+  "warnings": [
+    "Logical file size estimate, not compressed transfer size. Files may change after preview.",
+    "Database/VM detection is best effort. Stop applications or export consistent data. Any arbitrary file may contain secrets.",
+    "Recognized credentials, private keys and secret stores excluded. Unknown configuration is included only when selected."
+  ]
+}
+
+  rc=0 ms=10
+$ nyx-backupctl approve audit
+{
+  "ok": true,
+  "version": 1
+}
+
+  rc=0 ms=22
+$ nyx-backupctl backup audit --wait
+{
+  "finished": 1794478254,
+  "id": "56a6070e-062c-4b32-ac3c-c90e34932efb",
+  "message": "Completed",
+  "operation": "backup",
+  "profile": "audit",
+  "progress": {
+    "bytes_done": 5012121,
+    "files_done": 4,
+    "percent_done": 1,
+    "total_bytes": 5012121,
+    "total_files": 4
+  },
+  "result": {
+    "backup_end": "2026-11-12T04:10:54.796396849-06:00",
+    "backup_start": "2026-11-12T04:10:54.112330406-06:00",
+    "data_added": 5017575,
+    "data_added_packed": 5007239,
+    "data_blobs": 9,
+    "dirs_changed": 0,
+    "dirs_new": 9,
+    "dirs_unmodified": 0,
+    "files_changed": 0,
+    "files_new": 4,
+    "files_unmodified": 0,
+    "message_type": "summary",
+    "snapshot_id": "c62c23ca963e4b5cd6e2f89a87c86ff71ac22e923b27b1ed91707493d18102ce",
+    "total_bytes_processed": 5012121,
+    "total_duration": 0.684066435,
+    "total_files_processed": 4,
+    "tree_blobs": 10
+  },
+  "started": 1794478253,
+  "state": "success",
+  "version": 1
+}
+
+  rc=0 ms=1026
+$ nyx-backupctl verify audit --full --wait
+{
+  "finished": 1794478255,
+  "id": "7c44b8c7-ee3d-40b7-ab33-04068bf0e832",
+  "message": "Completed",
+  "operation": "verify-full",
+  "profile": "audit",
+  "progress": {
+    "stage": "running"
+  },
+  "result": {
+    "broken_packs": null,
+    "message_type": "summary",
+    "num_errors": 0,
+    "suggest_prune": false,
+    "suggest_repair_index": false
+  },
+  "started": 1794478255,
+  "state": "success",
+  "version": 1
+}
+
+  rc=0 ms=829
+snapshot: c62c23ca963e4b5cd6e2f89a87c86ff71ac22e923b27b1ed91707493d18102ce
+{
+  "finished": 1794478258,
+  "id": "b22cd387-7fee-44dd-ad9a-a57bfa2a0d6d",
+  "message": "Restore plan ready. Review the files and conflicts before applying.",
+  "operation": "restore-plan",
+  "profile": "audit",
+  "progress": {
+    "selected_paths": 1,
+    "stage": "staging"
+  },
+  "result": {
+    "conflicts": 0,
+    "files": 4,
+    "installed": 0,
+    "plan": "bcad1c04-a3d3-40d6-baed-b2015cc27c97",
+    "skipped": 0,
+    "snapshot": "c62c23ca963e4b5cd6e2f89a87c86ff71ac22e923b27b1ed91707493d18102ce",
+    "state": "ready",
+    "target": "/home/ken/audit-restore",
+    "version": 1
+  },
+  "started": 1794478256,
+  "state": "success",
+  "version": 1
+}
+
+plan id: b22cd387-7fee-44dd-ad9a-a57bfa2a0d6d
+$ nyx-backupctl restore apply audit b22cd387-7fee-44dd-ad9a-a57bfa2a0d6d --confirm b22cd387-7fee-44dd-ad9a-a57bfa2a0d6d --wait
+{
+  "finished": 1794478258,
+  "id": "05ff4903-b50e-422b-8be2-b7f80de2dafb",
+  "message": "restore-apply: No such file or directory (os error 2). Review the restore receipt before retrying or rolling back.",
+  "operation": "restore-apply",
+  "profile": "audit",
+  "progress": {
+    "stage": "preparing"
+  },
+  "result": null,
+  "started": 1794478258,
+  "state": "failed",
+  "version": 1
+}
+
+  rc=1 ms=221
+restored tree:
+   d
+checksum compare (source before damage vs restored):
+1,3d0
+< 370a8c04b8a65bb4494275eec227f1b694db04c76da6b0b8ae88ed1ab19790a3  ./sub/b.txt
+< bec643d1108ea13610b570e988b95dfb0fcbca41effc8e32d543505b330c8c87  ./a.txt
+< f00c3e98b8ed7fd1c0db5bd729771cc7be61415d3512861f5dd45dec3b8ea7fb  ./big.bin
+symlink restored: 
+schedule unit check:
+$ nyx-backupctl schedule audit --enable
+[
+  {
+    "activates": "nyx-backup-audit.service",
+    "last": 0,
+    "left": 1794549625529329,
+    "next": 1794549625529329,
+    "passed": 0,
+    "unit": "nyx-backup-audit.timer"
+  }
+]
+
+  rc=0 ms=353
+OnCalendar=daily
+ExecStart="/nix/store/ipa974q3fiipsmzl7l1zy3gfgzx38pgp-nyx-backup-0.1.0-unstable-2026-11-11/bin/nyx-backupctl" backup audit --wait
+nyx-backup-audit.service
+nyx-backup-audit.timer

@@ -1,0 +1,47 @@
+$ restore inspect
+{
+  "created": 1794478258,
+  "created_directories": [],
+  "empty_directories": [],
+  "entries": [
+    {
+      "action": "create",
+      "adaptation": null,
+      "after": {
+        "digest": "bec643d1108ea13610b570e988b95dfb0fcbca41effc8e32d543505b330c8c87",
+        "kind": "file",
+        "mode": 420,
+        "mtime": 1794478251,
+        "mtime_nsec": 444616700,
+        "size": 12
+      },
+      "before": null,
+      "incoming": "/home/ken/audit-restore/home/ken/audit-src/.nyx-restore-bcad1c04-a3d3-40d6-baed-b2015cc27c97-0.incoming",
+      "message": "",
+      "previous": "/home/ken/audit-res
+$ restore apply
+{"state":"success","message":"Completed; restore and rollback receipts retained.","result":{"conflicts":0,"files":4,"installed":4,"plan":"bcad1c04-a3d3-40d6-baed-b2015cc27c97","skipped":0,"snapshot":"c62c23ca963e4b5cd6e2f89a87c86ff71ac22e923b27b1ed91707493d18102ce","state":"applied","target":"/home/ken/audit-restore","version":1}}
+
+restored tree:
+   d
+  home d
+  home/ken d
+  home/ken/audit-src d
+  home/ken/audit-src/sub d
+  home/ken/audit-src/sub/b.txt f
+  home/ken/audit-src/a.txt f
+  home/ken/audit-src/link l
+  home/ken/audit-src/big.bin f
+checksum compare:
+  IDENTICAL (all 3 files)
+symlink restored: a.txt
+$ restore with policy replace onto the damaged original
+plan d3f2c58a-6f04-4f57-b2c5-df248c5c2ad5
+{"state":"success","message":"Completed; restore and rollback receipts retained."}
+
+1,2c1
+< 370a8c04b8a65bb4494275eec227f1b694db04c76da6b0b8ae88ed1ab19790a3  ./sub/b.txt
+< bec643d1108ea13610b570e988b95dfb0fcbca41effc8e32d543505b330c8c87  ./a.txt
+---
+> 3dff7d61038895144c0eca9d06ac8d067919785a5ba2604db7aef154899a494d  ./a.txt
+  /home/ken/audit-src
