@@ -5,8 +5,11 @@ repository holds the distribution flake: NixOS modules, Home Manager defaults an
 definitions. Nyx applications stay in their own repositories and are packaged by
 [nyx-packages](https://github.com/nyxos-project/nyx-packages).
 
-Status: phase 1, a development VM that boots NixOS 26.05 into a minimal Hyprland
-session. See [docs/dev-vm.md](docs/dev-vm.md) to run it and
+Version: **NyxOS 0.1.0** ([VERSION](VERSION)), on NixOS 26.05. The version is what
+`/etc/os-release`, Settings, Recovery, the boot menus and the live USB
+(`nyxos-0.1.0-installer.iso`, `nix build .#iso`) show; NixOS's own stays in `BUILD_ID`.
+
+Status: phase 1, a development VM that boots into the Nyx desktop. See [docs/dev-vm.md](docs/dev-vm.md) to run it and
 [docs/audit/repository-audit.md](docs/audit/repository-audit.md) for the state of the
 Nyx repositories.
 
@@ -15,6 +18,8 @@ Nyx repositories.
 | Path | Contents |
 | --- | --- |
 | `flake.nix` | Inputs (nixpkgs 26.05, Home Manager, Herdr, nyx-packages) and outputs |
+| `VERSION` | NyxOS's version |
+| `iso` | The live USB: its own image, started by Limine on UEFI and BIOS (`live-image.nix`, `boot-menu.nix`) |
 | `hosts/incus-dev` | The Incus development VM |
 | `modules/nixos` | System defaults: Nix, users, network, audio, desktop, shell, packages, base Nyx apps |
 | `modules/home` | User defaults: Foot, Zsh and the Nyx prompt, Helix, Herdr, Hyprland |

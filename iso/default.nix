@@ -37,8 +37,9 @@ let
 in
 {
   imports = [
-    "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
+    ./live-image.nix
     ./boot-menu.nix
+    ../modules/nixos/release.nix
     # For testing in Incus; it waits for Incus's share and does nothing elsewhere.
     "${modulesPath}/virtualisation/incus-agent.nix"
   ];
@@ -48,14 +49,8 @@ in
   # NyxOS installs on Btrfs; ZFS only makes the image bigger.
   boot.supportedFilesystems.zfs = lib.mkForce false;
   networking.hostName = "nyxos-live";
-  system.nixos.distroName = "NyxOS";
 
-  isoImage = {
-    volumeID = "NYXOS";
-    edition = "installer";
-    makeEfiBootable = true;
-    makeUsbBootable = true;
-    squashfsCompression = "zstd -Xcompression-level 15";
+  nyxos.liveImage = {
     storeContents = [
       example.system.build.toplevel
       pkgs.stdenv
@@ -71,7 +66,6 @@ in
     ++ buildInputs
     ++ lib.unique (sources nyxos);
   };
-  image.baseName = lib.mkForce "nyxos-installer";
 
   nix.settings.experimental-features = [
     "nix-command"

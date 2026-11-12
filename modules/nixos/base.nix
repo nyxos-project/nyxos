@@ -8,10 +8,6 @@ let
   user = config.nyxos.user;
 in
 {
-  # The name in /etc/os-release and the boot menu; the ID stays "nixos" for tools that
-  # check it.
-  system.nixos.distroName = "NyxOS";
-
   nix = {
     settings = {
       experimental-features = [

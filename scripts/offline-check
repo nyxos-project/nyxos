@@ -14,7 +14,7 @@ trap 'rm -rf "$work"' EXIT
 # What the USB's store has: its own system and what it carries.
 iso=$(nix eval --raw .#nixosConfigurations.iso.config.system.build.toplevel.drvPath)
 contents=$(nix build --no-link --print-out-paths .#nixosConfigurations.iso.config.system.build.toplevel \
-  $(nix eval --json .#nixosConfigurations.iso.config.isoImage.storeContents --apply 'map (x: x.drvPath or (toString x))' |
+  $(nix eval --json .#nixosConfigurations.iso.config.nyxos.liveImage.storeContents --apply 'map (x: x.drvPath or (toString x))' |
     python3 -c 'import json,sys; [print(p + ("^*" if p.endswith(".drv") else "")) for p in json.load(sys.stdin)]'))
 nix-store -qR $contents | sort -u > "$work/valid"
 

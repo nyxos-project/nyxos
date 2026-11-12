@@ -14,6 +14,7 @@ in
     inputs.nyx-packages.nixosModules.default
     ./apps.nix
     ./base.nix
+    ./release.nix
     ./boot.nix
     ./network.nix
     ./audio.nix

@@ -3,7 +3,8 @@
 set -euo pipefail
 
 vm=${NYXOS_INSTALL_VM:-nyxos-install-test}
-iso=${NYXOS_ISO:-$HOME/.cache/nyxos-test-tmp/iso/nyxos-installer.iso}
+version=$(cat "$(dirname "${BASH_SOURCE[0]}")/../VERSION")
+iso=${NYXOS_ISO:-$HOME/.cache/nyxos-test-tmp/iso/nyxos-$version-installer.iso}
 volume=${NYXOS_ISO_VOLUME:-nyxos-installer-iso}
 pool=${NYXOS_POOL:-default}
 vm_path=/run/wrappers/bin:/run/current-system/sw/bin
