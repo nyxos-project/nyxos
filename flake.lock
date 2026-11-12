@@ -888,11 +888,11 @@
     "nyx-design": {
       "flake": false,
       "locked": {
-        "lastModified": 1794442882,
-        "narHash": "sha256-jKYHtaWrMf1Wb+0BiCZqzUQ4oxx3LhBLApyAcHQEgfc=",
+        "lastModified": 1794459173,
+        "narHash": "sha256-Xk+08d4t12Cis+CM+q5dbZfApw0CLMQEDBJRzKDppA4=",
         "owner": "design-nexus",
         "repo": "nyx-design",
-        "rev": "8b41fb14ec11fa18199d8f4228d267d94dc8e323",
+        "rev": "e311c2f7b3933baed50d01c668e23930ca0fca2e",
         "type": "github"
       },
       "original": {
@@ -984,11 +984,11 @@
     "nyx-glimpse": {
       "flake": false,
       "locked": {
-        "lastModified": 1794452816,
-        "narHash": "sha256-za6yrUSl+WwLWRQ0z78HVz7dFI3e68IlA3GoFF8YMh0=",
+        "lastModified": 1794462211,
+        "narHash": "sha256-M2dvdEYr8uuDL2TjDYh6qKxsZb7bgiiSeruYiPedyN4=",
         "owner": "design-nexus",
         "repo": "nyx-glimpse",
-        "rev": "4b7a3e6aa994a8d7e1eda28927dcbe94041a4eb3",
+        "rev": "deecabf729a1954bc5252f6b7bf50720cf098180",
         "type": "github"
       },
       "original": {
@@ -1294,11 +1294,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1794461077,
-        "narHash": "sha256-N4sjYAG5JJbBwRmacXCqirhTD2hJcUoZkxiG8u8KiWs=",
+        "lastModified": 1794462500,
+        "narHash": "sha256-JyJ77DIax8JCLkr9kZZfsL5VbzU2n5VdMZD5TxENeD8=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "5079a7bfcd3088f3efe39921fdb78cc196d6de4e",
+        "rev": "d69e87e7fa457be22c5ca7ea53b696165fd87c91",
         "type": "github"
       },
       "original": {
