@@ -32,6 +32,9 @@ in
       # No loading a new kernel over the running one, no line disciplines on demand.
       "kernel.kexec_load_disabled" = harden 1;
       "dev.tty.ldisc_autoload" = harden 0;
+      # A program can debug only its own children, so it can't reach into a running Nyx
+      # program that services trust by its executable.
+      "kernel.yama.ptrace_scope" = harden 1;
       # Files in world-writable sticky folders (/tmp) only open for their owner.
       "fs.protected_fifos" = harden 2;
       "fs.protected_regular" = harden 2;

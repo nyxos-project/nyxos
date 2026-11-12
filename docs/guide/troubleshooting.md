@@ -45,6 +45,13 @@ Share receives on port 53317 (TCP and UDP), which NyxOS opens while Share is on.
 devices must be on the same network, and Share asks before receiving from a device it
 doesn't know.
 
+## My phone doesn't show up in Connected Devices
+
+Nyx Connect (Flux) starts once a phone is paired, and phones can reach this computer
+only on networks you trust. In Settings › Connected Devices, choose Start pairing if
+it's offered, and turn on Trust for your home or work network. A café's or hotel's
+network stays untrusted, so phones can't reach the computer there.
+
 ## Office warns that it can't keep part of a file
 
 Some Word, Excel and PowerPoint content (text boxes, content controls, equations and so

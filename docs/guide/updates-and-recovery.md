@@ -60,9 +60,23 @@ instead of the desktop, without the network, and opens NyxOS Recovery: earlier
 generations, repairing the configuration, a health check, accounts (resetting a
 password), and restoring from a backup.
 
-The Recovery console runs as root and doesn't ask for a password. Anyone who can reach
-the boot menu can use it; the disk's encryption passphrase is what protects an installed
-NyxOS.
+Recovery asks for an administrator's password first (an account that can change system
+settings). If no administrator has a password, it opens without one.
+
+### Forgot your password
+
+Start from the NyxOS USB stick, press Ctrl+Alt+F2 for a console, and reset it there
+(replace `you` with your login name):
+
+```sh
+sudo cryptsetup open /dev/disk/by-label/NyxOS cryptroot   # if the disk is encrypted
+sudo mount -o subvol=@ /dev/disk/by-label/nyxos /mnt
+sudo mount -o subvol=@nix /dev/disk/by-label/nyxos /mnt/nix
+sudo nixos-enter --root /mnt -c 'passwd you'
+sudo umount -R /mnt
+```
+
+Then restart without the stick.
 
 ## Backups
 

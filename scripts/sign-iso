@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Checksums and a signature for a release's installer images:
+#
+#   scripts/sign-iso nyxos-0.1.0-installer.iso [MORE.iso…]
+#
+# Writes SHA256SUMS and SHA256SUMS.sig beside the first image, signed with the release
+# key (NYXOS_RELEASE_KEY, default ~/.ssh/nyxos-release-ed25519) and checked against
+# release-signers. Upload all three with the release.
+set -euo pipefail
+
+repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+key=${NYXOS_RELEASE_KEY:-$HOME/.ssh/nyxos-release-ed25519}
+die() { echo "sign-iso: $*" >&2; exit 1; }
+(($#)) || die "name the images: scripts/sign-iso IMAGE.iso…"
+[[ -r $key ]] || die "no release key at $key (NYXOS_RELEASE_KEY)"
+for f in "$@"; do [[ -f $f ]] || die "no file $f"; done
+
+dir=$(dirname "$1")
+for f in "$@"; do
+  [[ $(dirname "$f") == "$dir" ]] || die "keep the images in one folder"
+done
+cd "$dir"
+names=()
+for f in "$@"; do names+=("$(basename "$f")"); done
+sha256sum -- "${names[@]}" > SHA256SUMS
+rm -f SHA256SUMS.sig
+ssh-keygen -q -Y sign -f "$key" -n file SHA256SUMS
+ssh-keygen -q -Y verify -f "$repo/release-signers" -I nyxos-release -n file -s SHA256SUMS.sig < SHA256SUMS >/dev/null ||
+  die "the signature doesn't verify against release-signers"
+echo "Wrote $dir/SHA256SUMS and $dir/SHA256SUMS.sig"

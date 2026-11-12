@@ -1,0 +1,3 @@
+# Keys that sign NyxOS releases (the known-good/<n> tags on stable, the ISO's SHA256SUMS).
+# Format: ssh-keygen(1) ALLOWED SIGNERS. nyx update checks stable against these.
+nyxos-release namespaces="git,file" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHb5jfukfujYaciSVnnbVlDIUjlfDJDS9cBMpt8FVGIm

@@ -64,12 +64,13 @@ in
   users.users.${user.name} = {
     isNormalUser = true;
     inherit (user) description initialPassword;
+    # Not `input`: it reads every keyboard directly, passwords included. The compositor
+    # gets input devices through logind.
     extraGroups = [
       "wheel"
       "networkmanager"
       "video"
       "audio"
-      "input"
     ];
     openssh.authorizedKeys.keys = user.authorizedKeys;
   };

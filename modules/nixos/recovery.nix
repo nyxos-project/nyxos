@@ -1,6 +1,7 @@
 # NyxOS Recovery: a boot entry beside each generation that starts a text console instead
 # of the desktop, without the network, and runs nyx-recovery as root on the first
-# console (generations, configuration repair, health, accounts, restoring from a backup).
+# console once an administrator signs in (generations, configuration repair, health,
+# accounts, restoring from a backup).
 # Each generation also carries the settings layer and flake.lock it was built from, so
 # going back to it can put them back even if /var/lib is lost.
 {
@@ -47,9 +48,9 @@ in
         networking.wireless.enable = lib.mkForce false;
         networking.useDHCP = lib.mkForce false;
         environment.etc."nyx-recovery-environment".text = "nyx-backup-recovery-v1\n";
-        # Recovery is root without a password, like its own shell: the other consoles too,
-        # and the first one if the console ever stops.
-        services.getty.autologinUser = lib.mkForce "root";
+        # nyx-recovery asks for an administrator's password first; the other consoles
+        # (and the first, if it ever stops) ask for a sign-in as usual.
+        services.getty.autologinUser = lib.mkForce null;
 
         systemd.services.nyx-recovery = {
           description = "NyxOS Recovery";

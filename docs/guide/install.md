@@ -5,8 +5,18 @@ want to keep: installing erases the disk you choose, or uses free space beside W
 
 ## 1. Make the USB stick
 
-Download `nyxos-0.1.0-installer.iso` and write it to a USB stick of 4 GB or more (it
-erases the stick):
+Download `nyxos-0.1.0-installer.iso`, with `SHA256SUMS`, `SHA256SUMS.sig` and
+[`release-signers`](../../release-signers) beside it, and check that it's the image NyxOS
+signed (on Linux or macOS):
+
+```sh
+ssh-keygen -Y verify -f release-signers -I nyxos-release -n file -s SHA256SUMS.sig < SHA256SUMS
+sha256sum -c SHA256SUMS    # macOS: shasum -a 256 -c SHA256SUMS
+```
+
+The first line must say `Good "file" signature for nyxos-release`, the second `OK`.
+
+Then write it to a USB stick of 4 GB or more (it erases the stick):
 
 - On Linux: `sudo dd if=nyxos-0.1.0-installer.iso of=/dev/sdX bs=4M status=progress conv=fsync`,
   with `/dev/sdX` the stick (check with `lsblk`; the wrong device loses its contents).

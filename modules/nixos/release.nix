@@ -44,4 +44,8 @@ in
 
   # NixOS's own manual, its launcher entry and nixos-help: NyxOS has its own help.
   documentation.nixos.enable = false;
+
+  # The keys that sign releases: `nyx update` moves a stable machine only to a revision
+  # with a known-good tag one of them signed.
+  environment.etc."nyxos/release-signers".source = ../../release-signers;
 }
