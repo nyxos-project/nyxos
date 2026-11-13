@@ -174,7 +174,7 @@ in
     hl.bind("SUPER + ALT + F", hl.dsp.window.fullscreen({ mode = "maximized" }), { description = "Full width" })
     hl.bind("SUPER + SHIFT + E", hl.dsp.exec_cmd("uwsm stop"), { description = "Sign out" })
     hl.bind("SUPER + CTRL + L", hl.dsp.exec_cmd("loginctl lock-session"), { description = "Lock" })
-    hl.bind("SUPER + CTRL + ALT + S", hl.dsp.exec_cmd([[sh -c 'pkill -f "bin/\.?orca" || exec orca --replace']]), { description = "Screen reader" })
+    hl.bind("SUPER + CTRL + ALT + S", hl.dsp.exec_cmd([[sh -c 'pkill -x orca || exec orca --replace']]), { description = "Screen reader" })
     hl.bind("SUPER + SHIFT + CTRL + A", launch("nyx agent"), { description = "Coding agent" })
     hl.bind("SUPER + SHIFT + RETURN", hl.dsp.exec_cmd("sh -c 'uwsm app -- gtk-launch \"$(xdg-settings get default-web-browser)\"'"), { description = "Browser" })
 
