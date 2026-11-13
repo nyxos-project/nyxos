@@ -56,15 +56,15 @@
   },
   "chatgpt-desktop": {
     "name": "ChatGPT",
-    "version": "26.1103.31037",
+    "version": "26.1111.21308",
     "recipe": 1,
     "aliases": [
       "chatgpt"
     ],
     "srcs": {
       "x86_64-linux": {
-        "url": "https://persistent.oaistatic.com/codex-app-prod/linux/deb/pool/main/c/chatgpt/chatgpt_26.1103.31037_amd64.deb",
-        "hash": "sha256-Mv7YCtP4yvZm5YYAIjYelwnWSqMYz7GfVI6LRY1PZ5M="
+        "url": "https://persistent.oaistatic.com/codex-app-prod/linux/deb/pool/main/c/chatgpt/chatgpt_26.1111.21308_amd64.deb",
+        "hash": "sha256-S0Q7xVc1ChsZO8LxuuIHyeo8n7XZT3yUpdPbqotVI1I="
       }
     },
     "upstream": {
