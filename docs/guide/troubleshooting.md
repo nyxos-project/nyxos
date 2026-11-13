@@ -7,8 +7,9 @@ Pick an earlier generation in the boot menu. If none works, use a generation's
 
 ## The bar, dock or launcher is gone
 
-They're drawn by one process, which systemd stops restarting if it crashes five times in
-a minute. Open a terminal (Super+Return) and run:
+They're drawn by one process, which systemd stops restarting if it crashes ten times in
+a minute. A notification then says so: **Restart the shell** starts it again. If the
+notification is gone, open a terminal (Super+Return) and run:
 
 ```sh
 systemctl --user reset-failed nyx-shell-qs
@@ -16,11 +17,6 @@ systemctl --user start nyx-shell-qs
 ```
 
 Signing out and in again does the same.
-
-## A new monitor has no bar or dock
-
-Bars and docks appear on monitors that were connected when you signed in. Sign out and in
-again after plugging one in.
 
 ## A setting or software change says it couldn't be built
 

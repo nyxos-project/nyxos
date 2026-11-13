@@ -142,3 +142,27 @@ later:
 | NYX-DOC-001 | user guide in docs/guide (nyxos af19863) | links checked |
 
 Still open from §1: NYX-HW-001 (hardware pass). Everything in §2–5 is unchanged.
+
+### W2: shell, sign-in and accessibility (2026-11-12)
+
+On the dev VM with nyxos `147bb6a` (nyx-packages `1840da5`); not yet on `stable` (G10:
+after W1–W3).
+
+| Finding | Fix | Verified |
+| --- | --- | --- |
+| NYX-SHELL-001 | start limit 10/min; `OnFailure=nyx-shell-failed` notifies with **Restart the shell** (nyx-shell 03f30a2, nyx-packages 29a2a73) | VM: 11 kills, unit failed, notification shown; its restart commands bring the shell back |
+| NYX-SHELL-002 | transient overlays open and close locally while Shell Core is away (nyx-shell 27dca32) | VM: Glimpse opens and closes with Shell Core stopped |
+| NYX-REL-003 | already fixed before W2 | VM: headless output gets bar and dock, both leave on removal |
+| NYX-REL-002 | changes built from staged overrides; leftover staging finished or dropped at start (nyx-system 7374426) | unit test |
+| NYX-SHELL-005 | `nyx-dock --focus`, `nyx-bar --focus` (Super+Ctrl+Alt+D / B), named tiles and items, Page Up/Down and named page dots in the Control Center, OSD as an alert | VM: dock and bar take the keyboard with a focus ring |
+| NYX-A11Y-002, THEME-002 | readability floor in the resolver (secondary/tertiary text 4.5:1, control outlines 3:1, labels on accent 4.5:1), stricter check, Catppuccin roles (nyx-design 0073144), every app on it | Mocha secondary text 7.4:1 (computed); contrast check clean for all built-ins |
+| NYX-APP-GREETER-001 | Try again, and starts over by itself after 10 s (nyx-greeter 040d6fd) | code |
+| NYX-APP-GREETER-002 | layout and Caps Lock under the password | VM: layout shown |
+| NYX-APP-GREETER-003 | Super+Alt+S toggles Orca at login, Super+Ctrl+Alt+S in a session; Orca in the base system and catalog | VM: Orca starts and stops at the greeter, AT-SPI bus present |
+| NYX-HYPR-001, 002 | named workspaces (0.57 gives them no id) get one from their name; fullscreen ones count as their origin (nyx-core 94e0c8a) | VM matrix in nyx-hyprland `docs/testing.md` |
+| NYX-HYPR-003 | labelled experimental; `nyx display` and Settings put an unkept change back themselves | VM: two unconfirmed changes, no hang, but Hyprland's timer didn't revert (still open) |
+| W2-P3 | SHELL-003 Glimpse in the panels group; SHELL-004 brightness polled only while the panel is open; SHELL-007 swipe plugin built for 0.57; SHELL-008/ASSISTANT-005 Aura makes room for Nyx Bar; UX-001 helper launcher entries hidden; UX-003 session named NyxOS (the wordmark is NYX by design, not cut); A11Y-003, MUSIC-002, OFFICE-002 accessible names; CALCULATOR-002 graph in theme colours; AGENTS-002 terminal readable by screen readers, CI added; THEME-003 unreadable theme.toml kept as .broken; THEME-004 clones shallow, 5 min, 200 MB; THEME-005 Mocha fallbacks; REL-001 no duplicate D-Bus listings of our own, CardPopup warning gone | VM: plugins load, our system-bus duplicates gone |
+
+Left as is: the session bus still logs a duplicate for every service, as NixOS lists the
+system profile both in `services.dbus.packages` and through `XDG_DATA_DIRS`; Caps Lock and
+the greeter's Try again weren't exercised at runtime.

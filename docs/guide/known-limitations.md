@@ -12,16 +12,17 @@ tracked as in the [release-readiness audit](../audit/release-readiness/issues.md
 
 ## Desktop
 
-- **Monitors plugged in after signing in** get no bar or dock until you sign in again.
-  (NYX-REL-003)
-- **If the shell crashes repeatedly**, the bar, dock and launcher stay gone until you
-  restart them ([troubleshooting](troubleshooting.md#the-bar-dock-or-launcher-is-gone)).
-  (NYX-SHELL-001)
-- **Screen readers:** the accessibility bus is on and the apps label their controls, but
-  the bar, dock, panels and sign-in screen haven't been made to work with a screen reader
-  yet, and Orca isn't in the catalog. (NYX-SHELL-005, NYX-APP-GREETER-003)
-- **Contrast:** the default theme's secondary text is lighter than accessibility
-  guidelines recommend; Nyx Dark has more contrast. (NYX-A11Y-002)
+- **If the shell crashes repeatedly** (more than 10 times a minute), the bar, dock and
+  launcher stop; a notification offers to start them again
+  ([troubleshooting](troubleshooting.md#the-bar-dock-or-launcher-is-gone)). (NYX-SHELL-001)
+- **Virtual monitors are experimental.** If a layout leaves you stuck,
+  `nyx display virtual disable --all` in a terminal (Super+Return) gives every screen back
+  whole. (NYX-HYPR-003)
+- **Screen readers:** Orca comes with NyxOS (Super+Alt+S at the sign-in screen,
+  Super+Ctrl+Alt+S in a session). The terminal in Nyx Agents reads its screen but doesn't
+  announce new output as it arrives. (NYX-APP-AGENTS-002)
+- **Screen capture rules take effect at sign-in:** after an update that changes them, the
+  session asks about every capture until you sign out and in. (NYX-PRIV-001)
 
 ## Apps
 
