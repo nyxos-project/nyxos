@@ -98,13 +98,13 @@
   },
   "codex": {
     "name": "Codex CLI",
-    "version": "0.134.0",
+    "version": "0.169.0",
     "recipe": 1,
     "aliases": [],
     "srcs": {
       "x86_64-linux": {
-        "url": "https://github.com/openai/codex/releases/download/rust-v0.134.0/codex-package-x86_64-unknown-linux-musl.tar.gz",
-        "hash": "sha256-L0aJgFtTA+8yXADUqLFrZHAETNlWI46hoWN6PEygfYg="
+        "url": "https://github.com/openai/codex/releases/download/rust-v0.169.0/codex-package-x86_64-unknown-linux-musl.tar.gz",
+        "hash": "sha256-O47QkRScxjpZBGufCUvPohzbTdoV7eRBzjabzuSnG6A="
       }
     },
     "upstream": {
