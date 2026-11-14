@@ -145,8 +145,8 @@ Still open from §1: NYX-HW-001 (hardware pass). Everything in §2–5 is unchan
 
 ### W2: shell, sign-in and accessibility (2026-11-12)
 
-On the dev VM with nyxos `147bb6a` (nyx-packages `1840da5`); not yet on `stable` (G10:
-after W1–W3).
+On the dev VM with nyxos `147bb6a` (nyx-packages `1840da5`); on `stable` with W3 as
+`known-good/24`.
 
 | Finding | Fix | Verified |
 | --- | --- | --- |
@@ -170,8 +170,8 @@ the greeter's Try again weren't exercised at runtime.
 ### W3: installer and dual boot (2026-11-14)
 
 On the dev VM with nyxos `d547f6e` (nyx-packages `c1a6225`), every Nyx input at `main`
-except nyx-files (`bc00197`: its `main` fails a test in the build sandbox); not yet on
-`stable`. Installer checks ran on a separate test VM from a fresh ISO, deleted afterwards.
+except nyx-files (`bc00197`: its `main` fails a test in the build sandbox). With W1–W2,
+`stable` is `known-good/24` (nyxos `171f062`, nyx-packages `67911ba`; G10). Installer checks ran on a separate test VM from a fresh ISO, deleted afterwards.
 
 | Finding | Fix | Verified |
 | --- | --- | --- |
