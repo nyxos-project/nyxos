@@ -24,6 +24,11 @@ Then write it to a USB stick of 4 GB or more (it erases the stick):
 
 ## 2. Start from the stick
 
+If Windows is on the computer and uses BitLocker (most Windows 11 laptops do), find its
+recovery key first: in your Microsoft account (aka.ms/myrecoverykey), or the copy you
+printed or saved. Changing Secure Boot, or the new boot menu, can make Windows ask for it
+the next time it starts.
+
 Turn Secure Boot off in the computer's firmware settings, then start from the USB stick
 (usually a key such as F12, F11 or Esc at power-on opens the boot menu). The stick's menu
 starts NyxOS's installer after three seconds.
@@ -49,6 +54,12 @@ USB stick out.
 
 If an install stops, the installer says which step failed and keeps a log in
 `/tmp/nyxos-install.log` on the stick (open a console with Ctrl+Alt+F2 to read it).
+Beside Windows it offers to remove the partitions the install made, so the free space is
+there again for the next try; the disk page offers the same later.
+
+The installer doesn't turn Secure Boot back on or set up unlocking with the TPM: NyxOS
+asks for the disk's passphrase at every start. Secure Boot can be turned on again once
+NyxOS signs its own boot (`nyxos.boot.secureBoot`, see [requirements](requirements.md)).
 
 ## 4. The first start
 
