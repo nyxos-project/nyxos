@@ -31,9 +31,11 @@ in
   '';
 
   # One Foot in the launcher: the server and client entries open no window of their own.
-  xdg.dataFile = lib.genAttrs [ "applications/foot-server.desktop" "applications/footclient.desktop" ] (_: {
-    text = "[Desktop Entry]\nType=Application\nName=Foot\nNoDisplay=true\n";
-  });
+  xdg.dataFile =
+    lib.genAttrs [ "applications/foot-server.desktop" "applications/footclient.desktop" ]
+      (_: {
+        text = "[Desktop Entry]\nType=Application\nName=Foot\nNoDisplay=true\n";
+      });
 
   programs.foot = {
     enable = true;
