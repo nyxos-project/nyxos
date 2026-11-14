@@ -138,7 +138,7 @@
   },
   "cursor-cli": {
     "name": "Cursor Agent",
-    "version": "2026.05.16-0338208",
+    "version": "2026.11.13-eacade1",
     "recipe": 1,
     "aliases": [
       "cursor-agent",
@@ -146,8 +146,8 @@
     ],
     "srcs": {
       "x86_64-linux": {
-        "url": "https://downloads.cursor.com/lab/2026.05.16-0338208/linux/x64/agent-cli-package.tar.gz",
-        "hash": "sha256-E2YeEnyAjbGXe1lpcpZnb/NBWNOoQYRkCfuokvkQsaI="
+        "url": "https://downloads.cursor.com/lab/2026.11.13-eacade1/linux/x64/agent-cli-package.tar.gz",
+        "hash": "sha256-wC5DIfINaR7gOvlNKZSNw6gcbDTnMo2nuxr63kx1gS8="
       }
     },
     "upstream": {
