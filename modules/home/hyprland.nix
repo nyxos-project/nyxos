@@ -76,13 +76,16 @@ let
     lib.concatMapStringsSep "\n" (
       p: "hl.permission(${lua "${lib.escapeRegex "${p}"}/.*"}, \"screencopy\", \"allow\")"
     ) screenCapture
-    # With permissions enforced, Hyprland also asks before loading a plugin.
+    # With permissions enforced, Hyprland also asks before loading a plugin. The plugins
+    # are under /etc (nyx-packages links them there), so their paths, and these rules,
+    # stay the same across updates.
     + lib.optionalString (enabled "shell") ''
 
-      hl.permission(${lua (lib.escapeRegex "${nyxPkgs.nyx-decor}/lib/nyx-decor.so")}, "plugin", "allow")''
+      hl.permission(${lua "^${lib.escapeRegex "${plugins}/nyx-decor.so"}$"}, "plugin", "allow")''
     + lib.optionalString (enabled "dock") ''
 
-      hl.permission(${lua (lib.escapeRegex "${nyxPkgs.nyx-dock-swipe}/lib/nyx-dock-swipe.so")}, "plugin", "allow")'';
+      hl.permission(${lua "^${lib.escapeRegex "${plugins}/nyx-dock-swipe.so"}$"}, "plugin", "allow")'';
+  plugins = "/etc/nyxos/hyprland-plugins";
 
   gesture =
     g:
@@ -327,7 +330,7 @@ in
   # theme, which colours the headerbars.
   + lib.optionalString (enabled "shell") ''
 
-    hl.plugin.load("${nyxPkgs.nyx-decor}/lib/nyx-decor.so")
+    hl.plugin.load("${plugins}/nyx-decor.so")
     local nyx_window_controls = io.open((os.getenv("HOME") or "") .. "/.config/hypr/nyx-window-controls.lua")
     if nyx_window_controls then
       nyx_window_controls:close()
