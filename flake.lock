@@ -1294,11 +1294,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1794648869,
-        "narHash": "sha256-0yTnp/AIApdxHa5kzSgwnMI4YNqav3Tj4+SrSCjRsKY=",
+        "lastModified": 1794649066,
+        "narHash": "sha256-+qqyPXjxuGfPT7y4nqXmif+EeuMKNaUJA8MzOR25Zzo=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "c1a62257711909ee0da0193346e15ef7572529d0",
+        "rev": "67911ba25620e3b8486b19cb9dcc2dd1ae2a8c1f",
         "type": "github"
       },
       "original": {
