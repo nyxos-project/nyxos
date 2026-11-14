@@ -5,13 +5,12 @@
 {
   config,
   lib,
-  pkgs,
   inputs,
   ...
 }:
 let
   cfg = config.nyxos.boot;
-  nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
+  nyxPkgs = config.nyx.packages;
   bootTheme = import ../../themes {
     inherit lib;
     inherit (inputs.nyx-packages.inputs) nyx-design;

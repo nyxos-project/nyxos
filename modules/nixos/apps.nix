@@ -7,7 +7,7 @@
   ...
 }:
 let
-  nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
+  nyxPkgs = config.nyx.packages;
   # Standalone Nyx apps NyxOS used to install for everyone. On a machine installed
   # since they're per user, Welcome puts them in each person's profile instead.
   forEveryone = config.nyxos.standaloneApps == "system";

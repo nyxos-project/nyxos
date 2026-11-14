@@ -105,6 +105,33 @@ up pinned. Add `NYX_SYSTEM=~/Projects/nyx-system` to also build nyx-packages aga
 local nyx-system (the System Manager and the software catalog), and
 `NYX_SOURCES="nyx-welcome=$HOME/Projects/nyx-welcome ..."` for any of its other sources.
 
+The packages built from those local sources are fast builds: no tests and no link-time
+optimization (`nyx.fastBuilds`, from `hosts/incus-dev/fast-builds.json`, which `sync`
+writes in the VM and Git ignores). The rest are the pinned releases, which the binary
+cache has. CI still builds and tests every package in full.
+
+## Working on one app
+
+To see a change to one app without rebuilding the system:
+
+```sh
+scripts/dev-vm app notepad --env NOTEPAD_APP_ID=io.github.design_nexus.nyx.NotepadTest
+scripts/dev-vm app log notepad
+scripts/dev-vm app stop notepad
+```
+
+`app` copies `../nyx-notepad` (or `$NYX_APP_SRC`) to `~/.cache/nyx-dev/nyx-notepad` in the
+VM, keeping its `target/`, and runs `cargo build --workspace` in the package's build
+environment (`nix develop path:/etc/nyxos/flake#nyx-notepad`, the system's toolchain and
+libraries). The build is a debug one and incremental, so after the first it takes seconds.
+It then runs `target/debug/nyx-notepad` (another program with `--bin`, arguments after
+`--`) as the transient user unit `nyx-notepad-dev` in the VM's session, replacing the
+copy it started before. With `NYX_PACKAGES` set, the dev shell comes from that checkout.
+
+Give the app its test app ID with `--env`: under its real ID, a single-instance app hands
+the launch to the installed copy, which is the old version. `scripts/dev-vm shot` shows
+the result.
+
 ## Log in
 
 ```sh

@@ -2,13 +2,12 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 let
   cfg = config.nyxos.desktop;
   session = "uwsm start hyprland-uwsm.desktop";
-  nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
+  nyxPkgs = config.nyx.packages;
   greeter = nyxPkgs.nyx-greeter;
   loginTheme = config.nyxos.theme.login;
   # The greeter's session with this computer's keyboard, hyprctl found without PATH, and
@@ -41,7 +40,7 @@ in
       enable = true;
       withUWSM = true;
       # With workspace swipe wrap-around, which Nyx Settings' Loop around uses.
-      package = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+      package = config.nyx.packages.hyprland;
     };
 
     xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];

@@ -2,13 +2,12 @@
   config,
   lib,
   osConfig,
-  inputs,
   pkgs,
   theme,
   ...
 }:
 let
-  nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
+  nyxPkgs = osConfig.nyx.packages;
 in
 {
   # Foot reads the theme's colours from a file nyx-themed writes; write it before the

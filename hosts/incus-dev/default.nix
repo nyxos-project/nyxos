@@ -32,6 +32,11 @@
   # Welcome-tier apps, enabled here to test their packages.
   nyx = {
     system.host = "incus-dev";
+    # The packages built from local checkouts (NYX_SOURCES, NYX_SYSTEM), written by
+    # scripts/dev-vm sync: no tests or link-time optimization.
+    fastBuilds = lib.optionals (builtins.pathExists ./fast-builds.json) (
+      lib.importJSON ./fast-builds.json
+    );
     fonts.enable = true;
     pdf.enable = true;
     news.enable = true;

@@ -13,7 +13,7 @@
 }:
 let
   cfg = config.nyxos.recovery;
-  nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
+  nyxPkgs = config.nyx.packages;
   settings = "${inputs.nyxos-overrides}/system.json";
   toolPins = "${inputs.nyxos-overrides}/tools.json";
 in

@@ -30,6 +30,12 @@ Usage: scripts/dev-vm <command> [args]
   rebuild [action]    sync, then nixos-rebuild <action> (default: switch)
   packages <args...>  Copy \$NYX_PACKAGES (default ../nyx-packages) to the VM and
                       run nix <args> there, e.g. "packages build .#nyx-fonts"
+  app NAME [--bin BIN] [--env K=V]... [-- ARGS]
+                      Copy ../nyx-NAME (or \$NYX_APP_SRC) to the VM, cargo build it in
+                      its package's dev shell (debug, incremental) and run BIN
+                      (default nyx-NAME) in the VM's session; no system rebuild
+  app stop NAME       Stop the copy app NAME started
+  app log NAME        Show its output
   rollback            Switch back to the previous system generation
   generations         List system generations
   check               sync, then nix flake check in the VM
@@ -68,6 +74,104 @@ push_tree() {
   tar -C "$1" --exclude=.git --exclude='result*' --exclude=./target -cf - . | vm_exec tar -C "$2" -xf -
 }
 
+# One app's development copy (scripts/dev-vm app): its checkout, built in place so
+# target/ survives between runs, and run as a transient user unit in the VM's session.
+dev_dir=/home/$user/.cache/nyx-dev
+
+# Runs a command as $user with their systemd user manager and session bus.
+user_session() {
+  local uid
+  uid=$(vm_exec id -u "$user" </dev/null)
+  vm_exec runuser -u "$user" -- env HOME="/home/$user" XDG_RUNTIME_DIR="/run/user/$uid" \
+    DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" "$@"
+}
+
+app() {
+  local action=run
+  case ${1:-} in
+    stop | log)
+      action=$1
+      shift
+      ;;
+  esac
+  local name=${1:?app name}
+  name=nyx-${name#nyx-}
+  shift
+  local unit=$name-dev
+  case $action in
+    stop)
+      user_session systemctl --user stop "$unit"
+      return
+      ;;
+    log)
+      user_session journalctl --user -u "$unit" -b --no-pager -n "${1:-200}"
+      return
+      ;;
+  esac
+
+  local bin=$name envs=() args=()
+  while (($#)); do
+    case $1 in
+      --bin)
+        bin=${2:?--bin needs a program}
+        shift 2
+        ;;
+      --env)
+        envs+=("--setenv=${2:?--env needs K=V}")
+        shift 2
+        ;;
+      --)
+        shift
+        args=("$@")
+        break
+        ;;
+      *)
+        usage >&2
+        exit 1
+        ;;
+    esac
+  done
+
+  local src=${NYX_APP_SRC:-$repo/../$name}
+  [[ -f $src/Cargo.toml ]] || {
+    echo "no Cargo workspace at $src (set NYX_APP_SRC)" >&2
+    exit 1
+  }
+  src=$(cd "$src" && pwd)
+  local dir=$dev_dir/$name
+
+  # Everything but target/ is replaced, so deleted files don't linger and builds stay
+  # incremental.
+  user_session mkdir -p "$dir"
+  vm_exec find "$dir" -mindepth 1 -maxdepth 1 ! -name target -exec rm -rf {} +
+  tar -C "$src" --exclude=.git --exclude='result*' --exclude=./target -cf - . |
+    user_session tar -C "$dir" -xf -
+
+  # The package's build environment from the system's own flake, so the toolchain and
+  # libraries are the system's. A local nyx-packages checkout replaces the pinned one.
+  local flake_args=(--no-write-lock-file)
+  if [[ -n $packages_repo ]]; then
+    push_tree "$packages_repo" "$packages_dir"
+    flake_args+=(--override-input nyx-packages "path:$packages_dir")
+  fi
+  # Four jobs: rustc takes about 1 GiB each, and the session shares the VM's 8 GiB.
+  user_session env CARGO_HOME="$dev_dir/cargo" bash -c 'cd "$1" && shift && nix develop "$@" --command cargo build --workspace -j 4' \
+    _ "$dir" "path:$flake_dir#$name" "${flake_args[@]}"
+
+  local exe
+  exe=$(vm_exec bash -c 'for d in "$1"/target/debug "$1"/target/*/debug; do [ -x "$d/$2" ] && echo "$d/$2" && exit; done; exit 1' \
+    _ "$dir" "$bin") || {
+    echo "$bin wasn't built in $dir/target (pick one with --bin)" >&2
+    exit 1
+  }
+
+  user_session systemctl --user stop "$unit" 2>/dev/null || true
+  user_session systemctl --user reset-failed "$unit" 2>/dev/null || true
+  user_session systemd-run --user --quiet --collect --unit="$unit" --working-directory="$dir" \
+    "${envs[@]}" "$exe" "${args[@]}"
+  echo "$unit: running $exe (scripts/dev-vm app log ${name#nyx-}, app stop ${name#nyx-})"
+}
+
 # Copies lock files Nix wrote in the VM back to the checkout they belong to.
 pull_lock() {
   if vm_exec test -f "$1/flake.lock"; then
@@ -82,10 +186,17 @@ sync() {
   if [[ -n $packages_repo ]]; then
     push_tree "$packages_repo" "$packages_dir"
     override_args=(--override-input nyx-packages "path:$packages_dir")
+    local fast=()
     for source in $sources; do
       push_tree "${source#*=}" "/etc/nyxos/${source%%=*}"
       override_args+=(--override-input "nyx-packages/${source%%=*}" "path:/etc/nyxos/${source%%=*}")
+      fast+=("\"${source%%=*}\"")
     done
+    # Packages built from local checkouts skip tests and link-time optimization
+    # (hosts/incus-dev reads the list); a source's input is named after its package.
+    if ((${#fast[@]})); then
+      (IFS=, && echo "[${fast[*]}]") | vm_exec tee "$flake_dir/hosts/incus-dev/fast-builds.json" >/dev/null
+    fi
   fi
   # What the Nyx System Manager set on the VM (its overrides layer) stays set.
   if vm_exec test -d /etc/nyxos/overrides; then
@@ -167,6 +278,7 @@ case $cmd in
     vm_exec bash -c 'cd "$1" && shift && nix "$@"' _ "$packages_dir" "$@"
     pull_lock "$packages_dir" "$src"
     ;;
+  app) app "$@" ;;
   ip) vm_ip ;;
   ssh) exec ssh "$user@$(vm_ip)" "$@" ;;
   exec) vm_exec "$@" ;;

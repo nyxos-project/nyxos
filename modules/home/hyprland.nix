@@ -7,12 +7,11 @@
   lib,
   pkgs,
   osConfig,
-  inputs,
   theme,
   ...
 }:
 let
-  nyxPkgs = inputs.nyx-packages.packages.${pkgs.stdenv.hostPlatform.system};
+  nyxPkgs = osConfig.nyx.packages;
   c = theme.colors;
   defaults = builtins.fromTOML (builtins.readFile ../../defaults/hyprland.toml);
   lua = lib.generators.toLua { };
