@@ -17,15 +17,15 @@
   },
   "antigravity-cli": {
     "name": "Antigravity CLI",
-    "version": "1.5.1",
+    "version": "1.5.9",
     "recipe": 1,
     "aliases": [
       "agy"
     ],
     "srcs": {
       "x86_64-linux": {
-        "url": "https://github.com/google-antigravity/antigravity-cli/releases/download/1.5.1/agy_cli_linux_x64_musl.tar.gz",
-        "hash": "sha256-6nSuWn1vVNkfc+QA1r8h9K1EGNQQq4lK1Q7mP7DmRL4="
+        "url": "https://github.com/google-antigravity/antigravity-cli/releases/download/1.5.9/agy_cli_linux_x64_musl.tar.gz",
+        "hash": "sha256-QmkXn/LVp6yZbvfehwK9PdbZxAumY2U0k5X25mcS3kY="
       }
     },
     "upstream": {
