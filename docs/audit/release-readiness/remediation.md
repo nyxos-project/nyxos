@@ -166,3 +166,17 @@ after W1–W3).
 Left as is: the session bus still logs a duplicate for every service, as NixOS lists the
 system profile both in `services.dbus.packages` and through `XDG_DATA_DIRS`; Caps Lock and
 the greeter's Try again weren't exercised at runtime.
+
+### W3: installer and dual boot (2026-11-14)
+
+On the dev VM with nyxos `d547f6e` (nyx-packages `c1a6225`), every Nyx input at `main`
+except nyx-files (`bc00197`: its `main` fails a test in the build sandbox); not yet on
+`stable`. Installer checks ran on a separate test VM from a fresh ISO, deleted afterwards.
+
+| Finding | Fix | Verified |
+| --- | --- | --- |
+| NYX-APP-INSTALLER-002 | the installer's partitions are named ("NyxOS EFI", "NyxOS"); found beside other partitions, the disk page offers **Remove them**, the failure page **Remove what this install made**; `nyx-install remove-leftovers` unmounts first and deletes only those (nyx-installer d408149, 6a6a9ec, c00ecbe) | test VM: install beside a Windows-like layout killed after partitioning; both found and removed, Windows partitions untouched, the free space and a valid plan back |
+| NYX-APP-INSTALLER-003 | warning on the disk page when a BitLocker volume is found and installing alongside; guide: recovery key before Secure Boot changes, no Secure Boot or TPM unlock yet (nyxos ef50592) | test VM: banner shown (lsblk reporting BitLocker) |
+| NYX-APP-INSTALLER-004 | gaps and plans carry the disk's sector size (512 or 4096) (nyx-installer d408149) | test VM: 4096-byte-sector NVMe disk, gap 38.5 GB, EFI exactly 1 GiB; unit tests |
+| NYX-APP-WELCOME-002 | single instance; closing while it applies asks first (nyx-welcome bfaa1bf) | dev VM: a second launch opens no second window; the close question is code only |
+| Found in rollout | Hyprland plugins load from `/etc/nyxos/hyprland-plugins/`, so an update no longer asks to load nyx-decor (the permission rules are read only at Hyprland's start) (nyx-packages c1a6225, nyxos d547f6e) | dev VM after reboot: both plugins loaded, no prompt |
