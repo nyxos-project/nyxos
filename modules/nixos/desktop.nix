@@ -58,6 +58,9 @@ in
     services.udisks2.enable = true;
     # Trash, network places, phones and cameras in Files and the file dialogs.
     services.gvfs.enable = true;
+    # TLS for GIO and libsoup in every app (Maps' tiles, remote images, Store apps):
+    # without it each https:// request fails quietly.
+    services.gnome.glib-networking.enable = true;
 
     # The Incus VM profile is built on the minimal profile, which turns these off.
     xdg = {
