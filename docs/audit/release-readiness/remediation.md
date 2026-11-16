@@ -254,3 +254,31 @@ Choices in [work-plan.md](work-plan.md#w5-advertised-features). Pinned by nyx-pa
 | NYX-APP-MAPS-001 (B) | directions from OSRM's demo server say so under the route, with the Geoapify key as the way round; the key's description says the same (nyx-maps babece6) | build, tests |
 | NYX-APP-GIT-001 | `git-credential-libsecret` (built alone from git's source) as git's helper; `SSH_ASKPASS` = a "Sign in" window (zenity) that git also uses for its username and password questions; gcr's SSH agent was already on (nyxos 3377445) | VM: a credential approved, read back with no prompt, rejected; the window shows git's question with a hidden field. Not yet: a push to a real private remote, and a passphrase key through gcr's agent |
 | NYX-APP-CONTAINERS-001 | rootless (`$XDG_RUNTIME_DIR/podman/podman.sock`) and system Podman sockets as Docker candidates, shown as "Podman 5.x" (nyx-containers 1d40af2, bdaf15a); each user's `podman.socket` started when Podman is on (nyxos 3377445); catalog names Podman (nyx-system 71dd711) | VM with Podman on through the overrides file: socket active at login, a rootless container listed running (CPU, memory, uptime), then as exited once its command ended; engine "Podman 5.8.9" |
+
+## W5b, W5c and W5-P3 (advertised features, the rest), 2026-11-16
+
+Pinned by nyx-packages `b22bca5`; checked in the dev VM rebuilt at those pins.
+
+| Finding | Fix | Verified |
+| --- | --- | --- |
+| NYX-APP-MAIL-001, CALENDAR-001, CONTACTS-001 (G3) | app passwords as the way in: Settings' Add screen lists Fastmail, Nextcloud, Zoho, Other mail (Gmail, iCloud, any IMAP) and CalDAV/CardDAV servers first, Google and Microsoft sign-in last as "Advanced: needs an OAuth client of your own", its setup guide opening the published copy (NyxOS installed none); catalog and READMEs say the same (nyx-settings 038db63, nyx-system b92590a, nyx-mail ccac23d, nyx-calendar 6c7b3a3) | VM screenshot of the Add screen (full and half width) |
+| NYX-APP-REMINDERS-001 | catalog: "Reminders and to-do lists", sync a preview; README's development-branch banner replaced by the status (nyx-reminders ed50fb6) | text. Provider round-trip not run (needs real accounts) |
+| NYX-APP-LYRA-001/002/003 (G1: ships, made ready) | catalog note, README and About say unofficial; CI: locked release build and the tests, the YouTube Music parser fixtures among them, on every push (nyx-lyra 1a90863) | first CI run green; memory on NyxOS (VM), signed out and idle 3 min: 20 processes, PSS 454 MB (Lyra 113, three web processes 187/57/26, network process 68; the rest sandbox helpers under 1 MB each). Signed in not measured (needs the account) |
+| NYX-APP-PASSWORDS-001 (B for now) | catalog makes no autofill claim; publishing the extension waits for the repository reorganization | — |
+| NYX-APP-ASSISTANT-001 (rest) | NyxOS routes for night light, keep awake (Control Center's unit), switching audio output (wpctl), the Theme and Keyboard Shortcuts pages, a private browser window and full width (a typed Hyprland action); the twelve with nothing like them on NyxOS (next wallpaper, bar, gaps, animations, transparency, layout, copy text, touchpad, screensaver, fullscreen desktop, pop window, emoji) left the defaults; Music, Passwords, Write, Calculator and the colour picker open the Nyx apps; a test fails on any default without a NyxOS route (nyx-assistant abd5280, dd11450) | unit tests; VM: keep awake registers and drops the idle inhibitor, the audio switch picks the next sink, night light 4000 K on, 6500 K off. Not spoken to (voice tests wait for you) |
+| NYX-APP-CHAT-001, NYX-VOICE-003 | dictation (push to talk) and reading aloud through Nyx Voice when it runs; whisper.cpp and Piper stay as the fallback (nyx-chat 2161b99) | build, tests. Not spoken to |
+| NYX-APP-PULSE-002 | deferred with Pulse (G1: out of 0.1) | — |
+| NYX-APP-FONTS-001 | Store item (nyx-system b92590a) | VM: `nyx-system catalog` lists nyx-fonts |
+| NYX-APP-FONTS-002 | downloads fall back to Google's google/fonts repository on GitHub; the Google and Nerd Fonts lists are fetched apart and a failing one keeps its saved copy with a message naming it (nyx-fonts 401adc7) | unit tests; the GitHub folder and file names checked against the live repository |
+| NYX-APP-CLOUD-002 | Store note "Set up in Settings › Cloud Storage"; CI runs the unit tests and the integration test, on a private bus where no Secret Service can start (nyx-cloud f364454, f805e64, 6576279) | CI green (it had been red since 2026-11-02: glib's development files were missing, and Ubuntu's rclone is too old) |
+| NYX-APP-TRANSFER-001 | "Copy files to and from servers (SFTP, FTP, WebDAV)." | text |
+| NYX-APP-MEDIA-PLAYER-002, THEATER-003 | Media Player's summary says videos; Theater claims no video types (nyx-theater 93031ea); NyxOS makes Media Player the default for the 19 video types (nyxos b92eb9e) | VM: `xdg-mime query default video/mp4` → Media Player |
+| NYX-APP-NEWS-001 | the README's "reserved" line was stale: sync, discovery and summaries are implemented; README corrected (nyx-news a636915) | code read |
+| NYX-APP-TORRENTS-002 | on NyxOS, Settings › Connection has "Allow incoming connections" (both protocols through `nyx-system apply`, as an administrator); a one-time notice says UPnP opens the port on the router and where to turn it off (nyx-torrents b34afd0) | unit tests; VM: the notice on first run. The switch itself not screenshotted (opening the settings page from the command line didn't work twice) |
+
+Found on the way: hyprsunset wasn't installed, so Settings' Night Light and the Control
+Center's tile couldn't work on NyxOS (now in the desktop's packages, nyxos b92eb9e); and
+turning night light off left hyprsunset reporting the night temperature, so the tile
+stayed on (nyx-control-center c2dc19e). Running Cloud's integration test under a plain
+`dbus-run-session` let gnome-keyring hand it the session's real keyring; the item was
+checked unchanged, and the test now runs on its own bus.
