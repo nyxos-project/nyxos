@@ -36,11 +36,22 @@ nyx flake, nyx develop…
 EOF
 }
 
-# firefox → nixpkgs#firefox, nyx-pdf → the Nyx app; flake references and options as given.
+# The system's release channel, as its flake.lock names NyxOS (github:nyxos-project/nyxos/stable),
+# the one Welcome and the Store install Nyx apps from and System Manager checks.
+channel() {
+  local c
+  c=$(jq -r '(.root // "root") as $r | .nodes[.nodes[$r].inputs.nyxos].original
+      | select(.type == "github") | "github:\(.owner)/\(.repo)" + (if .ref then "/\(.ref)" else "" end)' \
+    /etc/nyxos/flake/flake.lock 2>/dev/null) || c=
+  printf '%s' "${c:-github:nyxos-project/nyxos/stable}"
+}
+
+# firefox → nixpkgs#firefox, nyx-pdf → the Nyx app from the system's channel; flake
+# references and options as given.
 ref() {
   case $1 in
     -* | *'#'* | *:*) printf '%s' "$1" ;;
-    nyx-*) printf 'github:nyxos-project/nyx-packages#%s' "$1" ;;
+    nyx-*) printf '%s#%s' "$(channel)" "$1" ;;
     *) printf 'nixpkgs#%s' "$1" ;;
   esac
 }
