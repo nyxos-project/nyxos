@@ -66,6 +66,30 @@ in
     # its settings allow that (NYX-APP-MAPS-002).
     services.geoclue2.enable = lib.mkDefault true;
 
+    # Videos open in Media Player (Theater is for media servers and claims no file types).
+    # When Media Player isn't installed the default is skipped and any other player is used.
+    xdg.mime.defaultApplications = lib.genAttrs [
+      "video/mp4"
+      "video/x-m4v"
+      "video/x-matroska"
+      "video/webm"
+      "video/quicktime"
+      "video/x-msvideo"
+      "video/vnd.avi"
+      "video/avi"
+      "video/mpeg"
+      "video/mp2t"
+      "video/ogg"
+      "video/x-ogm+ogg"
+      "video/x-flv"
+      "video/3gpp"
+      "video/3gpp2"
+      "video/x-ms-wmv"
+      "video/x-ms-asf"
+      "video/dv"
+      "application/x-matroska"
+    ] (_: lib.mkDefault "io.github.design_nexus.nyx.MediaPlayer.desktop");
+
     # The Incus VM profile is built on the minimal profile, which turns these off.
     xdg = {
       autostart.enable = true;
@@ -106,6 +130,9 @@ in
       '')
       # The screen reader: Super+Alt+S at the login screen, Super+Ctrl+Alt+S in a session.
       pkgs.orca
+      # Night light: Settings' page, the Control Center's tile and the Assistant start it
+      # and set its temperature through hyprctl.
+      pkgs.hyprsunset
     ];
     # Every account's default; a choice in Settings (the user's own dconf) wins, and
     # `gsettings reset` goes back to these. Inter is the suite's font (the Nyx themes'
