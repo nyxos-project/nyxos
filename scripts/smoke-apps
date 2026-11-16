@@ -90,7 +90,12 @@ while IFS=$'\t' read -r id file name class term; do
     geo=$(clients | jq -r --arg a "$got" '.[] | select(.address == $a) | "\(.size[0])x\(.size[1])+\(.at[0])+\(.at[1])"')
     shot="$out/${id%.desktop}.png"
     region=$(echo "$geo" | awk -F'[x+]' '{print $3","$4" "$1"x"$2}')
-    asken "grim -g \"$region\" /tmp/smoke.png" >/dev/null 2>&1 && incus file pull "$vm/tmp/smoke.png" "$shot" >/dev/null 2>&1
+    # Passwords shows the account and server it's signed in to: no screenshot of it, so
+    # evidence folders never carry a real address.
+    case $id in
+      *nyx.Passwords*) ;;
+      *) asken "grim -g \"$region\" /tmp/smoke.png" >/dev/null 2>&1 && incus file pull "$vm/tmp/smoke.png" "$shot" >/dev/null 2>&1 ;;
+    esac
   elif [ -n "$overlay" ]; then
     status=overlay; pass=$((pass + 1))
     asken "grim /tmp/smoke.png" >/dev/null 2>&1 && incus file pull "$vm/tmp/smoke.png" "$out/${id%.desktop}.png" >/dev/null 2>&1

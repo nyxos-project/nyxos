@@ -180,3 +180,64 @@ except nyx-files (`bc00197`: its `main` fails a test in the build sandbox). With
 | NYX-APP-INSTALLER-004 | gaps and plans carry the disk's sector size (512 or 4096) (nyx-installer d408149) | test VM: 4096-byte-sector NVMe disk, gap 38.5 GB, EFI exactly 1 GiB; unit tests |
 | NYX-APP-WELCOME-002 | single instance; closing while it applies asks first (nyx-welcome bfaa1bf) | dev VM: a second launch opens no second window; the close question is code only |
 | Found in rollout | Hyprland plugins load from `/etc/nyxos/hyprland-plugins/`, so an update no longer asks to load nyx-decor (the permission rules are read only at Hyprland's start) (nyx-packages c1a6225, nyxos d547f6e) | dev VM after reboot: both plugins loaded, no prompt |
+
+## Audit 2 (2026-11-14 findings), 2026-11-15
+
+Fixes for [the second audit](../2026-11-14/issues.md), on each repository's `main`, pinned
+by nyx-packages `e807660` (nyxos ee9b985). Before the fixes, the uncommitted shared-crate bump was committed
+in 52 repositories after building all 55 workspaces (NYX-CI-008). VM results below are
+from the dev VM rebuilt at those pins on 2026-11-16; "code" means unit tests and builds only.
+
+| Finding | Fix | Verified |
+| --- | --- | --- |
+| NYX-APP-INSTALLER-005 (P1) | partitions made as "NyxOS EFI (installing)" / "NyxOS (installing)", renamed as the last step; only those count as leftovers; removal names partitions and sizes and asks; a finished NyxOS is described (nyx-installer cfe9575) | test VM from an ISO of nyxos ee9b985, Windows-shaped disk: an install stopped at step 34 left only partitions 4–5 "(installing)", and `remove-leftovers` removed just those (Windows' three intact); the full install beside Windows renamed them "NyxOS EFI"/"NyxOS", `remove-leftovers` then refused ("nothing an unfinished install left"), and the installed system booted through Limine to its login prompt with no failed unit | unit tests (finished beside Windows: no leftovers; both kinds on one disk: only the unfinished) |
+| NYX-INST-004 (P1) | no `/sys/firmware/efi`: Welcome page says how to start in UEFI mode, no Next; `check_here` refuses for the app and `nyx-install run` (nyx-installer cfe9575) | test VM in SeaBIOS mode: no `/sys/firmware/efi`, `nyx-install run` refused with the UEFI message, disk untouched |
+| NYX-APP-BROWSER-001 (P1) | `NyxLocalHosts`: only loopback/private/link-local IP literals and localhost, *.localhost, *.local go direct (nyx-browser 918be89) | `node --test nyx/tests/local_hosts.test.mjs`; released as Browser 1.24.2b-3 (nyx-packages e807660), running in the dev VM |
+| NYX-PKG-010 | `MOZ_SYSTEM_DIR=$out/lib/mozilla`; install check that the manifest is where it leads (nyx-packages 800a428, a847d7b) | VM: with `~/.mozilla/native-messaging-hosts` moved away, Browser started both bridge processes from the package |
+| NYX-PKG-011 | after each profile change, the profile's native-messaging manifests are linked into ~/.mozilla and ~/.config/chromium, dangling ones removed (nyx-system abe07aa) | unit test (the dev VM installs apps system-wide, not in a profile) |
+| NYX-UPD-003 | `nyx` maps `nyx-*` to the system's channel from flake.lock (nyxos ecedc43) | VM: `ref nyx-calculator` → `github:nyxos-project/nyxos/stable#nyx-calculator`, which the system flake evaluates; `htop` → nixpkgs |
+| NYX-APP-CLOUD-003 | waits for the keyring; a missing or wrong password sets rclone.conf and accounts.json aside, starts over and notifies (nyx-cloud 6c92501) | VM: keyring item deleted, `nyx-cloud` restarted → files set aside in `unreadable-<time>/`, fresh config, notification "Cloud couldn't open its saved accounts"; with the item back, it opens them without setting aside |
+| NYX-HYPR-010 | capture rules match `/nix/store/<hash>-<pname>[-<version>]/` (nyxos 64bb182) | VM: the rules match the running Switcher's and grim's current store paths |
+| NYX-APP-MAPS-004 | cause: no glib-networking, so libsoup (libshumate's tile downloads) had no TLS and every tile failed quietly. Maps package gets it (nyx-packages 3a622c3); every session gets it, for all apps (nyxos 412a2de) | VM: GIO's TLS backend is gnutls, the map draws |
+| NYX-APP-ASSISTANT-009 | HUD, Aura and visual back off to a minute while the daemon is away (nyx-assistant c739e41) | VM, daemon stopped: no `listen` process in a minute; session-wide process starts down from 170 to ~0 per 20 s (the 65 pids counted were the measuring shell's). The overlays still run while idle |
+| NYX-SHELL-009 | trusted folders re-read per connection (nyx-shell 431fd03) | tests |
+| NYX-APP-ARCHIVE-004 | names normalised; links through links refused (nyx-archive f107568) | unit test with both shapes |
+| NYX-APP-BROWSER-002 | no hold at start without a VPN last time (`nyx.vpn.in-use`); panel says what a workspace VPN covers (nyx-browser a207502) | parse check; in Browser 1.24.2b-3 |
+| NYX-UPD-004 | revision installed is verified after the upgrade (else rollback); newest release remembered, older refused (nyx-system 604387b) | unit tests |
+| NYX-ARCH-011 | in place when the folder refuses; owner/group kept; O_EXCL temp name (nyx-core a258c31; apps get it with the next crate bump) | unit test |
+| NYX-APP-INSTALLER-006 | colon allowed (nyx-installer 8a09b6f) | unit test |
+| NYX-CI-008 | committed (see above) | 55 workspaces built |
+| NYX-THEME-006 | `sync` removes copies of removed apps (nyx 6b2350c) | scratch run: copy made, app removed, copy cleaned |
+| NYX-UX-005 | `GSK_RENDERER=gl` in 29 apps | builds |
+| NYX-SET-003 | summaries wrap, no repeated titles, generation value uncut, facts wrap, Power subtitle (nyx-settings 7fce7d3) | VM screenshot |
+| NYX-APP-STORE-003 | suite shelf first, complementary essentials, spinner (nyx-store 0add2cb); **icons not done** | VM screenshot (home after loading) |
+| NYX-APP-ACTIVITY-002 | `.NAME-wrapped` unwrapped (nyx-activity 49141ed); names cut to 15 characters (`.Hyprland-wrapp`) taken from argv[0] (nyx-activity 76b8a08) | unit tests; the VM showed the first fix missed cut names |
+| NYX-UX-006 | Mail (1688db1), Passwords (a1520e8, db2dd15), Theater (04a550a), Calendar (d67cce2), Music (526400e), News (cdca752), Maps (fdf0d98; "Not set" smaller so it isn't cut, ff772a2) | VM screenshots (Passwords not shot: see PRIV-007) |
+| NYX-PRIV-007 | owner signed Passwords out in the VM; 15 snapshots made while it was signed in deleted. Passwords had no Sign out while unlocked: added to its Settings (nyx-passwords ce44dc2). Smoke runs skip Passwords' screenshot | `pre-audit2-batch1` (this batch's rollback point) still has it: delete after `stable` is promoted |
+| NYX-SHELL-010, -011 | accept pauses on error; surfaces `Restart=always` (nyx-shell a5d528e) | tests; VM: both units `Restart=always` |
+| NYX-SHELL-012 | one `pw-dump --monitor` (nyx-bar e9598f1) | unit test; stream parsed on the host |
+| NYX-SEC-015 | transient and password/authenticator bodies blanked on close, secure_delete; README (nyx-notification-center 741fa95) | tests |
+| NYX-APP-CALENDAR-004 | scrolls when the view first has room (nyx-calendar 20eadca) | VM screenshot: week view opens at 6 AM |
+| NYX-APP-MAIL-004 | "Nothing seen yet" (nyx-mail c9e0353) | build |
+| NYX-APP-WELCOME-003 | command line handled by the open instance (nyx-welcome e12ce1a) | second launch with `--step` exits 0, first stays |
+| NYX-SET-004 | du, nice, journalctl by name (nyx-settings 0fd7a4a) | VM: no `/usr/bin/` tool path left in the binaries |
+| NYX-A11Y-004 | tooltips on the seven (nyx-chat 453caab, nyx-notes 2aec963, nyx-activity 656eeba) | builds |
+
+Found on the way: Passwords and the Assistant locked nyx-biometrics ceb41b2, which brought a
+second nyx-core into their locks and broke the Nix vendor step (fixed with nyx-biometrics
+03117ea: nyx-passwords 2f247e3, nyx-assistant 983477d). nyx-browser's "Nyx checks" CI fails
+on rustfmt in the bridge, since before these changes.
+
+Also found in the VM: nyx-design's Nyx.Theme fallback was stale after the Messages accent,
+failing nyx-theme's tests (regenerated, nyx-design 57d5bf9). The release workflow for Browser
+had never run: mach needs a commit in `engine/` (nyx-browser f1c0bfd). Files' smoke launch
+now logs a second, D-Bus-activated copy that exits because the name is taken (not in the
+first audit; to look at). Smoke run 2026-11-16: 44 opened, the same 3 without a window as in
+the audit (Foot Server, Foot Client, uuctl).
+
+Installer tests: an ISO must be built from nyxos' committed lock. One built with
+`--override-input nyx-packages` carries a different system from the one its source pins,
+so the install rebuilt ~1000 packages in the live system's memory and stalled (8 GiB) or
+failed (12 GiB); from the committed lock it built 122 small pieces and finished in 8 GiB.
+The test VM's Incus agent doesn't come back after the live ISO restarts (a new VM is
+needed per boot of the ISO).
