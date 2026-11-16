@@ -1,0 +1,47 @@
+ok	Helix	Helix.desktop	|	|
+ok	btop++	btop.desktop	|	|
+NO-WINDOW	Foot Server	foot-server.desktop	|	|
+ok	Foot	foot.desktop	|	|
+NO-WINDOW	Foot Client	footclient.desktop	|	|
+ok	Irlume	io.github.archledger.Irlume.desktop	|	|
+ok	Activity	io.github.design_nexus.nyx.Activity.desktop	|	|
+ok	Agents	io.github.design_nexus.nyx.Agents.desktop	|	|
+ok	Archive	io.github.design_nexus.nyx.Archive.desktop	|	|
+ok	Backup	io.github.design_nexus.nyx.Backup.desktop	|	|
+ok	Browser	io.github.design_nexus.nyx.Browser.desktop	|	|
+ok	Calculator	io.github.design_nexus.nyx.Calculator.desktop	|	|
+ok	Calendar	io.github.design_nexus.nyx.Calendar.desktop	|	|
+ok	Capture	io.github.design_nexus.nyx.Capture.desktop	|	io.github.design_nexus.nyx.Capture | Capture|
+ok	Chat	io.github.design_nexus.nyx.Chat.desktop	|	io.github.design_nexus.nyx.Capture | Capture|
+overlay	Clipboard	io.github.design_nexus.nyx.Clipboard.desktop	|	|
+ok	Contacts	io.github.design_nexus.nyx.Contacts.desktop	|	|
+ok	Containers	io.github.design_nexus.nyx.Containers.desktop	Failed to register: Unable to acquire bus name 'io.github.design_nexus.nyx.Containers'|dbus-:1.5-io.github.design_nexus.nyx.Containers@0.service: Failed with result 'exit-code'.|	|
+ok	Files	io.github.design_nexus.nyx.Files.desktop	|	|
+ok	Fonts	io.github.design_nexus.nyx.Fonts.desktop	|	|
+ok	Git	io.github.design_nexus.nyx.Git.desktop	|	|
+overlay	Glimpse	io.github.design_nexus.nyx.Glimpse.desktop	|	|
+ok	Home	io.github.design_nexus.nyx.Home.desktop	|	|
+ok	Lyra	io.github.design_nexus.nyx.Lyra.desktop	Failed to register: Unable to acquire bus name 'io.github.design_nexus.nyx.Lyra'|dbus-:1.5-io.github.design_nexus.nyx.Lyra@0.service: Failed with result 'exit-code'.|	|
+ok	Mail	io.github.design_nexus.nyx.Mail.desktop	|	|
+ok	Maps	io.github.design_nexus.nyx.Maps.desktop	|	|
+ok	Media Player	io.github.design_nexus.nyx.MediaPlayer.desktop	Realtime error: Could not get pidns for pid 747122: Could not fstatat ns/pid: Not a directory|	|
+ok	Music	io.github.design_nexus.nyx.Music.desktop	|	|
+ok	News	io.github.design_nexus.nyx.News.desktop	|	|
+ok	Notepad	io.github.design_nexus.nyx.Notepad.desktop	|	|
+ok	Notes	io.github.design_nexus.nyx.Notes.desktop	|	|
+ok	Office	io.github.design_nexus.nyx.Office.desktop	|	|
+ok	Passwords	io.github.design_nexus.nyx.Passwords.desktop	Failed to register: Unable to acquire bus name 'io.github.design_nexus.nyx.Passwords'|dbus-:1.5-io.github.design_nexus.nyx.Passwords@0.service: Failed with result 'exit-code'.|	|
+ok	PDF	io.github.design_nexus.nyx.Pdf.desktop	|	|
+ok	Photo Viewer	io.github.design_nexus.nyx.PhotoViewer.desktop	|	|
+ok	Photos	io.github.design_nexus.nyx.Photos.desktop	|	|
+ok	Pulse	io.github.design_nexus.nyx.Pulse.desktop	|	gcr-prompter | Unlock Login Keyring|
+ok	Reminders	io.github.design_nexus.nyx.Reminders.desktop	|	|
+ok	Settings	io.github.design_nexus.nyx.Settings.desktop	|	|
+ok	Share	io.github.design_nexus.nyx.Share.desktop	|	|
+ok	Store	io.github.design_nexus.nyx.Store.desktop	|	|
+ok	Theater	io.github.design_nexus.nyx.Theater.desktop	|	|
+ok	Torrents	io.github.design_nexus.nyx.Torrents.desktop	|	|
+ok	Transfer	io.github.design_nexus.nyx.Transfer.desktop	|	|
+ok	Weather	io.github.design_nexus.nyx.Weather.desktop	Failed to register: Unable to acquire bus name 'io.github.design_nexus.nyx.Weather'|dbus-:1.5-io.github.design_nexus.nyx.Weather@0.service: Failed with result 'exit-code'.|	|
+ok	Welcome	io.github.design_nexus.nyx.Welcome.desktop	|	|
+NO-WINDOW	uuctl	uuctl.desktop	|	|
