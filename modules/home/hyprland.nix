@@ -60,9 +60,9 @@ let
   # Who may read the screen directly: the portal (apps that share the screen ask
   # through it), the grim and wf-recorder that Capture, Chat and the Assistant run, and
   # the Switcher and Dock, which show window thumbnails. Everything else is refused
-  # without asking. Rules match the program's store path, so nixpkgs' grim run by
-  # another program is refused. Hyprland reads these rules only when it starts; a
-  # session that reloads into them asks about every capture until the next sign-in.
+  # without asking. Rules match the program's package by name (any store hash, any
+  # version), so nixpkgs' grim run by another program is refused, and an update that gives
+  # these programs new store paths still matches the rules Hyprland read when it started.
   screenCapture = [
     osConfig.programs.hyprland.portalPackage
     nyxPkgs.nyx-screen-grim
@@ -73,7 +73,11 @@ let
   ++ osConfig.nyxos.desktop.screenCapture or [ ];
   permissions =
     lib.concatMapStringsSep "\n" (
-      p: "hl.permission(${lua "${lib.escapeRegex "${p}"}/.*"}, \"screencopy\", \"allow\")"
+      p:
+      let
+        name = p.pname or (lib.getName p);
+      in
+      "hl.permission(${lua "/nix/store/[a-z0-9]{32}-${lib.escapeRegex name}(-[0-9][^/]*)?/.*"}, \"screencopy\", \"allow\")"
     ) screenCapture
     # With permissions enforced, Hyprland also asks before loading a plugin. The plugins
     # are under /etc (nyx-packages links them there), so their paths, and these rules,
