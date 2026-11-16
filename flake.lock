@@ -840,11 +840,11 @@
     "nyx-containers": {
       "flake": false,
       "locked": {
-        "lastModified": 1794798374,
-        "narHash": "sha256-d/+ASXAntDSsBVPTOFZH8v0FGmOwh55expQO8T4Vxck=",
+        "lastModified": 1794842083,
+        "narHash": "sha256-2zU7icx/LBAU6jZqgfPLnyTbqdu2OW/bECwiQQD6uEY=",
         "owner": "design-nexus",
         "repo": "nyx-containers",
-        "rev": "0156644b55d87fa375bc2d3dbb447be5d6185f8c",
+        "rev": "bdaf15a9eb9c47564ad25d6a4cac95c65c37f3e6",
         "type": "github"
       },
       "original": {
@@ -1096,11 +1096,11 @@
     "nyx-maps": {
       "flake": false,
       "locked": {
-        "lastModified": 1794810777,
-        "narHash": "sha256-6A4Ku+6u6e3BMA/rIP4b0g5g3CET+YMqyrriwWbO/bY=",
+        "lastModified": 1794840392,
+        "narHash": "sha256-BYgEb5mtvK4Nxp30l2+FfT5JE3IIukUlD0R1BmuE9HU=",
         "owner": "design-nexus",
         "repo": "nyx-maps",
-        "rev": "ff772a2aea4022145e6a563fc26bf0e098a2f6d8",
+        "rev": "babece6b3c424fa53d35fccd1e69932ce218c589",
         "type": "github"
       },
       "original": {
@@ -1294,11 +1294,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1794815219,
-        "narHash": "sha256-PA3D4XW0JtXDklsRhxg1QrdrA0wGlUnn8IE3D5Q4smQ=",
+        "lastModified": 1794842149,
+        "narHash": "sha256-RjLg8eW8s/P2gcAaIAN73oPm2oz8Lan/j4coxd5T9Us=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "e80766054c45996681322e019cb3c69a2e1da74b",
+        "rev": "e59e5e015da0bc55d77419a5caff0f448efcd66f",
         "type": "github"
       },
       "original": {
@@ -1486,11 +1486,11 @@
     "nyx-system": {
       "flake": false,
       "locked": {
-        "lastModified": 1794798941,
-        "narHash": "sha256-2/0CbiVjODdFKoiq1Vx8scXmeMhXxfZkFg/5PBvNN6g=",
+        "lastModified": 1794840750,
+        "narHash": "sha256-/MJuqEc9v4O/9GYgsCMmA9gRw22avWvs/yfvTDdLVMI=",
         "owner": "nyxos-project",
         "repo": "nyx-system",
-        "rev": "604387ba51ad03b8612f18ee98944785ac6d81d3",
+        "rev": "71dd711838d7bde738456216cfae62d0bf467afa",
         "type": "github"
       },
       "original": {
@@ -1502,11 +1502,11 @@
     "nyx-theater": {
       "flake": false,
       "locked": {
-        "lastModified": 1794799448,
-        "narHash": "sha256-Tgk8d2M099Dvaj4vJHGkd0GOHFh10i0JeaQcgOFmU2s=",
+        "lastModified": 1794840246,
+        "narHash": "sha256-0boaRav6UIdGbF6U+Z/NnJkZm7rVoIGlOfCXqXoIaNA=",
         "owner": "design-nexus",
         "repo": "nyx-theater",
-        "rev": "04a550ad4f69dff686c6b9959c2b14d9a1ae44a7",
+        "rev": "3a19d027996a6d20ae67c8f976126b11e9aa21bb",
         "type": "github"
       },
       "original": {

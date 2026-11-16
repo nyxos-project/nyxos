@@ -241,3 +241,16 @@ so the install rebuilt ~1000 packages in the live system's memory and stalled (8
 failed (12 GiB); from the committed lock it built 122 small pieces and finished in 8 GiB.
 The test VM's Incus agent doesn't come back after the live ISO restarts (a new VM is
 needed per boot of the ISO).
+
+## W5a (advertised features, first batch), 2026-11-16
+
+Choices in [work-plan.md](work-plan.md#w5-advertised-features). Pinned by nyx-packages
+`e59e5e0` (nyxos 3377445 and the pin after it); checked in the dev VM rebuilt at those pins.
+
+| Finding | Fix | Verified |
+| --- | --- | --- |
+| NYX-APP-THEATER-001 | MPRIS player `org.mpris.MediaPlayer2.nyx_theater`: play/pause/stop, seek, position, volume, playlist next/previous, title and show in the metadata, Raise and Quit (nyx-theater 3a19d02) | unit tests; VM: a local video's metadata (title, length), PlayPause → Paused → Playing, Seek +5 s, the bar's media card shows it, Quit closes Theater. No cover art yet (Theater's posters are cached per view size) |
+| NYX-APP-MAPS-002 | GeoClue on for every desktop (nyxos 3377445); the IP fallback was already off unless turned on in Maps' settings; the no-location message no longer points at a system Location setting (nyx-maps babece6) | VM: GeoClue answers `where-am-i` (beacondb's IP fallback, no Wi-Fi in a VM) |
+| NYX-APP-MAPS-001 (B) | directions from OSRM's demo server say so under the route, with the Geoapify key as the way round; the key's description says the same (nyx-maps babece6) | build, tests |
+| NYX-APP-GIT-001 | `git-credential-libsecret` (built alone from git's source) as git's helper; `SSH_ASKPASS` = a "Sign in" window (zenity) that git also uses for its username and password questions; gcr's SSH agent was already on (nyxos 3377445) | VM: a credential approved, read back with no prompt, rejected; the window shows git's question with a hidden field. Not yet: a push to a real private remote, and a passphrase key through gcr's agent |
+| NYX-APP-CONTAINERS-001 | rootless (`$XDG_RUNTIME_DIR/podman/podman.sock`) and system Podman sockets as Docker candidates, shown as "Podman 5.x" (nyx-containers 1d40af2, bdaf15a); each user's `podman.socket` started when Podman is on (nyxos 3377445); catalog names Podman (nyx-system 71dd711) | VM with Podman on through the overrides file: socket active at login, a rootless container listed, started and stopped in Containers, engine "Podman 5.8.9" |
