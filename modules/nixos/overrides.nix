@@ -137,6 +137,9 @@ in
     services.fwupd.enable = service "fwupd";
     services.avahi.enable = service "avahi";
     virtualisation.podman.enable = service "podman";
+    # Rootless Podman's Docker-compatible socket for each user, which Nyx Containers and
+    # other Docker tools connect to (the unit comes with Podman).
+    systemd.user.sockets.podman.wantedBy = lib.mkIf (services.podman or false) [ "sockets.target" ];
     virtualisation.incus.enable = service "incus";
     # Incus's firewall rules need nftables.
     networking.nftables.enable = lib.mkIf (services.incus or false) (over true);

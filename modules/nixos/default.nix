@@ -19,6 +19,7 @@ in
     ./network.nix
     ./audio.nix
     ./desktop.nix
+    ./git.nix
     ./shell.nix
     ./packages.nix
     ./toolchains.nix

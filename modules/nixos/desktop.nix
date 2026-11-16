@@ -61,6 +61,10 @@ in
     # TLS for GIO and libsoup in every app (Maps' tiles, remote images, Store apps):
     # without it each https:// request fails quietly.
     services.gnome.glib-networking.enable = true;
+    # The desktop's location service (Wi-Fi looked up at beacondb), for apps installed
+    # per user too: without it Maps can only guess from the IP address, and only when
+    # its settings allow that (NYX-APP-MAPS-002).
+    services.geoclue2.enable = lib.mkDefault true;
 
     # The Incus VM profile is built on the minimal profile, which turns these off.
     xdg = {
