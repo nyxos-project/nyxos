@@ -127,24 +127,24 @@ APP-INSTALLER-004 is in W3): **A** fix all · **C** defer. Choice: ___
 
 | ID | Issue | A (recommended) | B | C | Effort | Choice |
 | --- | --- | --- | --- | --- | --- | --- |
-| APP-CONTAINERS-001 | Podman not supported (wording fixed) | Add rootless Podman as a Docker-API socket candidate | Keep "Incus and Docker" | | S–M | |
-| APP-PASSWORDS-001 | No browser autofill (wording fixed) | Publish the extension (AMO, Chrome Web Store), register hosts for per-user installs | Keep without autofill for 0.1 | | M | |
-| APP-MAIL-001, CALENDAR-001, CONTACTS-001 | Google/Microsoft need own OAuth client | Per G3 | | | S–L | |
-| APP-ASSISTANT-001 (rest) | ~18 desktop voice commands still Omarchy's | Map them to NyxOS (nyx-theme, hyprctl Lua, nyx-system) or drop from defaults | Drop unmapped commands from defaults | | M | |
-| APP-PULSE-002 | Calls unverified | Run the interop matrix; drop "with calls" if it fails | Mark calls "preview" | | M | |
-| APP-REMINDERS-001 | Sync rests on an unverified accounts preview | Validate providers; mark sync preview until then | | | M | |
-| APP-LYRA-001/002/003 | Private YouTube API; no CI; memory | Per G1 (Preview); add CI from nyx-music; re-measure memory | Keep in Welcome, add CI | | S–M | |
-| APP-MAPS-001 | Directions use the public OSRM demo server | A sanctioned provider with a key setting | Keep OSRM, label it | | M | |
-| APP-MAPS-002 | Per-user Maps has no GeoClue | GeoClue on for the desktop; ask before IP fallback | | | S | |
-| APP-GIT-001 | HTTPS/SSH push needs setup NyxOS lacks | `git-credential-libsecret` + a GTK askpass by default | In-app credential prompt | | M | |
-| APP-THEATER-001 | No MPRIS | Port Media Player's `mpris.rs` | | | S | |
-| APP-CHAT-001 / VOICE-003 | Chat's own whisper/Piper stack | Use Nyx Voice; keep the old runners as fallback | Remove voice from Chat for 0.1 | | M | |
+| APP-CONTAINERS-001 | Podman not supported (wording fixed) | Add rootless Podman as a Docker-API socket candidate | Keep "Incus and Docker" | | S–M || A |
+| APP-PASSWORDS-001 | No browser autofill (wording fixed) | Publish the extension (AMO, Chrome Web Store), register hosts for per-user installs | Keep without autofill for 0.1 | | M || B for now: publishing waits for the repo reorganization |
+| APP-MAIL-001, CALENDAR-001, CONTACTS-001 | Google/Microsoft need own OAuth client | Per G3 | | | S–L || A |
+| APP-ASSISTANT-001 (rest) | ~18 desktop voice commands still Omarchy's | Map them to NyxOS (nyx-theme, hyprctl Lua, nyx-system) or drop from defaults | Drop unmapped commands from defaults | | M || A |
+| APP-PULSE-002 | Calls unverified | Run the interop matrix; drop "with calls" if it fails | Mark calls "preview" | | M || A |
+| APP-REMINDERS-001 | Sync rests on an unverified accounts preview | Validate providers; mark sync preview until then | | | M || A |
+| APP-LYRA-001/002/003 | Private YouTube API; no CI; memory | Per G1 (Preview); add CI from nyx-music; re-measure memory | Keep in Welcome, add CI | | S–M || A |
+| APP-MAPS-001 | Directions use the public OSRM demo server | A sanctioned provider with a key setting | Keep OSRM, label it | | M || B for now (OSRM, labelled): provider and key to choose |
+| APP-MAPS-002 | Per-user Maps has no GeoClue | GeoClue on for the desktop; ask before IP fallback | | | S || A |
+| APP-GIT-001 | HTTPS/SSH push needs setup NyxOS lacks | `git-credential-libsecret` + a GTK askpass by default | In-app credential prompt | | M || A |
+| APP-THEATER-001 | No MPRIS | Port Media Player's `mpris.rs` | | | S || A |
+| APP-CHAT-001 / VOICE-003 | Chat's own whisper/Piper stack | Use Nyx Voice; keep the old runners as fallback | Remove voice from Chat for 0.1 | | M || A |
 
 P3 **W5-P3** (APP-FONTS-001 packaged but not offered, APP-FONTS-002 undocumented Google
 endpoints, APP-CLOUD-002 Store item with no visible app, APP-TRANSFER-001 Store text wrong,
 APP-MEDIA-PLAYER-002 / APP-THEATER-003 video MIME types and default handler, APP-NEWS-001
 reserved features shown, APP-TORRENTS-002 port blocked / UPnP on): **A** fix all (Fonts
-into the Store) · **B** catalog/MIME items only · **C** defer. Choice: ___
+into the Store) · **B** catalog/MIME items only · **C** defer. Choice: **A**
 
 ## W6 NyxOS correctness (Omarchy leftovers that run on NyxOS)
 
