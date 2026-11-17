@@ -372,3 +372,34 @@ Pinned by nyx-packages `9f3e310` (CI green). The dev VM builds and switches to i
 | NYX-APP-BACKUP-003 | the smoke scripts find Restic on PATH (NyxOS) | VM, against the package's unwrapped binaries (the wrapper puts the real Restic ahead of the script's stalling stand-in): restore-smoke's 18 checks and service-smoke's 4 pass |
 | NYX-APP-WELCOME-001 | Setup's stages and its retry plan out of the UI, tested: stage order, a failed stage stopping the rest, a retry skipping what worked | 3 new tests |
 | NYX-APP-LYRA-002 | done in W5 (CI green on push) | — |
+
+## W10-P3 and W11 (architecture now, documentation), 2026-11-17
+
+W10: ARCH-001, ARCH-002 and the rest of W10-P3 deferred past 0.1 (choice A); PERF-002
+done now. W11: DOC-002 and all of W11-P3 (choice A).
+
+| Finding | Fix | Verified |
+| --- | --- | --- |
+| NYX-PERF-002 | AI Core's OpenAI endpoint reads llama.cpp's `timings` from each forwarded reply (stream or JSON) and records them as its own requests do (nyx-ai `5c68e66`) | 3 new unit tests; not run against a live endpoint (it's off by default) |
+| NYX-DOC-002 | Every shipped README says how the app comes on NyxOS first (with the system; in Welcome and the Store with `nyx install nyx-NAME`; or the Store), then Omarchy's one-line install; opening lines say "for NyxOS and Omarchy" and "the desktop theme"; Settings' title is Settings; the Store's says what it installs from on each; Pulse's says NyxOS doesn't offer it yet (48 repositories) | the audit's count script: 0 READMEs open "for Omarchy"; 0 give only Arch steps (flux, an upstream fork, aside) |
+| NYX-DOC-003 | README: the `nyx` table from `nyx --help`, layout and flake inputs current; dev-vm.md: host steps distro-neutral (ufw and pacman as examples), Nyx Greeter after logging out, the test password marked as the dev VM's only; handoff.md marked historical | read against `nyx.sh`, `desktop.nix`, `flake.nix` |
+| NYX-DOC-004 | nyx-system updates.md: `main` requires no checks, so no tool pin auto-merges; `stable` moves through `promote-stable`. nyx-packages README: Files' 81 skipped tests run in `checks.nyx-files-tests`, Passwords unlocks through Biometrics, Git dependencies by hash, what CI and `stable` require | against branch protection (API), `lib/default.nix`, the skip list |
+| NYX-DOC-005 | `docs/architecture.md` and `docs/security.md`, linked from the README | read against the modules, nyx-packages' module and nyx-system's polkit policy |
+| NYX-SEC-013 | security.nix already says TPM2 unlock is planned; the Passwords recipe's comment corrected | — |
+| NYX-ARCH-008 | nyx-shell NYXOS.md: a "NyxOS today" table from the packages' autostart lists and the real session order; MIGRATION.md and ARCHITECTURE.md current; the 2026-11-07 runs marked as such (nyx-shell `4b6c90e`) | against the recipes |
+| NYX-HYPR-005 | done in W9 | — |
+| App docs (ARCHIVE-003, CALCULATOR-003, MAPS-003, NEWS-002, NOTEPAD-003, OFFICE-003, PDF-003, FONTS-003, TORRENTS-003) | the README pass above; CI for Calculator and Maps and the action manifests for Fonts and Torrents came with W7 and W9; Torrents' pacman hint shows only where pacman is | — |
+| NYX-APP-ASSISTANT-006 | prompts say "on this computer"; SETUP.md opens with how it comes on NyxOS (nyx-assistant `8f6815c`) | assistant-core tests |
+| NYX-APP-CALENDAR-003 | the banner was gone; the Evolution migration noted as Omarchy's; PLAN's per-event time zones and moving events ticked (both in the code) | — |
+| NYX-APP-CONTACTS-002 | README: online books through Nyx Online Accounts; `eds_*` fields renamed `online_*` (nyx-contacts `45beb3d`) | tests; installed |
+| NYX-APP-CONTAINERS-005 | the stale closing line removed; the source header names NyxOS | — |
+| NYX-APP-HOME-003 | the plan lists nyx-homed's eight actions | — |
+| NYX-APP-MAIL-003 | ARCHITECTURE.md: credentials from Nyx Online Accounts' sessions, not GOA | — |
+| NYX-APP-MEDIA-PLAYER-004, MUSIC-001, WEATHER-002 | crate descriptions and source headers name NyxOS (Weather's `--waybar` stays: it's for Omarchy's bar) | — |
+| NYX-APP-NOTES-002 | PLAN: shared crates at the suite's one revision, theme follows the desktop; README the same | — |
+| NYX-APP-PASSWORDS-004 | README links point at `apps/passwords/docs/`; the recipe's comment corrected | — |
+| NYX-APP-PHOTOS-003 | README: follows the desktop theme (setting the background already goes through the theme engine on NyxOS) | — |
+| NYX-APP-PULSE-005 | ARCHITECTURE.md and RISKS.md describe the built-in API pair, the settings override and `secret-tool`; the `chat_list.rs` unwraps were already gone | — |
+| NYX-APP-REMINDERS-002 | the core crate's header: tasks in nyx-pim's store; README: the Evolution note is Omarchy's | — |
+| NYX-APP-SETTINGS-002 | the reset tooltip names NyxOS's defaults on NyxOS; "omarchy" out of the launcher keywords; the Capture page was done in W6 (nyx-settings `a609966`) | tests; installed |
+| NYX-APP-STORE-001 | README describes both platforms' sources; the launcher entry has no Omarchy or Arch wording (nyx-store `a2e9c00`) | `desktop-file-validate`; installed |
