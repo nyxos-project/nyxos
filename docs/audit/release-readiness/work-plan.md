@@ -197,22 +197,22 @@ Choice: A
 
 | ID | Issue | A (recommended) | B | Effort | Choice |
 | --- | --- | --- | --- | --- | --- |
-| PKG-002 + THEME-001 | Apps on 10 nyx-core / 7 nyx-design revisions | Re-pin script + nyx-packages check failing on more than one revision | GTK apps take resolved tokens from nyx-themed at runtime | M | |
-| PKG-001 / APP-FILES-001 | Files' safety tests skipped everywhere | Run the full suite as a NixOS VM test in CI | In the dev VM before each pin bump | M | |
-| CI-004 | App CI never runs on push; 16 repos have none | `push: [main]` everywhere + a minimal check workflow for the 16 | Rely on nyx-packages' package builds | M | |
-| CI-005 | ISO not built by CI; release has no artifacts | ISO in checks + release workflow with SHA256SUMS and signature (G9) | ISO in checks only | M | |
-| DEP-001 | No dependency monitoring | Scheduled `cargo deny check advisories` over every pinned Cargo.lock, opening issues | Renovate | M | |
-| DEP-003 | Nine hand-pinned packages | Table with reasons and review dates + CI check when nixpkgs catches up | | M | |
-| DEP-004 | Forks with single-person upkeep | Upstreaming plan per fork (PrismML, flux, Hyprland, nixpkgs patches) | Document only | L | |
-| HYPR-004 | No compositor patch tests | Run hyprtester for the series in nyx-packages' checks | | M | |
-| APP-BACKUP-003, APP-WELCOME-001, APP-LYRA-002 | Untested critical paths / no CI | Smoke scripts in the VM; Welcome apply tests on a private bus; Lyra CI | | M | |
-| APP-NOTES-001 | Two nyx-core revisions, old AI client | Part of PKG-002 re-pin | | S | |
-| APP-CALCULATOR-001, APP-PASSWORDS-002 | License file / metadata wrong | Add LICENSE; fix recipe license | | S | |
+| PKG-002 + THEME-001 | Apps on 10 nyx-core / 7 nyx-design revisions | Re-pin script + nyx-packages check failing on more than one revision | GTK apps take resolved tokens from nyx-themed at runtime | M | A |
+| PKG-001 / APP-FILES-001 | Files' safety tests skipped everywhere | Run the full suite as a NixOS VM test in CI | In the dev VM before each pin bump | M | A |
+| CI-004 | App CI never runs on push; 16 repos have none | `push: [main]` everywhere + a minimal check workflow for the 16 | Rely on nyx-packages' package builds | M | A |
+| CI-005 | ISO not built by CI; release has no artifacts | ISO in checks + release workflow with SHA256SUMS and signature (G9) | ISO in checks only | M | A |
+| DEP-001 | No dependency monitoring | Scheduled `cargo deny check advisories` over every pinned Cargo.lock, opening issues | Renovate | M | A |
+| DEP-003 | Nine hand-pinned packages | Table with reasons and review dates + CI check when nixpkgs catches up | | M | A |
+| DEP-004 | Forks with single-person upkeep | Upstreaming plan per fork (PrismML, flux, Hyprland, nixpkgs patches) | Document only | L | A |
+| HYPR-004 | No compositor patch tests | Run hyprtester for the series in nyx-packages' checks | | M | A |
+| APP-BACKUP-003, APP-WELCOME-001, APP-LYRA-002 | Untested critical paths / no CI | Smoke scripts in the VM; Welcome apply tests on a private bus; Lyra CI | | M | A |
+| APP-NOTES-001 | Two nyx-core revisions, old AI client | Part of PKG-002 re-pin | | S | A |
+| APP-CALCULATOR-001, APP-PASSWORDS-002 | License file / metadata wrong | Add LICENSE; fix recipe license | | S | A |
 
 P3 **W9-P3** (PKG-003..006, CI-006, CI-007, DEP-002, DEP-005, HYPR-005..009,
 APP-ASSISTANT-007, APP-GLIMPSE-002, APP-SETTINGS-003, APP-CLIPBOARD-002, APP-HOME-001,
 APP-MAPS-003, APP-TRANSFER-002, APP-CALCULATOR-003): **A** fix all · **B** CI-007, DEP-002,
-PKG-005 (debug symbols), HYPR-007 only · **C** defer. Choice: ___
+PKG-005 (debug symbols), HYPR-007 only · **C** defer. Choice: A
 
 ## W10 Architecture
 

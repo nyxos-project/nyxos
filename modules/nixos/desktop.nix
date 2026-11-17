@@ -39,8 +39,11 @@ in
     programs.hyprland = {
       enable = true;
       withUWSM = true;
-      # With workspace swipe wrap-around, which Nyx Settings' Loop around uses.
+      # With nyx-hyprland's patch series (workspace swipe wrap-around, which Nyx Settings'
+      # Loop around uses; virtual monitors; fullscreen on its own workspace).
       package = config.nyx.packages.hyprland;
+      # The screen-sharing portal from the same Hyprland flake as the compositor.
+      portalPackage = config.nyx.packages.xdg-desktop-portal-hyprland;
     };
 
     xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];

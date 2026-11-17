@@ -17,6 +17,7 @@ final: prev: {
     inherit (prev) cursor-cli;
   };
   grok-build = final.callPackage ../grok-build { pin = pins.grok-build; };
+  herdr = final.callPackage ../herdr { pin = pins.herdr; };
   herdr-app = final.callPackage ../herdr-app { pin = pins.herdr-app; };
   opencode = final.callPackage ../opencode { pin = pins.opencode; };
 }

@@ -173,10 +173,24 @@ app() {
 }
 
 # Copies lock files Nix wrote in the VM back to the checkout they belong to.
+# The hash of a flake.lock, or "none".
+lock_hash() {
+  if [[ -f $1 ]]; then sha256sum <"$1" | cut -d' ' -f1; else echo none; fi
+}
+
+# Copies a flake.lock Nix rewrote in the VM ($1) back to the checkout it came from ($2),
+# whose lock hashed $3 when it was pushed: only if the VM changed it, and never over an
+# edit made on the host meanwhile.
 pull_lock() {
-  if vm_exec test -f "$1/flake.lock"; then
-    incus file pull "$vm$1/flake.lock" "$2/flake.lock"
+  vm_exec test -f "$1/flake.lock" || return 0
+  local vm_hash
+  vm_hash=$(vm_exec sha256sum "$1/flake.lock" | cut -d' ' -f1)
+  [[ $vm_hash == "$3" ]] && return 0
+  if [[ $(lock_hash "$2/flake.lock") != "$3" ]]; then
+    echo "dev-vm: $2/flake.lock changed on the host while the VM changed it too; the VM's copy is left at $vm$1/flake.lock" >&2
+    return 1
   fi
+  incus file pull "$vm$1/flake.lock" "$2/flake.lock"
 }
 
 override_args=()
@@ -205,10 +219,12 @@ sync() {
 }
 
 rebuild() {
+  local pushed
+  pushed=$(lock_hash "$repo/flake.lock")
   sync
   vm_exec nixos-rebuild "${1:-switch}" --flake "path:$flake_dir#$host" "${override_args[@]}"
   # An overridden input must not end up in flake.lock.
-  [[ -n $packages_repo ]] || pull_lock "$flake_dir" "$repo"
+  [[ -n $packages_repo ]] || pull_lock "$flake_dir" "$repo" "$pushed"
   disk_check
 }
 
@@ -274,9 +290,10 @@ case $cmd in
   packages)
     src=${packages_repo:-$repo/../nyx-packages}
     src=$(cd "$src" && pwd)
+    pushed=$(lock_hash "$src/flake.lock")
     push_tree "$src" "$packages_dir"
     vm_exec bash -c 'cd "$1" && shift && nix "$@"' _ "$packages_dir" "$@"
-    pull_lock "$packages_dir" "$src"
+    pull_lock "$packages_dir" "$src" "$pushed"
     ;;
   app) app "$@" ;;
   ip) vm_ip ;;

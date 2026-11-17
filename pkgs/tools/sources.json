@@ -177,6 +177,26 @@
       }
     }
   },
+  "herdr": {
+    "name": "Herdr TUI",
+    "version": "0.9.5",
+    "recipe": 1,
+    "aliases": [],
+    "srcs": {
+      "x86_64-linux": {
+        "url": "https://github.com/herdrdev/herdr/releases/download/v0.9.5/herdr-linux-x86_64",
+        "hash": "sha256-FNnovItKngEY13wyJm921GHwm0A0LrI3UpYL2J9Zkp0="
+      }
+    },
+    "upstream": {
+      "kind": "github",
+      "repo": "herdrdev/herdr",
+      "tag": "v{version}",
+      "assets": {
+        "x86_64-linux": "herdr-linux-x86_64"
+      }
+    }
+  },
   "herdr-app": {
     "name": "Herdr",
     "version": "0.1.13",

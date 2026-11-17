@@ -1,5 +1,5 @@
 # Installed, not started: Foot opens a plain shell and Herdr runs on demand.
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 {
-  home.packages = [ inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.herdr ];
+  home.packages = [ pkgs.herdr ];
 }
