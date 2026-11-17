@@ -291,6 +291,23 @@ in
   + lib.optionalString (enabled "files") ''
     hl.bind("SUPER + SHIFT + F", launch("nyx-files"), { description = "File manager" })
   ''
+  # Dictation with Nyx Voice: hold F9 (or Right Alt) to talk, Super+Ctrl+X to start and
+  # stop. The text is typed into the focused window. The release half runs only after
+  # its own press, ignores modifiers and doesn't consume the key, as Omarchy's hold binds.
+  + lib.optionalString (enabled "voice") ''
+
+    local function dictation_hold(keys, options)
+      local held = false
+      local press = { description = "Start dictation (push to talk)" }
+      local release = { release = true, transparent = true, ignore_mods = true, non_consuming = true, description = "Stop dictation (push to talk)" }
+      for k, v in pairs(options or {}) do press[k] = v end
+      hl.bind(keys, function() held = true; hl.exec_cmd("nyx-voice dictate start") end, press)
+      hl.bind(keys, function() if held then held = false; hl.exec_cmd("nyx-voice dictate stop") end end, release)
+    end
+    dictation_hold("F9")
+    dictation_hold("ALT + Alt_R", { ignore_mods = true })
+    hl.bind("SUPER + CTRL + X", hl.dsp.exec_cmd("nyx-voice dictate toggle"), { description = "Toggle dictation" })
+  ''
   # Hold Alt+Space to talk to the Assistant (the repeating bind is the hold signal);
   # Super+Shift+Escape stops everything it is doing.
   + lib.optionalString (enabled "assistant") ''
@@ -305,6 +322,28 @@ in
       size = { 820, 620 },
       no_initial_focus = true,
     })
+  ''
+  # Nyx Capture's webcam picture-in-picture (mpv, app id WebcamOverlay-SIZE): floating,
+  # pinned in the bottom-right corner, never taking focus. The 8:9 portrait sizes scale
+  # with the monitor's height. For every install, as Capture can come from a profile.
+  + ''
+
+    for _, s in ipairs({
+      { "small", "(monitor_h*4/25)", "(monitor_h*9/50)" },
+      { "medium", "(monitor_h*2/9)", "(monitor_h/4)" },
+      { "large", "(monitor_h*3/10)", "(monitor_h*27/80)" },
+    }) do
+      hl.window_rule({
+        name = "nyx-webcam-overlay-" .. s[1],
+        match = { class = "^WebcamOverlay-" .. s[1] .. "$", title = "^WebcamOverlay$" },
+        float = true,
+        pin = true,
+        no_initial_focus = true,
+        no_dim = true,
+        size = { s[2], s[3] },
+        move = { "(monitor_w-" .. s[2]:sub(2, -2) .. "-40)", "(monitor_h-" .. s[3]:sub(2, -2) .. "-40)" },
+      })
+    end
   ''
   # Switcher's shortcuts, which it writes from its settings.
   + lib.optionalString (enabled "switcher") ''

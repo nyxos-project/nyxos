@@ -78,6 +78,8 @@ in
       themes.enable = lib.mkDefault true;
       # Nyx AI Core: the local model runtime the apps share (starts on first use).
       ai.enable = lib.mkDefault true;
+    # Nyx Voice: dictation (F9) and speech for apps, on this computer (starts on first use).
+    voice.enable = lib.mkDefault true;
       locker.enable = lib.mkDefault true;
       prompt.enable = lib.mkDefault true;
       # Nyx Connect: upstream Flux's fluxd, shown in Settings › Devices and the Control Center.

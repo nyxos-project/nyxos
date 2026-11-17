@@ -282,3 +282,38 @@ turning night light off left hyprsunset reporting the night temperature, so the 
 stayed on (nyx-control-center c2dc19e). Running Cloud's integration test under a plain
 `dbus-run-session` let gnome-keyring hand it the session's real keyring; the item was
 checked unchanged, and the test now runs on its own bus.
+
+## W6 and W6-P3 (Omarchy leftovers that run on NyxOS), 2026-11-16
+
+Pinned by nyx-packages `2e1eff4`; checked in the dev VM rebuilt at those pins.
+
+| Finding | Fix | Verified |
+| --- | --- | --- |
+| NYX-APP-SETTINGS-001 | VPN: providers whose app is AUR-only import their WireGuard or OpenVPN file on NyxOS (no `omarchy-pkg-*`); OpenVPN detected through `/etc/NetworkManager/VPN`; NyxOS ships NetworkManager's OpenVPN plugin (nyx-settings 2ee5cfa, nyxos network.nix) | VM: `/etc/NetworkManager/VPN/nm-openvpn-service.name` present. Import with a real `.ovpn` not run |
+| NYX-APP-CONTAINERS-002, -003, -004 | on NixOS, Fix is Open Store at the Docker or Incus catalog item (service, group and consent there); no VTE check in a Nix build; group checks and the catalog's consent say docker, incus-admin and libvirtd amount to administrator rights; the user from the user ID, no literal name (nyx-containers 282867e, nyx-system 9601ad1) | unit tests (catalog consent text, NixOS commands) |
+| NYX-APP-BIOMETRICS-001, -003 | a System Manager setting `biometrics` (nyx.biometrics: face, fingerprint, keys and where each signs in), checked as the module checks it; Settings' Sign-in page on NyxOS reads `/etc/nyx/biometrics.json`, changes go through the System Manager, "Turn on…" instead of yay/pacman, no helper install, Apply banners or PAM undo (nyx-system ee28efd, nyx-settings 2ee5cfa, 56c72d2, nyxos overrides.nix) | unit tests; VM screenshot: the table shows the configuration (sudo face then fingerprint, lock screen fingerprint then face), NyxOS footer, no terminal actions. A change applied from the page not run |
+| NYX-APP-BIOMETRICS-002 | Nyx Prompt: "Use password instead", or typing, while a face, finger or key is awaited ends the conversation and starts it again password first; the gate skips the methods for administrator prompts while the person's fresh marker (`/run/user/UID/nyx-auth/password-first`) is there; skipping only ever leaves the password (nyx-greeter 85cf308, nyx-biometrics f0ae8ad) | unit tests; VM: the gate skips for polkit-1 with the marker, not without. With a reader not run (the VM has none). sudo in a terminal still waits for its fingerprint timeout |
+| NYX-APP-BIOMETRICS-004 | already fixed (trusted-bin.system) | VM: `/etc/nyx/trusted-bin` lists Biometrics' bin |
+| NYX-APP-CAPTURE-001 | NyxOS's Hyprland rules float, pin and place WebcamOverlay-small/medium/large bottom right without focus; Settings' Capture page opens Nyx Capture's settings instead of a warning about Omarchy's tools (nyxos hyprland.nix, nyx-settings 637f36b) | rules in the rendered hyprland.lua. Overlay with a webcam not run |
+| NYX-APP-PHOTOS-001 | Set as background through nyx-themed's new `SetWallpaper` (Omarchy's command where installed) (nyx-system 9a40ba7, nyx-photos 442a69f) | D-Bus test; VM: sets the wallpaper, refuses a missing file, `""` goes back to the theme's |
+| NYX-APP-CLIPBOARD-001, NYX-APP-AGENTS-001 | Settings reads `nyx-settings/extensions` in `$XDG_DATA_DIRS` (user's own win, packaged ones can be turned off, not removed); Clipboard's, Passwords' and Glimpse's pages packaged (nyx-settings 2ee5cfa, nyx-packages 2e1eff4) | VM: Agents, Clipboard, Glimpse and Passwords listed; Agents and Clipboard tabs in Settings |
+| NYX-VOICE-001 | F9 and Right Alt held, Super+Ctrl+X bound; Nyx Voice on by default; Settings offers the speech model (650 MB) when it's missing; a key press without it says so in a notification (nyxos hyprland.nix, apps.nix, nyx-voice 81fb1e5, nyx-settings 27742a3) | VM: the five binds, `nyx-voiced.socket` active. Not spoken to |
+| NYX-APP-BACKUP-002, -004 | no offline boot kit on NixOS; Restic from Arch's or NixOS's system folders; package handoff marked manual (install from the Store) (nyx-backup 6e79f14) | unit tests |
+| NYX-APP-ACTIVITY-001 | already fixed by the Startup page's rewrite (Omarchy's entries only when its file exists) | code read |
+| NYX-APP-FILES-002 | the media-plugin hint names Arch only where pacman is; dead "Follow Omarchy" search entries removed (nyx-files 6cdc8d15, 69f49a64) | package build (its locale test caught two missing translations) |
+| NYX-APP-GIT-002 | no editor set opens the folder; terminal error without Omarchy (nyx-git 860b780) | build |
+| NYX-APP-WEATHER-001 | NyxOS: no nyx.lua rule or Hyprland reload; the window is floated live when it opens (nyx-weather 2bb699f) | build |
+| NYX-APP-PULSE-003 | Telegram device name from os-release ("Nyx Desktop (NyxOS 0.1.0)") (nyx-pulse fd2cbdf) | unit test |
+| NYX-APP-ASSISTANT-008 | package and admin tools offered only where pacman is (nyx-assistant 433063f) | unit tests (one canvas test fails before and after the change) |
+| NYX-APP-SHARE-002 | the sandbox binds the Nix store and system profile on NixOS; bwrap on the package's PATH (nyx-share 9c0b141) | unit tests. An extension in the Share Sheet not run |
+| NYX-APP-STORE-002 | a failing later step says what was already done ("System changes applied; Flathub failed: …") (nyx-store f0b3497) | unit tests |
+| NYX-APP-PASSWORDS-003 | the newest Hyprland instance's socket when the daemon lacks HYPRLAND_INSTANCE_SIGNATURE (nyx-passwords a8be05a) | build (no live Passwords tests) |
+| NYX-SET-001 | resets name NyxOS's defaults (nyx-settings 2ee5cfa) | build |
+| NYX-ARCH-009 | minimize was already left out on NyxOS; the Control Center's switches are the `toggles` provider (`toggles.*` ops, old names still answered) (nyx-control-center c0fa3e4) | tests |
+| NYX-UX-002 | one offline message for rebuilds, Flathub and Nix profile installs, the Store's Flathub header and Nyx AI downloads (nyx-system 9601ad1, nyx-store f0b3497, nyx-ai 277b9a5) | unit test of the matcher. Not run offline |
+| NYX-UX-004 | `nyx-system generations` prints local dates (nyx-system 9601ad1) | VM |
+
+Found on the way: the shell's "stopped" notice fired after every crash, also one systemd
+restarted at once (the old shell crashed in Qt's icon loader during a switch); it now
+waits and stays quiet when the shell is back (nyx-packages 2e1eff4; VM: a crash restarts
+the shell without the notice).

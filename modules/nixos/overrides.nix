@@ -158,8 +158,21 @@ in
       nvidia.proprietary = over (hw.nvidiaProprietary or false);
     };
 
-    # Nyx apps turned on or off; a name nyx-packages doesn't have fails the build.
-    nyx = lib.mapAttrs (_: on: { enable = over on; }) (o.nyxApps or { });
+    # Nyx apps turned on or off; a name nyx-packages doesn't have fails the build. And
+    # face, fingerprint and security-key sign-in, from Settings › Sign-in & Security.
+    nyx = lib.mkMerge [
+      (lib.mapAttrs (_: on: { enable = over on; }) (o.nyxApps or { }))
+      (lib.mkIf (o ? biometrics) {
+        biometrics = {
+          enable = over o.biometrics.enable;
+          face = over (o.biometrics.face or "none");
+          allowWebcamFace = over (o.biometrics.allowWebcamFace or false);
+          fingerprint.enable = over (o.biometrics.fingerprint or false);
+          securityKey.enable = over (o.biometrics.securityKey or false);
+          surfaces = over (o.biometrics.surfaces or { });
+        };
+      })
+    ];
 
     users.groups = lib.mapAttrs (_: users: { members = users; }) (o.groups or { });
 

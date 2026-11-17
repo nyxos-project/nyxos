@@ -152,22 +152,22 @@ Depends on G2.
 
 | ID | Issue | A (recommended) | B | Effort | Choice |
 | --- | --- | --- | --- | --- | --- |
-| APP-SETTINGS-001 | VPN install/import run Omarchy/pacman | Gate on Omarchy; NyxOS uses the catalog/System Manager and `nmcli` | Hide on NyxOS | S | |
-| APP-CONTAINERS-002 | "Fix" runs Arch commands via pkexec | Detect NixOS; link to catalog items; drop VTE check | | S | |
-| APP-CONTAINERS-003 | Root-equivalent groups not explained | Risk sentence per group; Fix goes through the catalog | | S | |
-| APP-BIOMETRICS-001 | Sign-in page shows Arch-only actions | NyxOS branch: configure surfaces through the System Manager | Read-only status on NyxOS | M | |
-| APP-BIOMETRICS-002 | Password waits behind fingerprint/face in the prompt | Cancel biometrics on typing; parallel methods like the locker | | M | |
-| APP-CAPTURE-001 | Webcam overlay needs Omarchy's window rule | Rule in NyxOS's Hyprland defaults | Capture sets it at runtime | S | |
-| APP-PHOTOS-001 | "Set as background" Omarchy-only | Through nyx-themed's D-Bus API | | S | |
-| APP-CLIPBOARD-001, APP-AGENTS-001 | Packaged Settings pages never load | Settings reads `share/nyx-settings/extensions` in `XDG_DATA_DIRS` | | S | |
-| VOICE-001 | Dictation not wired (Settings says F9) | Merge the F9 bindings; Nyx Voice on by default (socket-activated) | Hide the Settings text when absent | S | |
-| APP-BACKUP-002 | Offline disk recovery offered but can't work | Hide on NixOS; find restic on PATH | | S | |
+| APP-SETTINGS-001 | VPN install/import run Omarchy/pacman | Gate on Omarchy; NyxOS uses the catalog/System Manager and `nmcli` | Hide on NyxOS | S | A |
+| APP-CONTAINERS-002 | "Fix" runs Arch commands via pkexec | Detect NixOS; link to catalog items; drop VTE check | | S | A |
+| APP-CONTAINERS-003 | Root-equivalent groups not explained | Risk sentence per group; Fix goes through the catalog | | S | A |
+| APP-BIOMETRICS-001 | Sign-in page shows Arch-only actions | NyxOS branch: configure surfaces through the System Manager | Read-only status on NyxOS | M | A |
+| APP-BIOMETRICS-002 | Password waits behind fingerprint/face in the prompt | Cancel biometrics on typing; parallel methods like the locker | | M | A |
+| APP-CAPTURE-001 | Webcam overlay needs Omarchy's window rule | Rule in NyxOS's Hyprland defaults | Capture sets it at runtime | S | A |
+| APP-PHOTOS-001 | "Set as background" Omarchy-only | Through nyx-themed's D-Bus API | | S | A |
+| APP-CLIPBOARD-001, APP-AGENTS-001 | Packaged Settings pages never load | Settings reads `share/nyx-settings/extensions` in `XDG_DATA_DIRS` | | S | A |
+| VOICE-001 | Dictation not wired (Settings says F9) | Merge the F9 bindings; Nyx Voice on by default (socket-activated) | Hide the Settings text when absent | S | A |
+| APP-BACKUP-002 | Offline disk recovery offered but can't work | Hide on NixOS; find restic on PATH | | S | A |
 
 P3 **W6-P3** (APP-ACTIVITY-001, APP-FILES-002, APP-GIT-002, APP-WEATHER-001,
 APP-PULSE-003, APP-ASSISTANT-008, APP-BACKUP-004, APP-SHARE-002, APP-STORE-002,
 APP-BIOMETRICS-003/004, APP-CONTAINERS-004, APP-PASSWORDS-003, SET-001, ARCH-009, UX-002,
 UX-004): **A** fix all · **B** only user-visible wording and errors (ACTIVITY-001,
-FILES-002, GIT-002, PULSE-003, SET-001, UX-002, UX-004) · **C** defer. Choice: ___
+FILES-002, GIT-002, PULSE-003, SET-001, UX-002, UX-004) · **C** defer. Choice: A
 
 ## W7 Integration (actions, Glimpse, per-user apps)
 
