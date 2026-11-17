@@ -159,15 +159,15 @@
   },
   "grok-build": {
     "name": "Grok Build",
-    "version": "1.0.77",
+    "version": "1.0.88",
     "recipe": 1,
     "aliases": [
       "grok"
     ],
     "srcs": {
       "x86_64-linux": {
-        "url": "https://storage.googleapis.com/grok-build-public-artifacts/cli/grok-1.0.77-linux-x86_64",
-        "hash": "sha256-twKVCqWCfYVeSTJ4q2IVpOD1vOtbumxiQ6n1XN0UOwo="
+        "url": "https://storage.googleapis.com/grok-build-public-artifacts/cli/grok-1.0.88-linux-x86_64",
+        "hash": "sha256-ozAT/nPqY9LxjfY2+Q+EBgqIcS+ZMrd82gRH3YO0v+U="
       }
     },
     "upstream": {
