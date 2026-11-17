@@ -9,8 +9,8 @@ image, receives a copy of this checkout, and builds and switches to the flake it
 ## Host prerequisites (once)
 
 - Incus with KVM, and your user in `incus-admin`.
-- Omarchy enables ufw with forwarding denied, which blocks DHCP and NAT for
-  `incusbr0`. Allow the bridge:
+- A firewall that lets `incusbr0` through: one that denies forwarding blocks the VM's
+  DHCP and NAT. With ufw (Omarchy turns it on that way):
 
   ```sh
   sudo ufw allow in on incusbr0
@@ -20,7 +20,8 @@ image, receives a copy of this checkout, and builds and switches to the flake it
 
   If a VPN client with its own firewall (NordVPN's kill switch, for example) is
   connected, it may need `incusbr0` or `10.24.219.0/24` allowlisted too.
-- QEMU's GL display modules and virglrenderer, for 3D acceleration:
+- QEMU's GL display modules (virtio-gpu and virtio-vga with GL, egl-headless) and
+  virglrenderer, for 3D acceleration. On Arch:
 
   ```sh
   sudo pacman -S --needed virglrenderer qemu-hw-display-virtio-gpu-gl \
@@ -139,8 +140,10 @@ scripts/dev-vm ssh              # ssh ken@<VM IPv4>, key-only
 scripts/dev-vm exec bash        # root shell through the Incus agent
 ```
 
-The VM logs `ken` straight into Hyprland at boot (temporary, until Nyx Greeter).
-After logging out, tuigreet takes over; the initial password is `nyx`.
+The VM logs `ken` straight into Hyprland at boot (`nyxos.desktop.autoLogin`, for
+development). After logging out, Nyx Greeter takes over. The VM user's initial password
+is `nyx`; it's this development VM's only, set in `hosts/incus-dev/default.nix`, and SSH
+takes keys alone.
 
 To see the desktop:
 

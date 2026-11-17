@@ -16,6 +16,9 @@ computer's own keys (`nyxos.boot.secureBoot`), keeping Microsoft's so Windows st
 Installing and using NyxOS: the [guide](docs/guide/README.md) (requirements, installing,
 updates and recovery, troubleshooting, known limitations).
 
+How it's built and what it trusts: [architecture](docs/architecture.md) and
+[security model](docs/security.md).
+
 Developing: [docs/dev-vm.md](docs/dev-vm.md) runs the development VM;
 [docs/audit/release-readiness/](docs/audit/release-readiness/README.md) is the 0.1
 release-readiness audit.
@@ -24,7 +27,7 @@ release-readiness audit.
 
 | Path | Contents |
 | --- | --- |
-| `flake.nix` | Inputs (nixpkgs 26.05, Home Manager, Herdr, nyx-packages) and outputs |
+| `flake.nix` | Inputs (nixpkgs 26.05, Home Manager, nyx-packages, the machine's overrides) and outputs |
 | `VERSION` | NyxOS's version |
 | `iso` | The live USB: its own image, started by Limine on UEFI and BIOS (`live-image.nix`, `boot-menu.nix`) |
 | `hosts/incus-dev` | The Incus development VM |
@@ -32,7 +35,7 @@ release-readiness audit.
 | `modules/home` | User defaults: Foot, Zsh and the Nyx prompt, Helix, Herdr, Hyprland |
 | `themes` | Theme tokens (the boot and login themes), mirrored from nyx-design |
 | `pkgs/nyx-cli` | The `nyx` command on NyxOS |
-| `pkgs/antigravity-cli` | Catalog packages nixpkgs lacks, added to `pkgs` by an overlay |
+| `pkgs/tools`, `pkgs/<tool>` | The coding agents and tools the catalog offers that nixpkgs lacks (Herdr among them), pinned in `pkgs/tools/sources.json`, added to `pkgs` by an overlay |
 | `agents/skills` | Skills that teach coding agents NyxOS, shared by every agent ([docs/agent-skills.md](docs/agent-skills.md)) |
 | `scripts/dev-vm` | Create, rebuild, snapshot and inspect the VM |
 
@@ -75,29 +78,28 @@ Rollback without it: pick an earlier generation in the boot menu, or
 
 ## The `nyx` command
 
-Short commands for the Nix package manager. Each runs one `nix` command for the
-current user; anything else goes to `nix` unchanged (`nyx build`, `nyx flake`, …).
+`nyx --help` lists every command. The main ones:
 
-| nyx | nix |
+| Command | What it does |
 | --- | --- |
-| `install PKG…` | `nix profile add nixpkgs#PKG…` |
-| `remove PKG…` | `nix profile remove PKG…` |
-| `update [PKG…]` | `nix profile upgrade --all` (or the packages named) |
-| `list` | `nix profile list` |
-| `search TERM…` | `nix search nixpkgs TERM…` |
-| `run PKG [ARGS…]` | `nix run nixpkgs#PKG -- ARGS…` |
-| `shell PKG… [-c CMD]` | `nix shell nixpkgs#PKG… [-c CMD]` |
-| `rollback` / `history` | `nix profile rollback` / `history` |
-| `clean` | `nix-collect-garbage -d` |
+| `nyx install NAME…` | Install software as Welcome and the Store do: names the NyxOS catalog has go through it (apps and tools for you; services and drivers for everyone, through the Nyx System Manager); other names are packages from the system's channel, for you |
+| `nyx remove NAME…` | Remove it, wherever it's installed (also `uninstall`) |
+| `nyx update [WHAT…]` | Update everything, or `system`, `apps`, `tools`, `firmware`, or one thing by name |
+| `nyx list` | Your installed packages |
+| `nyx search TERM…` | Search the NyxOS catalog, then nixpkgs |
+| `nyx run PKG [ARGS…]` / `nyx shell PKG… [-c CMD]` | Run a program, or open a shell with packages, without installing |
+| `nyx rollback` / `nyx history` | Undo the last install, remove or update / list them |
+| `nyx clean` | Delete old versions to free disk space |
+| `nyx system …` / `nyx service NAME on\|off` | System settings, packages for everyone, generations and rollback, and the services NyxOS manages, through the Nyx System Manager |
+| `nyx apps`, `nyx APP [ACTION]` | What Nyx apps can do from the command line (`nyx notes create "Ideas"`) |
+| `nyx agent` | Start your default coding agent (Settings › Default Apps); `nyx agent skills` links NyxOS's skills into every agent |
+| `nyx icons`, `nyx share`, `nyx display virtual`, `nyx plugin` | Launcher icons, the Share Sheet, virtual monitors, bar plugins |
+| `nyx completion SHELL` | Completions for bash, zsh or fish |
 
-A name starting with `nyx-` comes from the system's release channel, as Welcome and the
-Store install it (`github:nyxos-project/nyxos/stable#nyx-pdf`); anything with `#` or `:` is used as
-given. `nyx icons …`, `nyx share …` and `nyx plugin …` run the Nyx tools as on Omarchy.
-`nyx agent` starts the default coding agent (Settings > Default Apps, or `nyx agent default
-CMD`) with its flag for working without stopping to ask, as Super Shift Ctrl A does; `nyx
-agent skills` links NyxOS's skills into every agent's skills folder.
-`nyx system …` and `nyx service NAME on|off|default` go to the Nyx System Manager:
-system settings, packages for everyone, `update`, `generations` and `rollback`.
+NAME is what the catalog calls it, a command or an alias (`claude`, `firefox`,
+`notepad`), or any package name. Anything with `#` or `:` is a flake reference, used as
+given. Any other command goes to an app that answers to it, else to `nix` (`nyx build`,
+`nyx flake`, …).
 
 ## Defaults
 

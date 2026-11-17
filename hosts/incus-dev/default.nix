@@ -23,7 +23,7 @@
       initialPassword = "nyx";
     };
 
-    # Temporary until Nyx Greeter exists.
+    # Straight to the desktop at boot, for development; Nyx Greeter after logging out.
     desktop.autoLogin = true;
     # scripts/dev-vm shot screenshots the session with the system's grim.
     desktop.screenCapture = [ pkgs.grim ];

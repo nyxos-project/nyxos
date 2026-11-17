@@ -218,25 +218,25 @@ PKG-005 (debug symbols), HYPR-007 only · **C** defer. Choice: A
 
 | ID | Issue | A (recommended) | B | Effort | Choice |
 | --- | --- | --- | --- | --- | --- |
-| ARCH-001 | Shell components keep their own Hyprland watchers | Move Dock, Switcher and Bar host onto Shell Core's state | **D**: after 0.1 (recommended timing) | L | |
-| ARCH-002 | Surfaces bypass the overlay registry | Wrap each surface in `OverlaySurface`; retire `Panel1` with the QML NC/Switcher | **D**: after 0.1 | M | |
+| ARCH-001 | Shell components keep their own Hyprland watchers | Move Dock, Switcher and Bar host onto Shell Core's state | **D**: after 0.1 (recommended timing) | L | A |
+| ARCH-002 | Surfaces bypass the overlay registry | Wrap each surface in `OverlaySurface`; retire `Panel1` with the QML NC/Switcher | **D**: after 0.1 | M | A |
 
 P3 **W10-P3** (ARCH-003..008, ARCH-010, SET-002, SHELL-006, PERF-001, PERF-002):
 **A** defer all past 0.1 except PERF-002 (small) · **B** fix all now · **C** defer all.
-Choice: ___
+Choice: A
 
 ## W11 Documentation
 
 | ID | Issue | A (recommended) | B | Effort | Choice |
 | --- | --- | --- | --- | --- | --- |
-| DOC-002 | 28 READMEs present apps as Omarchy software | One README template (NyxOS first, Omarchy second per G2), applied to every release app | Only base and Welcome apps | M | |
+| DOC-002 | 28 READMEs present apps as Omarchy software | One README template (NyxOS first, Omarchy second per G2), applied to every release app | Only base and Welcome apps | M | A |
 
 P3 **W11-P3** (DOC-003..005, SEC-013, ARCH-008, HYPR-005, and the app doc items:
 ARCHIVE-003, ASSISTANT-006, CALCULATOR-003, CALENDAR-003, CONTACTS-002, CONTAINERS-005,
 FONTS-003, HOME-003, MAIL-003, MAPS-003, MEDIA-PLAYER-004, MUSIC-001, NEWS-002,
 NOTEPAD-003, NOTES-002, OFFICE-003, PASSWORDS-004, PDF-003, PHOTOS-003, PULSE-005,
 REMINDERS-002, SETTINGS-002, STORE-001, TORRENTS-003, WEATHER-002): **A** fix all with
-DOC-002 (same pass) · **B** DOC-003..005 only · **C** defer. Choice: ___
+DOC-002 (same pass) · **B** DOC-003..005 only · **C** defer. Choice: A
 
 ## W12 Hardware
 

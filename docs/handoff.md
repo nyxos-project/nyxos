@@ -1,4 +1,12 @@
-# Handoff: where NyxOS stands (2026-11-07, night)
+# Handoff: where NyxOS stood (2026-11-07, night)
+
+> **Historical.** This predates NyxOS 0.1.0 and isn't kept up to date: its lists of
+> known problems and open decisions are stale. What NyxOS is now: the [README](../README.md),
+> the [user guide](guide/README.md), [architecture](architecture.md) and
+> [security](security.md); what was fixed and what's open: the release-readiness
+> [remediation](audit/release-readiness/remediation.md) and
+> [known limitations](guide/known-limitations.md). The password it mentions is the
+> development VM's only.
 
 Read this first in a new session. It covers what's done, what's half done, what Ken is
 deciding, and how to work so things don't break again.
