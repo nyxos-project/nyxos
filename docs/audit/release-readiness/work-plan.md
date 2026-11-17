@@ -187,11 +187,11 @@ search; APP-CHAT-003 stale text): **A** fix all (GLIMPSE-001 first: it's a crash
 
 | ID | Issue | A (recommended) | B | Effort | Choice |
 | --- | --- | --- | --- | --- | --- |
-| UPD-001 | Plans don't show package changes before confirming | Build first, show `diff-closures` + size, then ask | Show the changed Nyx app list only | M | |
+| UPD-001 | Plans don't show package changes before confirming | Build first, show `diff-closures` + size, then ask | Show the changed Nyx app list only | M | A |
 
 P3 **W8-P3** (UPD-002 stable's nyx-packages input follows main, SEC-012 is in W1, UX-004
 in W6): **A** point stable at nyx-packages' stable branch in promote-stable · **C** defer.
-Choice: ___
+Choice: A
 
 ## W9 Build, CI and dependencies
 

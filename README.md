@@ -39,8 +39,13 @@ release-readiness audit.
 ## Channels
 
 - `main`: development; every change lands here first.
-- `stable`: the last known-good state (`known-good/<n>` tags), with nyx-packages pinned at
-  its own `stable`. Follow it with `github:nyxos-project/nyxos/stable`.
+- `stable`: the last known-good state (`known-good/<n>` tags, signed). Its `flake.lock`
+  pins nyx-packages to the commit that nyx-packages' own `stable` branch points at:
+  `scripts/promote-stable` moves both branches together, only to commits with a
+  successful CI run, and only forward. Follow it with `github:nyxos-project/nyxos/stable`.
+  `stable` is always a commit of `main`, so its `flake.nix` names nyx-packages' `main`
+  like `main`'s does; pins change on `main` and reach `stable` by promotion, never by a
+  `nix flake update` on `stable`.
 
 ## Configuration layers
 
