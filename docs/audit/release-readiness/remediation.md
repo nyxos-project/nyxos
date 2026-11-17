@@ -317,3 +317,17 @@ Found on the way: the shell's "stopped" notice fired after every crash, also one
 restarted at once (the old shell crashed in Qt's icon loader during a switch); it now
 waits and stays quiet when the shell is back (nyx-packages 2e1eff4; VM: a crash restarts
 the shell without the notice).
+
+## W7 and W7-P3 (integration: actions, Glimpse, per-user apps), 2026-11-17
+
+Pinned by nyx-packages `da4fca5`; checked in the dev VM rebuilt at those pins.
+
+| Finding | Fix | Verified |
+| --- | --- | --- |
+| NYX-APP-GLIMPSE-001 | a semantic hit without a path is skipped instead of panicking the search (nyx-glimpse 058ad7a) | Glimpse's tests |
+| NYX-APP-MAIL-002 | Glimpse read plugins only from its own folder, so no app's plugin loaded on NyxOS, system or per user; it now also lists `nyx-APP/glimpse` in the user's data folder and every `$XDG_DATA_DIRS` folder (Nix profiles included), to enable after review; a packaged one is turned off, not removed, and updates with its app (nyx-glimpse 058ad7a) | unit test; VM: `nyx-glimpse plugins list` shows Agents, Calendar, Capture, Mail, News, Notes, Pulse and Reminders |
+| NYX-APP-CALENDAR-002, NYX-PKG-009 | no change needed now: the session bus reads `~/.nix-profile/share/dbus-1/services` (dbus-broker's `XDG_DATA_DIRS`), the catalog reloads it and starts the app's units after a per-user install, and nyx-actions reads `nyx/actions` in every `$XDG_DATA_DIRS` folder | VM: a new user service file is activatable after the reload (not before); Calendar's manifest alone in a folder on `XDG_DATA_DIRS` makes `calendar` appear in `nyx-actions apps`, and not without it. A real per-user install not repeated (every app with actions is system-wide in the VM) |
+| NYX-AI-003 | already done (nyx-assistant 2b8e8f6, 2026-11-09): the nyx-apps ability's `actions.list` and `actions.run` use AI Core's registry (running one always asks first), and its app tools go through AI Core as Glimpse's do | VM: AI Core lists Calendar's 11 actions and runs `calendar.search`; the packaged ability has `actions.run` |
+| NYX-APP-ASSISTANT-002 | launcher entry "Assistant" opening Settings › Assistant (where it's turned on), with an icon in the suite's set (nyx-assistant fd8871f, nyx-design 1e07cd8) | VM: entry and icon installed |
+| NYX-APP-CAPTURE-002, MEDIA-PLAYER-001, THEATER-002, TORRENTS-003, FONTS-003, CONTACTS-003 | control API 2 descriptions with risks and D-Bus activation, manifests installed (`actions = [ … ]`); started for a call: Capture and Contacts' lookups and Media Player's search answer without a window (Media Player waits for its library), Theater, Torrents, Fonts and changes in Contacts open the window first (Torrents waits for its engine); one required argument can be given bare; Torrents' and Fonts' READMEs and Torrents' python hint for NyxOS (nyx-capture 775e918, nyx-contacts 67d0e79, nyx-media-player 59c978c, nyx-theater fab75f8, nyx-torrents e7c9eb4, nyx-fonts 6370f70) | unit tests; VM, each app closed: `nyx contacts find`, `nyx video search` and `nyx capture search` answer with no window; `nyx torrents list`, `nyx theater search`, `nyx fonts installed` open their app and answer at once |
+| NYX-APP-CHAT-003 | READMEs: the system theme, NyxOS's or Omarchy's; catalog: "Chat with AI models on this computer or your own servers." (nyx-chat 3909270, nyx-system 39ced93) | text |

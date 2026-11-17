@@ -173,15 +173,15 @@ FILES-002, GIT-002, PULSE-003, SET-001, UX-002, UX-004) · **C** defer. Choice: 
 
 | ID | Issue | A (recommended) | B | Effort | Choice |
 | --- | --- | --- | --- | --- | --- |
-| APP-MAIL-002 | Glimpse doesn't find per-user plugins | Glimpse scans profile `share/*/glimpse` | Register plugins at install | S | |
-| APP-CALENDAR-002 / PKG-009 (rest) | Per-user D-Bus activation/actions | Verify after the stable promotion; fix what remains | | S | |
-| AI-003 | Assistant ignores the shared action registry | Feed the registry into its tool catalog | Defer to 0.2 | M | |
-| APP-ASSISTANT-002 | No launcher entry or icon | Desktop entry opening Settings › Assistant, offering to enable | | S | |
+| APP-MAIL-002 | Glimpse doesn't find per-user plugins | Glimpse scans profile `share/*/glimpse` | Register plugins at install | S | A |
+| APP-CALENDAR-002 / PKG-009 (rest) | Per-user D-Bus activation/actions | Verify after the stable promotion; fix what remains | | S | A |
+| AI-003 | Assistant ignores the shared action registry | Feed the registry into its tool catalog | Defer to 0.2 | M | A |
+| APP-ASSISTANT-002 | No launcher entry or icon | Desktop entry opening Settings › Assistant, offering to enable | | S | A |
 
 P3 **W7-P3** (APP-CAPTURE-002, APP-MEDIA-PLAYER-001, APP-THEATER-002, APP-TORRENTS-003,
 APP-FONTS-003, APP-CONTACTS-003 action manifests; APP-GLIMPSE-001 a path-less hit panics
 search; APP-CHAT-003 stale text): **A** fix all (GLIMPSE-001 first: it's a crash) ·
-**B** GLIMPSE-001 only · **C** defer. Choice: ___
+**B** GLIMPSE-001 only · **C** defer. Choice: A
 
 ## W8 Updates and the System Manager
 
