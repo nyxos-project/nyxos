@@ -35,6 +35,10 @@ in
   config = {
     # The lock screen (its PAM service); the user's config is in modules/home/lock.nix.
     programs.hyprlock.enable = lib.mkDefault true;
+    # nixpkgs' hyprlock module also starts hypridle for every account, the login screen's
+    # too (where it crashed at every boot); each person's own hypridle is in
+    # modules/home/lock.nix, with the idle settings' times.
+    services.hypridle.enable = lib.mkForce false;
 
     programs.hyprland = {
       enable = true;
