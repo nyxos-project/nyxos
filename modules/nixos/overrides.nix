@@ -145,6 +145,9 @@ in
     networking.nftables.enable = lib.mkIf (services.incus or false) (over true);
     virtualisation.libvirtd.enable = service "libvirtd";
     services.ollama.enable = service "ollama";
+    # Mullvad's daemon, with its app (the window and the `mullvad` command Settings signs in with).
+    services.mullvad-vpn.enable = service "mullvad";
+    services.mullvad-vpn.package = lib.mkIf (services.mullvad or false) pkgs.mullvad-vpn;
 
     nyxos.unfree = unfree;
 
