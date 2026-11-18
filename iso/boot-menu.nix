@@ -24,13 +24,16 @@ let
       or nyxPkgs.nyx-wallpapers.passthru.locks.catppuccin-mocha;
   init = "init=${config.system.build.toplevel}/init";
   params = config.boot.kernelParams;
-  # What hides the start: without these the kernel and systemd say what they do.
+  # What hides the start: without these the kernel and systemd say what they do, and a
+  # slow step (common on real hardware) prints systemd's status lines over the splash.
   quiet = [
     "quiet"
     "splash"
     "rd.udev.log_level=3"
     "udev.log_priority=3"
-    "rd.systemd.show_status=auto"
+    "rd.systemd.show_status=false"
+    "systemd.show_status=false"
+    "vt.global_cursor_default=0"
   ];
   loud = lib.filter (p: !(lib.elem p quiet) && !(lib.hasPrefix "loglevel=" p)) params;
   entry = cmdline: ''
