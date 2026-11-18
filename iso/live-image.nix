@@ -21,7 +21,19 @@ let
     comp = cfg.squashfsCompression;
   };
   kernel = "${config.boot.kernelPackages.kernel}/${config.system.boot.loader.kernelFile}";
-  initrd = "${config.system.build.initialRamdisk}/${config.system.boot.loader.initrdFile}";
+  # Early microcode (boot.initrd.prepend) goes in front of the initrd, as boot loaders
+  # do for an installed system: the kernel reads it before anything else, so a CPU erratum
+  # it fixes (Zen 5's RDSEED) is fixed before the kernel looks.
+  initrd =
+    let
+      main = "${config.system.build.initialRamdisk}/${config.system.boot.loader.initrdFile}";
+    in
+    if config.boot.initrd.prepend == [ ] then
+      main
+    else
+      "${pkgs.runCommand "initrd-with-microcode" { } ''
+        cat ${lib.escapeShellArgs config.boot.initrd.prepend} ${main} > $out
+      ''}";
   limineConf = pkgs.writeText "limine.conf" cfg.limineConfig;
   graft = f: lib.escapeShellArg "${f.target}=${f.source}";
 in

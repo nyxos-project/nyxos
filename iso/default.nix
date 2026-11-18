@@ -173,6 +173,10 @@ in
     RestartForceExitStatus = "75";
   };
   hardware.graphics.enable = true;
+  # The CPU's latest microcode, loaded first (live-image.nix puts it before the initrd):
+  # fixes for errata the kernel otherwise reports on screen as it starts.
+  hardware.cpu.amd.updateMicrocode = true;
+  hardware.cpu.intel.updateMicrocode = true;
   # A quiet boot behind Nyx Plymouth, as on an installed NyxOS (modules/nixos/boot.nix),
   # in the boot theme NyxOS installs. The text consoles still show what's wrong.
   boot.plymouth = {
