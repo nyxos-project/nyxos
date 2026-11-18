@@ -226,7 +226,9 @@ in
           mkdir -p tree/boot/limine
           cp ${limine}/share/limine/{limine-bios-cd.bin,limine-uefi-cd.bin,limine-bios.sys} tree/boot/limine/
           cp ${limineConf} tree/boot/limine/limine.conf
-          xorriso -as mkisofs -R -r -J -V ${cfg.volumeID} \
+          # -iso-level 3: the store's squashfs is past ISO 9660's 4 GiB for one file (it
+          # carries systems for real hardware too); Linux mounts the extents as one file.
+          xorriso -as mkisofs -iso-level 3 -R -r -J -V ${cfg.volumeID} \
             -b boot/limine/limine-bios-cd.bin -no-emul-boot -boot-load-size 4 -boot-info-table \
             --efi-boot boot/limine/limine-uefi-cd.bin -efi-boot-part --efi-boot-image \
             --protective-msdos-label \
