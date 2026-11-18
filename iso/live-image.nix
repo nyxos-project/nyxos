@@ -133,6 +133,10 @@ in
       "iso9660"
       "uas"
       "overlay"
+      # For an ISO file on a USB stick (Ventoy's partition is exFAT).
+      "exfat"
+      "ntfs3"
+      "dm_mod"
     ];
     boot.initrd.kernelModules = [
       "loop"
@@ -140,6 +144,54 @@ in
     ];
     boot.initrd.supportedFilesystems = [ "vfat" ];
     boot.initrd.systemd.emergencyAccess = lib.mkIf config.boot.initrd.systemd.enable true;
+
+    # Finding the image when it isn't a disk of its own: started from Ventoy (which serves
+    # the ISO as /dev/mapper/ventoy) or from an ISO file on a USB stick. Either is attached
+    # read-only through a loop device, which carries the image's label, so the /iso mount
+    # finds it as it would on a stick written with the image. Without this, the mount waited
+    # for the label until a timeout (four minutes on a Zephyrus G16 under Ventoy).
+    boot.initrd.systemd.extraBin = lib.mkIf config.boot.initrd.systemd.enable {
+      losetup = "${pkgs.util-linux}/bin/losetup";
+      blkid = "${pkgs.util-linux}/bin/blkid";
+    };
+    boot.initrd.systemd.services.nyxos-find-image = lib.mkIf config.boot.initrd.systemd.enable {
+      description = "Find the NyxOS image (Ventoy, or an ISO file on a USB stick)";
+      wantedBy = [ "initrd.target" ];
+      before = [ "sysroot-iso.mount" ];
+      after = [ "systemd-udev-trigger.service" ];
+      unitConfig.DefaultDependencies = false;
+      serviceConfig.Type = "oneshot";
+      script = ''
+        label=${cfg.volumeID}
+        found() { [ -e "/dev/disk/by-label/$label" ]; }
+        # A stick written with the image: its label shows up on its own.
+        for _ in $(seq 20); do found && exit 0; sleep 0.5; done
+        # Ventoy serves the ISO as a device-mapper device.
+        if [ -e /dev/mapper/ventoy ]; then
+          losetup --read-only --find /dev/mapper/ventoy
+          for _ in $(seq 20); do found && exit 0; sleep 0.5; done
+        fi
+        # An ISO file with the image's label on a partition, by any name.
+        mkdir -p /run/nyxos-image
+        n=0
+        for dev in /dev/sd[a-z][0-9]* /dev/nvme[0-9]n[0-9]p[0-9]* /dev/mmcblk[0-9]p[0-9]*; do
+          [ -b "$dev" ] || continue
+          case "$(blkid -o value -s TYPE "$dev")" in vfat | exfat | ntfs | ntfs3 | ext4 | btrfs | xfs) ;; *) continue ;; esac
+          n=$((n + 1)); dir=/run/nyxos-image/$n
+          mkdir -p "$dir"
+          mount -o ro "$dev" "$dir" 2>/dev/null || continue
+          for iso in "$dir"/*.iso "$dir"/*/*.iso; do
+            [ -f "$iso" ] || continue
+            if [ "$(blkid -o value -s LABEL "$iso")" = "$label" ]; then
+              losetup --read-only --find "$iso"
+              for _ in $(seq 20); do found && exit 0; sleep 0.5; done
+            fi
+          done
+          umount "$dir"
+        done
+        exit 0
+      '';
+    };
     # The live system has no boot loader of its own to install.
     boot.loader.grub.enable = lib.mkImageMediaOverride false;
 

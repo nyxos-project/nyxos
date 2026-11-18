@@ -4,7 +4,11 @@
 # installer wrote it) builds from. Prints the outputs a build would miss
 # (the reason an offline install would try to bootstrap compilers), and nothing else.
 # Run in a store that has the USB's contents built (the dev VM), from the nyxos flake.
+# With --iso FILE first, what the USB has is read from that image's own store instead:
+# a store that already holds a path (the dev VM's) can't then hide that the USB lacks it.
 set -euo pipefail
+image=
+if [ "${1:-}" = --iso ]; then image=$(realpath "$2"); shift 2; fi
 machine=$1 host=$2 overrides=${3:-/etc/nyxos/overrides}
 here=$(pwd)
 if ! command -v python3 >/dev/null; then exec nix shell nixpkgs#python3 -c "$0" "$@"; fi
@@ -12,11 +16,17 @@ work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 
 # What the USB's store has: its own system and what it carries.
-iso=$(nix eval --raw .#nixosConfigurations.iso.config.system.build.toplevel.drvPath)
-contents=$(nix build --no-link --print-out-paths .#nixosConfigurations.iso.config.system.build.toplevel \
-  $(nix eval --json .#nixosConfigurations.iso.config.nyxos.liveImage.storeContents --apply 'map (x: x.drvPath or (toString x))' |
-    python3 -c 'import json,sys; [print(p + ("^*" if p.endswith(".drv") else "")) for p in json.load(sys.stdin)]'))
-nix-store -qR $contents | sort -u > "$work/valid"
+if [ -n "$image" ]; then
+  nix shell nixpkgs#libarchive nixpkgs#squashfsTools -c sh -c \
+    "bsdtar -xOf '$image' nix-store.squashfs > '$work/store.squashfs' &&
+     unsquashfs -l '$work/store.squashfs' | awk -F/ 'NF==2 {print \"/nix/store/\" \$2}' | sort -u > '$work/valid'"
+  rm -f "$work/store.squashfs"
+else
+  contents=$(nix build --no-link --print-out-paths .#nixosConfigurations.iso.config.system.build.toplevel \
+    $(nix eval --json .#nixosConfigurations.iso.config.nyxos.liveImage.storeContents --apply 'map (x: x.drvPath or (toString x))' |
+      python3 -c 'import json,sys; [print(p + ("^*" if p.endswith(".drv") else "")) for p in json.load(sys.stdin)]'))
+  nix-store -qR $contents | sort -u > "$work/valid"
+fi
 
 drv=$(cd "$machine" && nix eval --raw ".#nixosConfigurations.$host.config.system.build.toplevel.drvPath" \
   --override-input nyxos "path:$here" --override-input nyxos-overrides "path:$overrides")
