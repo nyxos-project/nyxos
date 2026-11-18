@@ -255,7 +255,21 @@ case ${1:-} in
     exec nyx-system update "$@" ;;
   list)
     shift
-    exec nix profile list "$@" ;;
+    # Options go to nix as they are (nix profile list --json, …).
+    (($#)) && exec nix profile list "$@"
+    # NAME VERSION, and where it came from unless it's the system's channel.
+    nix profile list --json | jq -r '
+      .elements | to_entries[] | .key as $n
+      | ((.value.storePaths[0] // "") | split("/") | last | sub("^[a-z0-9]{32}-"; "")) as $p
+      | ($p | split("-")) as $parts
+      | ([$parts | to_entries[] | select(.value | test("^[0-9]")) | .key] | first) as $i
+      | (if $i then $parts[$i:] | join("-") else "" end) as $v
+      | ((.value.originalUrl // "") | if test("^github:nyxos-project/nyxos/") then "" else . end) as $s
+      | [$n, (if $v == "" then "-" else $v end), (if $s == "" then "-" else $s end)] | @tsv' |
+      while IFS=$'\t' read -r name version source; do
+        [[ $source == - ]] && source="" || source="  ($source)"
+        printf '  %-26s %s%s\n' "$name" "$version" "$source"
+      done ;;
   search)
     shift
     (($#)) || { usage >&2; exit 2; }
@@ -263,7 +277,16 @@ case ${1:-} in
       echo "In the NyxOS catalog (nyx install NAME):"
       nyx-system catalog search "$@" 2>/dev/null || echo "  nothing"
       echo
-      echo "In the package collection:"
+      echo "In the package collection (nyx install NAME):"
+      # NAME VERSION DESCRIPTION, one line each; nix's progress lines left out.
+      nix search nixpkgs "$@" --json 2> >(grep -v '^evaluating' >&2) | jq -r '
+        to_entries[] | [(.key | split(".") | .[2:] | join(".")), (.value.version // ""),
+          ((.value.description // "") | gsub("[\t\n]"; " "))] | @tsv' |
+        while IFS=$'\t' read -r name version description; do
+          (( ${#description} > 70 )) && description="${description:0:69}…"
+          printf '  %-28s %-14s %s\n' "$name" "$version" "$description"
+        done
+      exit "${PIPESTATUS[0]}"
     fi
     exec nix search nixpkgs "$@" ;;
   run)
