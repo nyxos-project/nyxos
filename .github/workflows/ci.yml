@@ -118,6 +118,38 @@ jobs:
       - name: Build the installer image
         run: nix build -L --no-link .#iso
 
+  # The catalog's free packages no cache has yet (nixpkgs' builders skipped them, say),
+  # built into NyxOS's cache so `nyx install` downloads them instead of compiling.
+  # Not part of the gate below: a miss is slow for someone, not broken.
+  catalog-cache:
+    if: github.event_name == 'push'
+    needs: evaluate
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - name: Free disk space
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: cachix/install-nix-action@3dc140bfc76c49fbd4dd958429132e3746bcb086 # v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            http2 = false
+            stalled-download-timeout = 60
+      - uses: cachix/cachix-action@38b082610b782e7e93e209c35fd730d399dee866 # v17
+        with:
+          name: ${{ vars.CACHIX_NAME }}
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - name: Build what no cache has
+        run: |
+          mapfile -t missing < <(scripts/cache-misses "https://${{ vars.CACHIX_NAME }}.cachix.org")
+          if ((${#missing[@]})); then
+            printf 'Building %s\n' "${missing[@]}"
+            nix build -L --no-link --keep-going "${missing[@]}"
+          else
+            echo "Every free catalog package is cached."
+          fi
+
   # The one check branch protection asks for (the build jobs are named by their shards):
   # every check evaluated and built.
   ci:

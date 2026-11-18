@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# The catalog's free packages that neither cache.nixos.org nor NyxOS's cache has, as
+# installables (.#legacyPackages.x86_64-linux.NAME), one a line: what `nyx install`
+# would otherwise compile on someone's computer. CI builds them, which puts them in
+# NyxOS's cache. Unfree ones stay out: their licenses don't allow passing them on.
+#   scripts/cache-misses [CACHE_URL]   (NyxOS's: https://nyxos.cachix.org)
+set -euo pipefail
+cd "$(dirname "$0")/.."
+ours=${1:-https://nyxos.cachix.org}
+
+# name<TAB>out path, for each free package a catalog item installs.
+nix eval --raw --impure --expr '
+  let
+    f = builtins.getFlake (toString ./.);
+    lib = f.inputs.nixpkgs.lib;
+    pkgs = f.legacyPackages.x86_64-linux;
+    items = f.inputs.nyx-packages.lib.catalog.item;
+    names = lib.unique (lib.concatMap (i: i.packages or [ ]) (lib.filter (i: !(i.unfree or false)) items));
+    path = n: lib.attrByPath (lib.splitString "." n) null pkgs;
+    one = n:
+      let p = path n; t = builtins.tryEval (if p == null || (p.meta.unfree or false) then null else p.outPath);
+      in if t.success && t.value != null then "${n}\t${t.value}\n" else "";
+  in lib.concatMapStrings one names' |
+  while IFS=$'\t' read -r name out; do
+    hash=${out#/nix/store/}
+    hash=${hash%%-*}
+    for cache in https://cache.nixos.org "$ours"; do
+      if curl -fsS -o /dev/null --head "$cache/$hash.narinfo" 2>/dev/null; then
+        continue 2
+      fi
+    done
+    echo ".#legacyPackages.x86_64-linux.$name"
+  done
