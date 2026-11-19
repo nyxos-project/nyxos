@@ -185,6 +185,38 @@ in
     hl.bind("SUPER + SHIFT + CTRL + A", launch("nyx agent"), { description = "Coding agent" })
     hl.bind("SUPER + SHIFT + RETURN", hl.dsp.exec_cmd("sh -c 'uwsm app -- gtk-launch \"$(xdg-settings get default-web-browser)\"'"), { description = "Browser" })
 
+    -- Universal copy, paste, cut and select all. Terminals take Ctrl+Shift for copy and
+    -- paste, so they're tagged. Key down, then up 50 ms later: one send_shortcut can leave
+    -- the synthetic key stuck. Sent to the focused surface, so panels get it too.
+    hl.window_rule({
+      name = "nyx-terminal-tag",
+      match = { class = "^(foot|footclient|org\\.codeberg\\.dnkl\\.foot|Alacritty|kitty|com\\.mitchellh\\.ghostty|org\\.wezfurlong\\.wezterm)$" },
+      tag = "+terminal",
+    })
+    local function send_shortcut_once(mods, key)
+      return function()
+        hl.dispatch(hl.dsp.send_key_state({ mods = mods, key = key, state = "down" }))
+        hl.timer(function()
+          hl.dispatch(hl.dsp.send_key_state({ mods = mods, key = key, state = "up" }))
+        end, { timeout = 50, type = "oneshot" })
+      end
+    end
+    local function universal_shortcut(mods, key, terminal_mods)
+      return function()
+        local window = hl.get_active_window()
+        for _, tag in ipairs(window and window.tags or {}) do
+          if tag:gsub("%*$", "") == "terminal" then
+            return send_shortcut_once(terminal_mods, key)()
+          end
+        end
+        send_shortcut_once(mods, key)()
+      end
+    end
+    hl.bind("SUPER + A", send_shortcut_once("CTRL", "A"), { description = "Select all" })
+    hl.bind("SUPER + C", universal_shortcut("CTRL", "C", "CTRL SHIFT"), { description = "Universal copy" })
+    hl.bind("SUPER + V", universal_shortcut("CTRL", "V", "CTRL SHIFT"), { description = "Universal paste" })
+    hl.bind("SUPER + X", send_shortcut_once("CTRL", "X"), { description = "Universal cut" })
+
     for _, d in ipairs({ { "LEFT", "l", "left" }, { "RIGHT", "r", "right" }, { "UP", "u", "up" }, { "DOWN", "d", "down" } }) do
       hl.bind("SUPER + " .. d[1], hl.dsp.focus({ direction = d[2] }), { description = "Focus on " .. d[3] .. " window" })
       hl.bind("SUPER + SHIFT + " .. d[1], hl.dsp.window.swap({ direction = d[2] }), { description = "Swap window " .. d[3] })
