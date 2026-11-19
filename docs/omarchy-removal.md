@@ -4,7 +4,7 @@ Generated 2026-11-18 by `scripts/omarchy-inventory` from 63 repositories (checko
 
 Omarchy/Arch support is being dropped. For each item: do the job natively (a `nyx-platform` job, or the app's own code), then delete the Omarchy branch. Don't keep two paths.
 
-- **232** distinct `omarchy-*` commands, at **809** places; `nyx-platform` already has a job for **26** of them
+- **230** distinct `omarchy-*` commands, at **806** places; `nyx-platform` already has a job for **26** of them
 - **159** places that behave differently on Omarchy
 - **239** references to Omarchy's files and folders
 
@@ -12,7 +12,7 @@ Omarchy/Arch support is being dropped. For each item: do the job natively (a `ny
 
 | Repository | Command uses | Distinct commands | Omarchy gates | Omarchy paths |
 |---|---:|---:|---:|---:|
-| nyx-settings | 375 | 171 | 43 | 16 |
+| nyx-settings | 372 | 169 | 43 | 16 |
 | nyx-control-center | 56 | 23 | 29 | 2 |
 | nyx-assistant | 53 | 14 | 3 | 22 |
 | nyx-notification-center | 65 | 14 | 2 | 2 |
@@ -167,7 +167,6 @@ Omarchy/Arch support is being dropped. For each item: do the job natively (a `ny
 | `omarchy-network-status` | job | 2 | nyx-control-center:`crates/nyx-providers/src/dns.rs:164`, nyx-control-center:`crates/nyx-providers/src/dns.rs:222` |
 | `omarchy-nyx` |  | 2 | nyx-design:`crates/nyx-theme-core/src/resolver.rs:255`, nyx-design:`crates/nyx-theme-core/src/resolver.rs:256` |
 | `omarchy-osd` |  | 2 | nyx-settings:`apps/settings/src/backend/audio.rs:439`, nyx-settings:`apps/settings/src/backend/audio.rs:441` |
-| `omarchy-pkg-aur-add` |  | 2 | nyx-settings:`apps/settings/src/sections/vpn_accounts.rs:456`, nyx-settings:`apps/settings/src/sections/vpn_accounts.rs:509` |
 | `omarchy-plugin-remove` |  | 2 | nyx-settings:`apps/settings/src/sections/plugins.rs:410`, nyx-settings:`apps/settings/src/sections/theme.rs:1322` |
 | `omarchy-plugin-update` |  | 2 | nyx-settings:`apps/settings/src/sections/plugins.rs:211`, nyx-settings:`apps/settings/src/sections/plugins.rs:383` |
 | `omarchy-plymouth-set-by-theme` |  | 2 | nyx-settings:`apps/settings/src/sections/boot.rs:110`, nyx-settings:`apps/settings/src/sections/boot.rs:439` |
@@ -250,7 +249,6 @@ Omarchy/Arch support is being dropped. For each item: do the job natively (a `ny
 | `omarchy-notification-wait` |  | 1 | nyx-notification-center:`apps/notifyd/tests/compat.rs:392` *(test)* |
 | `omarchy-notification-weather` |  | 1 | nyx-settings:`apps/settings/src/sections/capture.rs:801` |
 | `omarchy-obsidian-notes` |  | 1 | nyx:`docs/migration/attribution-cleanup.json:107` |
-| `omarchy-pkg-add` |  | 1 | nyx-settings:`apps/settings/src/sections/vpn_accounts.rs:546` |
 | `omarchy-plymouth-current` |  | 1 | nyx-settings:`apps/settings/src/sections/boot.rs:112` |
 | `omarchy-plymouth-list` |  | 1 | nyx-settings:`apps/settings/src/sections/boot.rs:418` |
 | `omarchy-polkit` |  | 1 | nyx-biometrics:`shell/design-nexus.auth-polkit/PolkitAgent.qml:298` |
