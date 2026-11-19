@@ -676,11 +676,11 @@
     "nyx-biometrics": {
       "flake": false,
       "locked": {
-        "lastModified": 1795057842,
-        "narHash": "sha256-fnlHZ0gX0E4jjDCK50bL8XNnfIrZNbQQm467758M99U=",
+        "lastModified": 1795059307,
+        "narHash": "sha256-F9PsmD213fFUaNzdU+TkJZSCdVrAa8Ec77M4tu6eO3U=",
         "owner": "design-nexus",
         "repo": "nyx-biometrics",
-        "rev": "221871b654397c1cbe0c1a869f997d7b04f756f6",
+        "rev": "77a419e10c93dfa2a50fb94d5031ab750363ce10",
         "type": "github"
       },
       "original": {
@@ -965,11 +965,11 @@
     "nyx-greeter": {
       "flake": false,
       "locked": {
-        "lastModified": 1795057842,
-        "narHash": "sha256-jd2Fssfe0ez478WgeznTBmmrKNgn7sh8W1IYff86OpQ=",
+        "lastModified": 1795061332,
+        "narHash": "sha256-0vCjT4qXd0cfBuptpyqBgzp7AQJGaBF5XVkuHe2jBuE=",
         "owner": "nyxos-project",
         "repo": "nyx-greeter",
-        "rev": "77771efd4271b6513b372cefa4faff67b2aa5bdb",
+        "rev": "820de27e90a1b4a92fa2a708034fe273ccfba205",
         "type": "github"
       },
       "original": {
@@ -1260,11 +1260,11 @@
         "umbra-icons": "umbra-icons"
       },
       "locked": {
-        "lastModified": 1795057898,
-        "narHash": "sha256-BTnq0pySY4WnKEktzjXV+3QkvtBNtXo1bw14hl5K3OY=",
+        "lastModified": 1795061344,
+        "narHash": "sha256-B/17+RHu0etLUj1HLUE21b6TKPte4izouJ9XoS3eXME=",
         "owner": "nyxos-project",
         "repo": "nyx-packages",
-        "rev": "c067ee8baa509652337b0d1219c742bd38811e1d",
+        "rev": "264c6881d75c23531eab2987e9f20b9042da6f25",
         "type": "github"
       },
       "original": {
