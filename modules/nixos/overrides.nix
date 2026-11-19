@@ -148,8 +148,14 @@ in
     # Mullvad's daemon, with its app (the window and the `mullvad` command Settings signs in with).
     services.mullvad-vpn.enable = service "mullvad";
     services.mullvad-vpn.package = lib.mkIf (services.mullvad or false) pkgs.mullvad-vpn;
+    # ExpressVPN's daemon and its `expressvpn` command.
+    services.expressvpn.enable = service "expressvpn";
 
-    nyxos.unfree = unfree;
+    # Turning on a VPN service whose app is unfree accepts its licence (the catalog says so).
+    nyxos.unfree =
+      unfree
+      ++ lib.optional (services.nordvpn or false) "nordvpn"
+      ++ lib.optional (services.expressvpn or false) "expressvpn";
 
     # What the System Manager detected, and the driver choices made for it.
     nyxos.hardware = lib.mkIf (hw != { }) {
@@ -165,6 +171,8 @@ in
     # face, fingerprint and security-key sign-in, from Settings › Sign-in & Security.
     nyx = lib.mkMerge [
       (lib.mapAttrs (_: on: { enable = over on; }) (o.nyxApps or { }))
+      # NordVPN's daemon and app (unfree; its users are the nordvpn group's members).
+      { nordvpn.enable = service "nordvpn"; }
       (lib.mkIf (o ? biometrics) {
         biometrics = {
           enable = over o.biometrics.enable;
