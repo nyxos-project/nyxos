@@ -10,7 +10,7 @@
     };
 
     nyx-packages = {
-      url = "github:nyxos-project/nyx-packages";
+      url = "github:nyxos-project/nyx-packages/dev/nocturne";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

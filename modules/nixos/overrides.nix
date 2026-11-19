@@ -79,12 +79,13 @@ in
 
   options.nyxos.signinStyle = lib.mkOption {
     type = lib.types.enum [
+      "halo"
       "circular"
       "cyberpunk"
       "minimal"
       "edge"
     ];
-    default = "circular";
+    default = "halo";
     description = ''
       The sign-in animation for a fingerprint, a face or a security key: the login
       screen's, and every user's lock screen's until they choose their own.

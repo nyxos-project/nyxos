@@ -94,7 +94,7 @@ one, each theme's own wallpaper from the Nyx wallpapers is shown (`nyx-wallpaper
 
 ## The lock screen, sign-in, boot and login
 
-- Lock screen theme and sign-in animation: `lock-theme` and `lock-style` (`circular`,
+- Lock screen theme and sign-in animation: `lock-theme` and `lock-style` (`halo`, `circular`,
   `cyberpunk`, `minimal`, `edge`) in `~/.config/nyx/appearance.toml`, or Settings.
 - For every account, and the boot and login screens: `nyx-system set theme|boot-theme|login-theme
   THEME` (system.md). The boot screen (Plymouth) and the boot menu (Limine) use the boot theme.

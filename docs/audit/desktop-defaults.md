@@ -227,7 +227,7 @@ native dispatchers; Omarchy-script ones don't.
 | Screensaver | 300 s, turned off | shell.json + toggle `screensaver-off` | U | `idle` `screen-off = 660` (screen off a minute after the lock, since there's no screensaver) | validated |
 | Suspend | never | shell.json | N | `idle` `suspend = 0` | validated |
 | Lock-screen sign-in | face or password, presence only | nyx `auth/policy.toml` | H | `nyx.locker` methods default to password; face needs a camera | excluded (hardware) |
-| Lock style | halo | `nyx/auth/overlay.json` | K | `nyxos.signinStyle` | kept at `circular` until Ken decides (see below) |
+| Lock style | halo | `nyx/auth/overlay.json` | K | `nyxos.signinStyle` | Halo is the default |
 | Night light | identity (off), hyprsunset not running | user `hyprsunset.conf` | N | off by default | validated |
 | Keyboard backlight off after 60 s | | `nyx-settings/keyboard-idle.toml` | H | — | needs a backlit keyboard; offered when the capability exists | excluded |
 
