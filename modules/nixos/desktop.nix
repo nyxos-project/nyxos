@@ -10,6 +10,11 @@ let
   nyxPkgs = config.nyx.packages;
   greeter = nyxPkgs.nyx-greeter;
   loginTheme = config.nyxos.theme.login;
+  profileMimeCache = pkgs.writeShellApplication {
+    name = "nyx-profile-mime-cache";
+    runtimeInputs = [ pkgs.coreutils pkgs.diffutils pkgs.findutils pkgs.desktop-file-utils ];
+    text = builtins.readFile ./profile-mime-cache.sh;
+  };
   # The greeter's session with this computer's keyboard, hyprctl found without PATH, and
   # the system's cursors (greetd's environment has no XCURSOR_PATH, and libXcursor's own
   # path doesn't reach the system profile).
@@ -51,6 +56,34 @@ in
     };
 
     xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
+    systemd.user.services.nyx-profile-mime-cache = {
+      description = "Update file associations for per-user Nix apps";
+      unitConfig.ConditionUser = "!@system";
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = lib.getExe profileMimeCache;
+      };
+    };
+
+    # Nix atomically replaces its profile links after a transaction. Watch the
+    # parents for those renames, including the first install by Welcome. Reconcile
+    # the index too if a local desktop installer rewrites it.
+    systemd.user.paths.nyx-profile-mime-cache = {
+      description = "Watch per-user Nix app transactions";
+      wantedBy = [ "default.target" ];
+      unitConfig.ConditionUser = "!@system";
+      pathConfig = {
+        PathChanged = [
+          "%h/.nix-profile"
+          "%S/nix"
+          "%S/nix/profiles"
+          "%D/applications"
+          "/nix/var/nix/profiles/per-user/%u"
+        ];
+        Unit = "nyx-profile-mime-cache.service";
+      };
+    };
 
     security.polkit.enable = true;
     # The accessibility bus. Without it NixOS switches accessibility off in every session
