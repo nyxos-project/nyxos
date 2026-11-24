@@ -199,20 +199,20 @@
   },
   "herdr-app": {
     "name": "Herdr",
-    "version": "0.1.16",
-    "coreVersion": "0.1.21",
+    "version": "0.1.18",
+    "coreVersion": "0.1.22",
     "recipe": 1,
     "aliases": [
       "herdr-core"
     ],
     "srcs": {
       "x86_64-linux": {
-        "url": "https://releases.herdr.dev/app/0.1.16/herdr-app-linux-x86_64.tar.gz",
-        "hash": "sha256-KC0mMhlrI4IGz+Zr+2HA+vKZyhyRhDvQdlIbvjZXEhY="
+        "url": "https://releases.herdr.dev/app/0.1.18/herdr-app-linux-x86_64.tar.gz",
+        "hash": "sha256-ihHt153UCzSfcobPUZELYuIRNtr48DAFqf0sTcWDD4M="
       },
       "core-x86_64-linux": {
-        "url": "https://releases.herdr.dev/core/0.1.21/herdr-core-linux-x86_64.tar.gz",
-        "hash": "sha256-eEJHVcEKQN3jigvbVcIKwZcG6a4F7Wj8Ks8fz/DZQcE="
+        "url": "https://releases.herdr.dev/core/0.1.22/herdr-core-linux-x86_64.tar.gz",
+        "hash": "sha256-MFTsOZLOgMVxXXIcqp3O+mBWch0V3BE/R1CvznY7pd8="
       }
     },
     "upstream": {
